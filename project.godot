@@ -21,7 +21,13 @@ _global_script_class_icons={
 [application]
 
 config/name="Signalling simulator"
+run/main_scene="res://SignallingSimulator.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
 
 [gdnative]
 
