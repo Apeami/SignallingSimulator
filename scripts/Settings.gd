@@ -5,7 +5,7 @@ signal toReturn
 func fillContributerList():
 	var file = File.new()
 	file.open("res://contributerList.txt", File.READ)
-	get_node("Label").text = file.get_as_text()
+	get_node("ContributerBox").text = file.get_as_text()
 
 
 func _ready():
