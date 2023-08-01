@@ -5,12 +5,18 @@ from PyQt5.QtOpenGL import QGLWidget as OpenGLWidget
 from pyglet.gl import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 from pyglet.gl import *
 from PyQt5.QtCore import Qt
+import math
 
+
+
+# Zooming constants
+ZOOM_IN_FACTOR = 1.2
+ZOOM_OUT_FACTOR = 1/ZOOM_IN_FACTOR
 
 class PygletWidget(OpenGLWidget):
     def __init__(self, parent):
         super().__init__(parent)
-        width, height = 640, 480
+        width, height = 1441, 521
         self.setMinimumSize(width, height)
 
         self.timer = QtCore.QTimer()
@@ -32,6 +38,7 @@ class PygletWidget(OpenGLWidget):
         self.camera_scale = 1
 
 
+
     def _pyglet_update(self):
         # Tick the pyglet clock, so scheduled events can work.
         pyglet.clock.tick()  
@@ -41,20 +48,61 @@ class PygletWidget(OpenGLWidget):
 
     def paintGL(self):
         """Pyglet equivalent of on_draw event for window"""
+        
+        # Initialize Projection matrix
+        glMatrixMode( GL_PROJECTION )
+        glLoadIdentity()
+
+        # Initialize Modelview matrix
+        glMatrixMode( GL_MODELVIEW )
+        glLoadIdentity()
+        # Save the default modelview matrix
+        glPushMatrix()
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        
-        
+
+        # Set orthographic projection matrix
+        glOrtho( self.left, self.right, self.bottom, self.top, 1, -1 )
+
+        # Draw quad 
+        glBegin( GL_QUADS )
+        glColor3ub( 0xFF, 0, 0 )
+        glVertex2i( 10, 10 )
+
+        glColor3ub( 0xFF, 0xFF, 0 )
+        glVertex2i( 110, 10 )
+
+        glColor3ub( 0, 0xFF, 0 )
+        glVertex2i( 110, 110 )
+
+        glColor3ub( 0, 0, 0xFF )
+        glVertex2i( 10, 110 )
+        glEnd()
+
         self.batch.draw()
+
+        # Remove default modelview matrix
+        glPopMatrix()     
+        
+        
 
 
     def initializeGL(self):
         """Call anything that needs a context to be created."""
         self.batch = pyglet.graphics.Batch()
         size = self.size()
-        w, h = size.width(), size.height()
+        self.width, self.height = size.width(), size.height()
         
         self.projection = pyglet.window.Projection2D()
-        self.projection.set(w, h, w, h)
+        self.projection.set(self.width, self.height, self.width, self.height)
+
+        self.left   = 0
+        self.right  = self.width
+        self.bottom = 0
+        self.top    = self.height
+        self.zoom_level = 1
+        self.zoomed_width  = self.width
+        self.zoomed_height = self.height
 
     def mouseMoveEvent(self, event):
         # Handle mouse movement and update camera position
@@ -65,23 +113,11 @@ class PygletWidget(OpenGLWidget):
             dx = (current_pos.x() - self.last_mouse_pos.x())
             dy =- (current_pos.y() - self.last_mouse_pos.y())
 
-            # new_camera_x = self.camera_x - dx
-            # new_camera_y = self.camera_y - dy
+            self.left   -= dx*self.zoom_level
+            self.right  -= dx*self.zoom_level
+            self.bottom -= dy*self.zoom_level
+            self.top    -= dy*self.zoom_level
 
-            # # Check if new_camera_x is within limits
-            # if self.camera_x_min <= new_camera_x <= self.camera_x_max:
-            #     self.camera_x = new_camera_x
-            # else:
-            #     dx = 0
-
-            # # Check if new_camera_y is within limits
-            # if self.camera_y_min <= new_camera_y <= self.camera_y_max:
-            #     self.camera_y = new_camera_y
-            # else:
-            #     dx = 0
-
-            glTranslatef(dx, dy, 0)
-            self.update()
             self.last_mouse_pos = current_pos
 
             
@@ -90,18 +126,26 @@ class PygletWidget(OpenGLWidget):
         self.last_mouse_pos = None
 
     def wheelEvent(self, event):
-        # Handle mouse wheel event for zooming
-        angleDeltaY = event.angleDelta().y()
-        zoom_speed = 0.01  # Adjust zoom speed as needed
-        print("Angle Delta")
-        print(angleDeltaY)
-        # Update the camera scale while respecting the limits
-        new_scale = self.camera_scale - angleDeltaY * zoom_speed
-        if 0.1 <= new_scale <= 2.0:  # Adjust the zoom limits as needed
-            self.camera_scale = new_scale
-        print("Camera scale")
-        print(self.camera_scale)
-        print("Value")
-        print(angleDeltaY*zoom_speed)
-        glScalef(angleDeltaY*zoom_speed, angleDeltaY*zoom_speed, 1.0)
-        self.update()
+
+        f = ZOOM_OUT_FACTOR if event.angleDelta().y() > 0 else ZOOM_IN_FACTOR if event.angleDelta().y() < 0 else 1
+
+        # If zoom_level is in the proper range
+        if .2 < self.zoom_level*f < 5:
+            self.zoom_level *= f
+
+            x = event.pos().x()
+            y = event.pos().y()
+
+            mouse_x = x/self.width
+            mouse_y = y/self.height
+
+            mouse_x_in_world = self.left   + mouse_x*self.zoomed_width
+            mouse_y_in_world = self.bottom + mouse_y*self.zoomed_height
+
+            self.zoomed_width  *= f
+            self.zoomed_height *= f
+
+            self.left   = mouse_x_in_world - mouse_x*self.zoomed_width
+            self.right  = mouse_x_in_world + (1 - mouse_x)*self.zoomed_width
+            self.bottom = mouse_y_in_world - mouse_y*self.zoomed_height
+            self.top    = mouse_y_in_world + (1 - mouse_y)*self.zoomed_height

@@ -58,20 +58,19 @@ class MainWindow(QMainWindow):
 
     def create_sprite_click(self):
         gl_width, gl_height = self.opengl.size().width(), self.opengl.size().height()
-        print(gl_width)
-        print(gl_height)
 
+        # Load the image and create a sprite
+        image_path = "assets/trackHorizontal.png"
+        image = pyglet.image.load(image_path)
+        sprite = pyglet.sprite.Sprite(image, batch=self.opengl.batch)
 
-        width = random.randint(50, 100)
-        height = random.randint(50, 100)
-        
-        x = random.randint(0, gl_width-width)
-        y = random.randint(0, gl_height-height)
-        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        
-        shape = pyglet.shapes.Rectangle(x, y, width, height, color=color, batch=self.opengl.batch)
-        shape.opacity = random.randint(100, 255)
-        self.shapes.append(shape)
+        # Set the initial position for the sprite
+        x = random.randint(0, gl_width - 50)
+        y = random.randint(0, gl_height - 50)
+        sprite.update(x, y)
+
+        # Add the sprite to the list of shapes
+        self.shapes.append(sprite)
         
     def clear_sprite_click(self):
         for shape in self.shapes:
