@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtOpenGL import QGLWidget as OpenGLWidget
 from pyglet.gl import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 from pyglet.gl import *
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 import math
 
 
@@ -14,6 +14,9 @@ ZOOM_IN_FACTOR = 1.2
 ZOOM_OUT_FACTOR = 1/ZOOM_IN_FACTOR
 
 class PygletWidget(OpenGLWidget):
+    mousePressSignal = pyqtSignal(int, int,int,int,int,int,int,int)
+
+
     def __init__(self, parent):
         super().__init__(parent)
         width, height = 1441, 521
@@ -36,6 +39,8 @@ class PygletWidget(OpenGLWidget):
         self.camera_y_max = 40   # Set the maximum Y coordinate limit
 
         self.camera_scale = 1
+
+        self.shapes = []
 
 
 
@@ -149,3 +154,9 @@ class PygletWidget(OpenGLWidget):
             self.right  = mouse_x_in_world + (1 - mouse_x)*self.zoomed_width
             self.bottom = mouse_y_in_world - mouse_y*self.zoomed_height
             self.top    = mouse_y_in_world + (1 - mouse_y)*self.zoomed_height
+
+    def mousePressEvent(self, event):
+        if event.buttons() == Qt.LeftButton:
+            x = event.x()
+            y = event.y()
+            self.mousePressSignal.emit(x, y,self.left,self.right,self.top,self.bottom,self.width,self.height)  # Emit the signal with x and y coordinates

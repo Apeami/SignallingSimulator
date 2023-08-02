@@ -1,0 +1,14 @@
+{
+    "name" : "Test Example Map",
+    "grid_size" : {
+        "rows" : 2,
+        "columns" : 5
+    },
+
+    "data" : [
+        { "row": 0, "column": 0, "type": "straight" },
+        { "row": 0, "column": 1, "type": "straight", "signal":"left" },
+        { "row": 0, "column": 2, "type": "straight", "waypoint":"Test Station" },
+        { "row": 1, "column": 2, "type": "deco", "item":"platform" }
+    ]     
+}
