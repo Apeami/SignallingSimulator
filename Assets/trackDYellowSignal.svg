@@ -8,8 +8,8 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.2 (dc2aeda, 2022-05-15)"
-   sodipodi:docname="trackHorizontal.svg"
-   inkscape:export-filename="trackHorizontal.png"
+   sodipodi:docname="trackDYellowSignal.svg"
+   inkscape:export-filename="trackDYellowSignal.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -30,8 +30,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="11.313708"
-     inkscape:cx="20.019962"
-     inkscape:cy="15.291185"
+     inkscape:cx="37.432467"
+     inkscape:cy="9.1040002"
      inkscape:window-width="1440"
      inkscape:window-height="800"
      inkscape:window-x="0"
@@ -54,6 +54,32 @@
        x="0"
        y="5.2916665"
        ry="0" />
+    <rect
+       style="fill:#ffffff;stroke-width:0.265895"
+       id="rect1124"
+       width="5.3975635"
+       height="0.30000001"
+       x="3.91293"
+       y="2.1960416" />
+    <circle
+       style="fill:#ffff00;stroke-width:0.182302"
+       id="path227"
+       cx="10.054167"
+       cy="2.3812499"
+       r="1.0583333" />
+    <circle
+       style="fill:#ffff00;stroke-width:0.182302"
+       id="path227-7"
+       cx="11.641666"
+       cy="2.3812499"
+       r="1.0583333" />
+    <rect
+       style="fill:#ffffff;stroke-width:0.253513"
+       id="rect1127"
+       width="0.30000001"
+       height="3.3046198"
+       x="3.8886082"
+       y="2.2023156" />
   </g>
   <metadata
      id="metadata16">

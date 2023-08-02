@@ -2,14 +2,14 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="50"
-   height="50"
-   viewBox="0 0 13.229167 13.229167"
+   width="57"
+   height="57"
+   viewBox="0 0 15.08125 15.08125"
    version="1.1"
    id="svg5"
    inkscape:version="1.2 (dc2aeda, 2022-05-15)"
-   sodipodi:docname="trackHorizontal.svg"
-   inkscape:export-filename="trackHorizontal.png"
+   sodipodi:docname="pointStraight.svg"
+   inkscape:export-filename="pointStraight.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -30,8 +30,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="11.313708"
-     inkscape:cx="20.019962"
-     inkscape:cy="15.291185"
+     inkscape:cx="32.747884"
+     inkscape:cy="23.422913"
      inkscape:window-width="1440"
      inkscape:window-height="800"
      inkscape:window-x="0"
@@ -47,13 +47,32 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#ffffff;stroke-width:0.215879"
+       style="fill:#ffffff;stroke-width:0.252835"
        id="rect195"
-       width="13.229167"
+       width="18.146189"
        height="2.6458333"
-       x="0"
-       y="5.2916665"
-       ry="0" />
+       x="-16.333794"
+       y="6.2177081"
+       ry="0"
+       transform="scale(-1,1)" />
+    <rect
+       style="fill:#ffffff;stroke-width:0.192531"
+       id="rect195-0"
+       width="10.522325"
+       height="2.6458333"
+       x="-10.089103"
+       y="9.5062094"
+       ry="0"
+       transform="matrix(-0.70710678,0.70710678,0.70710678,0.70710678,0,0)" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:0.128299"
+       id="rect1445"
+       width="6.0321965"
+       height="2.0494883"
+       x="-13.083127"
+       y="4.1597328"
+       ry="0"
+       transform="scale(-1,1)" />
   </g>
   <metadata
      id="metadata16">
