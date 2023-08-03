@@ -8,8 +8,8 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.2 (dc2aeda, 2022-05-15)"
-   sodipodi:docname="platform.svg"
-   inkscape:export-filename="platform.png"
+   sodipodi:docname="trackContinuation.svg"
+   inkscape:export-filename="trackContinuation.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -30,8 +30,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="11.313708"
-     inkscape:cx="26.295535"
-     inkscape:cy="23.776467"
+     inkscape:cx="21.522564"
+     inkscape:cy="22.980971"
      inkscape:window-width="1440"
      inkscape:window-height="800"
      inkscape:window-x="0"
@@ -47,21 +47,23 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#ff00ff;stroke-width:0.308929"
-       id="rect195"
-       width="13.229167"
-       height="5.4182148"
-       x="0"
-       y="0"
-       ry="0" />
+       style="fill:#0000ff;stroke-width:0.269557"
+       id="rect302"
+       width="6.1505041"
+       height="13.229167"
+       x="-13.229167"
+       y="-6.9388939e-18"
+       rx="0"
+       transform="scale(-1,1)" />
     <rect
-       style="fill:#ffffff;stroke-width:0.215879"
-       id="rect195-9"
-       width="13.229167"
+       style="fill:#ffffff;stroke-width:0.182817"
+       id="rect195"
+       width="9.4873934"
        height="2.6458333"
-       x="-3.469447e-18"
+       x="-9.4873934"
        y="5.2916665"
-       ry="0" />
+       ry="0"
+       transform="scale(-1,1)" />
   </g>
   <metadata
      id="metadata16">

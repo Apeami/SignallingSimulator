@@ -12,6 +12,7 @@ from PyQt5.QtCore import Qt
 from pygletWidget import PygletWidget
 from ui_mainGUI import Ui_MainWindow
 from tileMapper import TileMapper
+from extra import *
 
 
 class MainWindow(QMainWindow):
@@ -21,26 +22,18 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.setWindowTitle("Signalling Simulator")
 
-        self.setWindowTitle("Pyglet and QT Example")
-        #self.shapes = []
-
-        width, height = 640, 480
         self.opengl = self.ui.openGLWidget
+        self.tileMap = None
 
-        self.sprite_button = self.ui.CreateRect
-        self.sprite_button.clicked.connect(self.create_sprite_click)
-
-        self.clear_sprite_button = self.ui.pushButton
-        self.clear_sprite_button.clicked.connect(self.clear_sprite_click)
-        
-        
-        
         self.ui.actionOpen_Map.triggered.connect(self.openMap)
 
+        self.ui.actionRed.triggered.connect(lambda: self.setSignal("Red"))
+        self.ui.actionyellow.triggered.connect(lambda: self.setSignal("DYellow"))
+        self.ui.actiondYellow.triggered.connect(lambda: self.setSignal("Yellow"))
+        self.ui.actionGreen.triggered.connect(lambda: self.setSignal("Green"))
 
-        
-        #self.ui.actionOpen_Map.triggered.connect(self.start)
 
         self.setMouseTracking(True)
         self.installEventFilter(self)
@@ -48,32 +41,16 @@ class MainWindow(QMainWindow):
         
     def openMap(self):
         self.tileMap = TileMapper(self.opengl,self.opengl.shapes)
+        #try:
         self.tileMap.openFile(QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)"))
+        # except: 
+        #     print("File Failed to open")
+        #     popup = PopupWindow("File failed to open", "Error").exec_()
         self.opengl.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
 
-
-    def create_sprite_click(self):
-        gl_width, gl_height = self.opengl.size().width(), self.opengl.size().height()
-
-        # Load the image and create a sprite
-        image_path = "assets/platform.png"
-        image = pyglet.image.load(image_path)
-        sprite = pyglet.sprite.Sprite(image, batch=self.opengl.batch)
-
-        # Set the initial position for the sprite
-        x = random.randint(0, gl_width - 50)
-        y = random.randint(0, gl_height - 50)
-        print(x,y)
-        sprite.update(x, y)
-
-        # Add the sprite to the list of shapes
-        self.opengl.shapes.append(sprite)
-        
-    def clear_sprite_click(self):
-        for shape in self.opengl.shapes:
-            shape.delete()
-            
-        self.opengl.shapes.clear()
+    def setSignal(self, type):
+        if self.tileMap!=None:
+            self.tileMap.setSignal(type)
 
 
 

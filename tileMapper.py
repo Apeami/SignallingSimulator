@@ -1,4 +1,4 @@
-from tileBase import TileBase
+from tileBase import *
 import pyglet
 import json
 from PyQt5.QtCore import Qt
@@ -24,29 +24,37 @@ class TileMapper:
         self.height = trackData["grid_size"]["rows"]
         self.width = trackData["grid_size"]["columns"]
 
+        self.tileMap = [[None for _ in range(self.width)] for _ in range(self.height)]
+
         map_data = trackData["data"]
 
         for tile in map_data:
             row = tile['row']
             column = tile['column']
 
+
             realCoord = self.tileToCoord((column,row))
 
             type = tile['type']
+            point = tile['point']
 
-            if 'signal' in tile: #This tile is a signal tile
-                if tile['type']=="straight":
-                    TileBase(self.openGlInstance,"assets/trackRedSignal.png",False,False,False,realCoord)
-            elif tile['type']=="deco": #This tile is a decoration block
-                if tile['item']=="platform":
-                    TileBase(self.openGlInstance,"assets/platform.png",False,False,False,realCoord)
-            else: #This tile is regular track
-                if tile['type']=="straight":
-                    TileBase(self.openGlInstance,"assets/trackHorizontal.png",False,False,False,realCoord)
 
-            print(row)
-            print(column)
+            if tile['type']=="signalTrack":
+                tileObj = SignalTile(self.openGlInstance,"assets/trackRedSignal.png",point,realCoord)
+            if tile['type']=="contTrack":
+                tileObj = TileBase(self.openGlInstance,"assets/trackContinuation.png",point,realCoord)
+            if tile['type']=="platTrack":
+                tileObj = TileBase(self.openGlInstance,"assets/platform.png",point,realCoord)
+            if tile['type']=="track":
+                tileObj = TileBase(self.openGlInstance,"assets/trackHorizontal.png",point,realCoord)
+            if tile['type']=="pointTrack":
+                tileObj = TileBase(self.openGlInstance,"assets/pointStraight.png",point,realCoord)
+
+
+            self.tileMap[row][column] = tileObj
+
         print(self.map_name)
+        print(self.tileMap)
 
         
 
@@ -71,4 +79,23 @@ class TileMapper:
 
         print(mapX,mapY)
 
-        print(self.coordToTile((mapX,mapY)))
+        pressedCoord = self.coordToTile((mapX,mapY))
+
+        print(pressedCoord)
+
+        print(self.width)
+        print(self.height)
+
+        for i in self.tileMap:
+            for tile in i:
+                if tile!=None:
+                    tile.handleClickOff()
+        if 0<=pressedCoord[1]<self.height and 0<=pressedCoord[0]<self.width and self.tileMap[pressedCoord[1]][pressedCoord[0]]!=None:
+            self.tileMap[pressedCoord[1]][pressedCoord[0]].handleClick()
+
+    def setSignal(self,type):
+        for i in self.tileMap:
+            for tile in i:
+                if tile!=None and tile.highlighted==True and isinstance(tile, SignalTile):
+                    print("CHanging to: ", type)
+                    tile.setSignal(type)

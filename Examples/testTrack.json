@@ -2,13 +2,19 @@
     "name" : "Test Example Map",
     "grid_size" : {
         "rows" : 2,
-        "columns" : 5
+        "columns" : 10
     },
 
-    "data" : [
-        { "row": 0, "column": 0, "type": "straight" },
-        { "row": 0, "column": 1, "type": "straight", "signal":"left" },
-        { "row": 0, "column": 2, "type": "straight", "waypoint":"Test Station" },
-        { "row": 1, "column": 2, "type": "deco", "item":"platform" }
+    "data" : [ 
+        { "row": 0, "column": 0, "type": "contTrack", "point": "west" },
+        { "row": 0, "column": 1, "type": "signalTrack", "point":"west" },
+        { "row": 0, "column": 2, "type": "platTrack","point":"west", "waypoint":"Test Station" },
+        { "row": 0, "column": 3, "type": "platTrack","point":"west"},
+        { "row": 0, "column": 4, "type": "signalTrack","point":"west"},
+        { "row": 0, "column": 5, "type": "track","point":"west"},
+        { "row": 0, "column": 6, "type": "track","point":"west"},
+        { "row": 0, "column": 7, "type": "track","point":"west"},
+        { "row": 0, "column": 8, "type": "track","point":"west"},
+        { "row": 0, "column": 9, "type": "pointTrack","point":"west"}
     ]     
 }
