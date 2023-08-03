@@ -5,6 +5,7 @@ from PyQt5.QtOpenGL import QGLWidget as OpenGLWidget
 from pyglet.gl import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 from pyglet.gl import *
 from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QCursor
 import math
 
 
@@ -130,16 +131,19 @@ class PygletWidget(OpenGLWidget):
         # Reset last mouse position when the mouse button is released
         self.last_mouse_pos = None
 
-    def wheelEvent(self, event):
-
+    def wheelEvent(self,event):
         f = ZOOM_OUT_FACTOR if event.angleDelta().y() > 0 else ZOOM_IN_FACTOR if event.angleDelta().y() < 0 else 1
+        x = event.pos().x()
+        y = event.pos().y()
+        self.zoomScreen(f,x,y)
+
+    def zoomScreen(self, f,x,y):
 
         # If zoom_level is in the proper range
         if .2 < self.zoom_level*f < 5:
             self.zoom_level *= f
 
-            x = event.pos().x()
-            y = event.pos().y()
+
 
             mouse_x = x/self.width
             mouse_y = y/self.height

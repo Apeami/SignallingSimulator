@@ -34,6 +34,12 @@ class MainWindow(QMainWindow):
         self.ui.actiondYellow.triggered.connect(lambda: self.setSignal("Yellow"))
         self.ui.actionGreen.triggered.connect(lambda: self.setSignal("Green"))
 
+        self.ui.actionToggle_Track.triggered.connect(self.togglePoint)
+
+        self.ui.actionZoom_In.triggered.connect(lambda: self.opengl.zoomScreen(1/1.2,self.opengl.width/2,self.opengl.height/2))
+        self.ui.actionZoom_Out.triggered.connect(lambda: self.opengl.zoomScreen(1.2,self.opengl.width/2,self.opengl.height/2))
+        self.ui.actionActual_Size.triggered.connect(self.zoomToActualSize)
+
 
         self.setMouseTracking(True)
         self.installEventFilter(self)
@@ -47,10 +53,35 @@ class MainWindow(QMainWindow):
         #     print("File Failed to open")
         #     popup = PopupWindow("File failed to open", "Error").exec_()
         self.opengl.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
+        self.zoomToActualSize()
 
     def setSignal(self, type):
         if self.tileMap!=None:
             self.tileMap.setSignal(type)
+
+    def togglePoint(self):
+        print("Toggling")
+        if self.tileMap!=None:
+            self.tileMap.togglePoint()
+
+    def zoomToActualSize(self):
+
+        zoomHeightOld = self.opengl.zoomed_height
+        prop = self.opengl.zoomed_width / self.opengl.zoomed_height
+
+        if self.tileMap.width>self.tileMap.height:
+            self.opengl.zoomed_width = self.tileMap.width*50
+            self.opengl.zoomed_height = self.opengl.zoomed_width /prop
+        else:
+            self.opengl.zoomed_height = self.tileMap.height*50
+            self.opengl.zoomed_width = self.opengl.zoomed_height * prop
+
+        self.opengl.left = 0
+        self.opengl.bottom = 0
+        self.opengl.right = self.opengl.zoomed_width
+        self.opengl.top = self.opengl.zoomed_height
+
+        self.opengl.zoom_level = self.opengl.zoom_level * (self.opengl.zoomed_height/zoomHeightOld)
 
 
 

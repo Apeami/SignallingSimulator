@@ -1,20 +1,62 @@
 {
     "name" : "Test Example Map",
     "grid_size" : {
-        "rows" : 2,
-        "columns" : 10
+        "rows" : 3,
+        "columns" : 18
     },
 
+    "text" : [
+        {"row":3 , "column":4, "text":"Station 1"},
+        {"row":13 , "column":4, "text":"Station 2"}
+
+    ],
+
+
     "data" : [ 
-        { "row": 0, "column": 0, "type": "contTrack", "point": "west" },
-        { "row": 0, "column": 1, "type": "signalTrack", "point":"west" },
-        { "row": 0, "column": 2, "type": "platTrack","point":"west", "waypoint":"Test Station" },
-        { "row": 0, "column": 3, "type": "platTrack","point":"west"},
-        { "row": 0, "column": 4, "type": "signalTrack","point":"west"},
-        { "row": 0, "column": 5, "type": "track","point":"west"},
-        { "row": 0, "column": 6, "type": "track","point":"west"},
-        { "row": 0, "column": 7, "type": "track","point":"west"},
-        { "row": 0, "column": 8, "type": "track","point":"west"},
-        { "row": 0, "column": 9, "type": "pointTrack","point":"west"}
+        { "row": 1, "column": 0, "type": "contTrack", "point": "west","flip":false},
+        { "row": 1, "column": 1, "type": "signalTrack", "point":"west","flip":false },
+        { "row": 1, "column": 2, "type": "platTrack","point":"west","flip":false, "waypoint":"Test Station" },
+        { "row": 1, "column": 3, "type": "platTrack","point":"west","flip":false},
+        { "row": 1, "column": 4, "type": "signalTrack","point":"west","flip":false},
+        { "row": 1, "column": 5, "type": "track","point":"west","flip":false},
+        { "row": 1, "column": 6, "type": "track","point":"west","flip":false},
+        { "row": 1, "column": 7, "type": "track","point":"west","flip":false},
+        { "row": 1, "column": 8, "type": "track","point":"west","flip":false},
+        { "row": 1, "column": 9, "type": "pointTrack","point":"west","flip":true},
+
+        { "row": 2, "column": 0, "type": "contTrack", "point": "west","flip":false},
+        { "row": 2, "column": 1, "type": "signalTrack", "point":"east","flip":false },
+        { "row": 2, "column": 2, "type": "platTrack","point":"east","flip":false, "waypoint":"Test Station" },
+        { "row": 2, "column": 3, "type": "platTrack","point":"east","flip":false},
+        { "row": 2, "column": 4, "type": "signalTrack","point":"east","flip":false},
+        { "row": 2, "column": 5, "type": "track","point":"east","flip":false},
+        { "row": 2, "column": 6, "type": "track","point":"east","flip":false},
+        { "row": 2, "column": 7, "type": "track","point":"east","flip":false},
+        { "row": 2, "column": 8, "type": "pointTrack","point":"east","flip":true},
+        { "row": 2, "column": 9, "type": "track","point":"east","flip":false},
+
+        { "row": 1, "column": 10, "type": "pointTrack","point":"east","flip":true},
+        { "row": 1, "column": 11, "type": "signalTrack","point":"west","flip":false},
+        { "row": 1, "column": 12, "type": "platTrack","point":"west","flip":false},
+        { "row": 1, "column": 13, "type": "platTrack","point":"west","flip":false},
+        { "row": 1, "column": 14, "type": "signalTrack","point":"west","flip":false},
+        { "row": 1, "column": 15, "type": "track","point":"west","flip":false},
+        { "row": 1, "column": 16, "type": "track","point":"west","flip":false},
+        { "row": 1, "column": 17, "type": "contTrack","point":"east","flip":false},
+
+        { "row": 0, "column": 11, "type": "curveTrack","point":"west","flip":true},
+        { "row": 0, "column": 12, "type": "signalTrack","point":"west","flip":false},
+        { "row": 0, "column": 13, "type": "platTrack","point":"east","flip":false},
+        { "row": 0, "column": 14, "type": "bufferTrack","point":"east","flip":false},
+
+        { "row": 2, "column": 10, "type": "track","point":"east","flip":false},
+        { "row": 2, "column": 11, "type": "signalTrack","point":"east","flip":false},
+        { "row": 2, "column": 12, "type": "platTrack","point":"east","flip":false},
+        { "row": 2, "column": 13, "type": "platTrack","point":"east","flip":false},
+        { "row": 2, "column": 14, "type": "signalTrack","point":"east","flip":false},
+        { "row": 2, "column": 15, "type": "track","point":"east","flip":false},
+        { "row": 2, "column": 16, "type": "track","point":"east","flip":false},
+        { "row": 2, "column": 17, "type": "contTrack","point":"east","flip":false}
+        
     ]     
 }
