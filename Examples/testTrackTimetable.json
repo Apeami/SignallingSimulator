@@ -1,0 +1,26 @@
+{
+    "MapName":"Test Example Map",
+    "SimTime":15,
+    "Trains": [
+        {
+            "Headcode": "9k34",
+            "MaxSpeed": 100,
+            "Schedule": [
+                { "Action": "Spawn", "Time": 0, "Location": "WestIn" },
+                { "Action": "Stop", "Time": 1, "Location": "Station 1" },
+                { "Action": "Stop", "Time": 4, "Location": "Station 2" },
+                { "Action": "Despawn", "Time": 6, "Location": "EastOut" }
+            ]
+        },
+        {
+            "Headcode": "2m17",
+            "MaxSpeed": 120,
+            "Schedule": [
+                { "Action": "Spawn", "Time": 0, "Location": "EastIn" },
+                { "Action": "Stop", "Time": 2, "Location": "Station 2" },
+                { "Action": "Stop", "Time": 5, "Location": "Station 1" },
+                { "Action": "Despawn", "Time": 7, "Location": "WestOut" }
+            ]
+        }
+    ]
+}
