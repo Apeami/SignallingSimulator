@@ -79,10 +79,14 @@ class TileBase:
             self.highlight=None
 
 
-
-class SignalTile(TileBase):
-    def __init__(self, openGlInstance, imagePath, point, flip,location, clickable=False, signal="Red"):
+class TrackTile(TileBase):
+    def __init__(self, openGlInstance, imagePath, point, flip,location,distance, clickable=False):
         super().__init__(openGlInstance, imagePath, point,flip ,location, clickable)
+        self.distance = distance
+
+class SignalTile(TrackTile):
+    def __init__(self, openGlInstance, imagePath, point, flip,location, clickable=False, signal="Red"):
+        super().__init__(openGlInstance, imagePath, point,flip ,location,50, clickable)
         self.signal = signal
 
     def setSignal(self,signal):
@@ -107,9 +111,9 @@ class SignalTile(TileBase):
         self.sprite.image = new_image
 
 
-class PointTile(TileBase):
+class PointTile(TrackTile):
     def __init__(self, openGlInstance, imagePath, point, flip,location, clickable=False, diverge=False):
-        super().__init__(openGlInstance, imagePath, point,flip ,location, clickable)
+        super().__init__(openGlInstance, imagePath, point,flip ,location,50, clickable)
         self.diverge=diverge
 
     def togglePoint(self):
