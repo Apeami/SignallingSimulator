@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
         self.zoomToActualSize()
 
     def openTimetable(self):
-        self.timetable = Timetable(self.opengl,self.opengl.shapes)
+        self.timetable = Timetable(self.opengl,self.opengl.shapes,self.ui)
         self.timetable.openFile(QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)"))
         self.opengl.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
 

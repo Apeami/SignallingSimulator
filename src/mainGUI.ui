@@ -14,243 +14,231 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="CreateRect">
-    <property name="geometry">
-     <rect>
-      <x>1050</x>
-      <y>550</y>
-      <width>121</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Create Rectangle</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>1210</x>
-      <y>550</y>
-      <width>131</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Clear Rectangle</string>
-    </property>
-   </widget>
-   <widget class="PygletWidget" name="openGLWidget">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>1441</width>
-      <height>521</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>520</y>
-      <width>995</width>
-      <height>232</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QGroupBox" name="TrainListBox">
-       <property name="title">
-        <string>Train List</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QTableWidget" name="TrainList">
-          <row>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="0" column="0">
+     <widget class="PygletWidget" name="openGLWidget">
+      <property name="minimumSize">
+       <size>
+        <width>600</width>
+        <height>450</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QGroupBox" name="TrainListBox">
+        <property name="title">
+         <string>Train List</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QTableWidget" name="TrainList">
+           <row>
+            <property name="text">
+             <string/>
+            </property>
+           </row>
+           <column>
+            <property name="text">
+             <string notr="true">Headcode </string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string notr="true">Next Loc</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string notr="true">Time</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string notr="true">Dest</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>EndPoint</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Conter</string>
+            </property>
+           </column>
+           <item row="0" column="2">
+            <property name="text">
+             <string/>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="TrainInfoBox">
+        <property name="title">
+         <string>Train Information</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="1" column="0">
+          <widget class="QTableWidget" name="TrainTimetable">
+           <row>
+            <property name="text">
+             <string/>
+            </property>
+           </row>
+           <column>
+            <property name="text">
+             <string notr="true">Time</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Action</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Location</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Center</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="CurrentHeadcode">
            <property name="text">
-            <string/>
+            <string>HeadCode: Not Selected</string>
            </property>
-          </row>
-          <column>
-           <property name="text">
-            <string notr="true">Headcode </string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string notr="true">Next</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string notr="true">For</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string notr="true">To</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Center</string>
-           </property>
-          </column>
-          <item row="0" column="2">
-           <property name="text">
-            <string/>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="TrainInfoBox">
-       <property name="title">
-        <string>Train Information</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="1" column="0">
-         <widget class="QTableWidget" name="TrainTimetable">
-          <row>
-           <property name="text">
-            <string/>
-           </property>
-          </row>
-          <column>
-           <property name="text">
-            <string notr="true">Time</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Location</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Center</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="CurrentHeadcode">
-          <property name="text">
-           <string>HeadCode: Not Selected</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="TimingBox">
-       <property name="title">
-        <string>Timing</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Simulation Time</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLCDNumber" name="lcdNumber">
-              <property name="digitCount">
-               <number>8</number>
-              </property>
-              <property name="mode">
-               <enum>QLCDNumber::Dec</enum>
-              </property>
-              <property name="segmentStyle">
-               <enum>QLCDNumber::Filled</enum>
-              </property>
-              <property name="value" stdset="0">
-               <double>0.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QPushButton" name="playSimulation">
-              <property name="text">
-               <string>Play</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pauseSimulation">
-              <property name="text">
-               <string>Pause</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QPushButton" name="times1Speed">
-              <property name="text">
-               <string>1x</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="times2Speed">
-              <property name="text">
-               <string>2x</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="times5Speed">
-              <property name="text">
-               <string>5x</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="times10Speed">
-              <property name="text">
-               <string>10x</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="times20Speed">
-              <property name="text">
-               <string>20x</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="TimingBox">
+        <property name="title">
+         <string>Timing</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Simulation Time</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLCDNumber" name="lcdNumber">
+               <property name="digitCount">
+                <number>8</number>
+               </property>
+               <property name="mode">
+                <enum>QLCDNumber::Dec</enum>
+               </property>
+               <property name="segmentStyle">
+                <enum>QLCDNumber::Filled</enum>
+               </property>
+               <property name="value" stdset="0">
+                <double>0.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QPushButton" name="playSimulation">
+               <property name="text">
+                <string>Play</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pauseSimulation">
+               <property name="text">
+                <string>Pause</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QPushButton" name="times1Speed">
+               <property name="text">
+                <string>1x</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="times2Speed">
+               <property name="text">
+                <string>2x</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="times5Speed">
+               <property name="text">
+                <string>5x</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="times10Speed">
+               <property name="text">
+                <string>10x</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="times20Speed">
+               <property name="text">
+                <string>20x</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="LogBox">
+        <property name="title">
+         <string>Event Box</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="0">
+          <widget class="QTextEdit" name="LogTextBox"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
    <zorder>layoutWidget</zorder>
    <zorder>openGLWidget</zorder>
-   <zorder>CreateRect</zorder>
-   <zorder>pushButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

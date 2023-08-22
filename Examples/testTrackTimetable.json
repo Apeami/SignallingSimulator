@@ -1,10 +1,12 @@
 {
     "MapName":"Test Example Map",
     "SimTime":15,
+    "StartTime": "07:00:00",
     "Trains": [
         {
             "Headcode": "9k34",
             "MaxSpeed": 100,
+            "Destination": "Faraway Station 1",
             "Schedule": [
                 { "Action": "Spawn", "Time": 0, "Location": "WestIn" },
                 { "Action": "Stop", "Time": 1, "Location": "Station 1" },
@@ -15,6 +17,7 @@
         {
             "Headcode": "2m17",
             "MaxSpeed": 120,
+            "Destination": "Faraway Station 2",
             "Schedule": [
                 { "Action": "Spawn", "Time": 0, "Location": "EastIn" },
                 { "Action": "Stop", "Time": 2, "Location": "Station 2" },

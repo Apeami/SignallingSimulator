@@ -1,18 +1,19 @@
 import pyglet
 
 class Train:
-    def __init__(self,trainData,openGlInstance,shape,headcode):
+    def __init__(self,trainData,openGlInstance,shape):
         self.openGlInstance = openGlInstance
         self.shape = shape
-        self.headcode = headcode
         self.trainCoord = [0,0]
 
-        #self.headcode = trainData['Headcode']
-        #self.maxSpeed = trainData['MaxSpeed']
+        self.headcode = trainData['Headcode']
+        self.maxSpeed = trainData['MaxSpeed']
+        self.destination = trainData['Destination']
 
-        #self.sorted_schedule = sorted(trainData["Schedule"], key=lambda x: x["Time"])
+        self.sorted_schedule = sorted(trainData["Schedule"], key=lambda x: x["Time"])
 
         self.currentEvent = 0
+        
 
     def updateMajorEvent(self):
         pass
