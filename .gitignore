@@ -8,3 +8,13 @@ Assets/.DS_Store
 __pycache__/tileMapper.cpython-36.pyc
 .gitignore
 .DS_Store
+__pycache__/extra.cpython-36.pyc
+__pycache__/tileBase.cpython-36.pyc
+src/__pycache__/clock.cpython-36.pyc
+src/__pycache__/extra.cpython-36.pyc
+src/__pycache__/pygletWidget.cpython-36.pyc
+src/__pycache__/tileBase.cpython-36.pyc
+src/__pycache__/tileMapper.cpython-36.pyc
+.gitignore
+src/__pycache__/ui_mainGUI.cpython-36.pyc
+.gitignore

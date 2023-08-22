@@ -1,6 +1,8 @@
 import sys
 import pyglet
 import random
+import time
+
 
 from PyQt5 import QtGui
 from PyQt5 import QtCore, QtWidgets
@@ -14,6 +16,8 @@ from ui_mainGUI import Ui_MainWindow
 from tileMapper import TileMapper
 from extra import *
 
+from train import Train
+from clock import Clock
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -44,8 +48,12 @@ class MainWindow(QMainWindow):
         self.setMouseTracking(True)
         self.installEventFilter(self)
 
-        
+        #Setup Clock
+        Clock(self.ui)
+
+    
     def openMap(self):
+        Train(",.u",self.opengl,self.opengl.shapes,"9K94").drawTrain((50,50))
         self.tileMap = TileMapper(self.opengl,self.opengl.shapes)
         #try:
         self.tileMap.openFile(QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)"))

@@ -50,7 +50,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -61,13 +61,13 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="QGroupBox" name="groupBox">
+      <widget class="QGroupBox" name="TrainListBox">
        <property name="title">
         <string>Train List</string>
        </property>
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="TrainList">
           <row>
            <property name="text">
             <string/>
@@ -76,6 +76,11 @@
           <column>
            <property name="text">
             <string notr="true">Headcode </string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string notr="true">Next</string>
            </property>
           </column>
           <column>
@@ -90,15 +95,10 @@
           </column>
           <column>
            <property name="text">
-            <string notr="true">Next</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
             <string>Center</string>
            </property>
           </column>
-          <item row="0" column="1">
+          <item row="0" column="2">
            <property name="text">
             <string/>
            </property>
@@ -109,13 +109,13 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox_2">
+      <widget class="QGroupBox" name="TrainInfoBox">
        <property name="title">
-        <string>GroupBox</string>
+        <string>Train Information</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QTableWidget" name="tableWidget_2">
+        <item row="1" column="0">
+         <widget class="QTableWidget" name="TrainTimetable">
           <row>
            <property name="text">
             <string/>
@@ -138,11 +138,18 @@
           </column>
          </widget>
         </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="CurrentHeadcode">
+          <property name="text">
+           <string>HeadCode: Not Selected</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox_3">
+      <widget class="QGroupBox" name="TimingBox">
        <property name="title">
         <string>Timing</string>
        </property>
@@ -159,21 +166,34 @@
              </widget>
             </item>
             <item>
-             <widget class="QLCDNumber" name="lcdNumber"/>
+             <widget class="QLCDNumber" name="lcdNumber">
+              <property name="digitCount">
+               <number>8</number>
+              </property>
+              <property name="mode">
+               <enum>QLCDNumber::Dec</enum>
+              </property>
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Filled</enum>
+              </property>
+              <property name="value" stdset="0">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="playSimulation">
               <property name="text">
                <string>Play</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="pauseSimulation">
               <property name="text">
                <string>Pause</string>
               </property>
@@ -184,35 +204,35 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="times1Speed">
               <property name="text">
                <string>1x</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_5">
+             <widget class="QPushButton" name="times2Speed">
               <property name="text">
                <string>2x</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_6">
+             <widget class="QPushButton" name="times5Speed">
               <property name="text">
                <string>5x</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_7">
+             <widget class="QPushButton" name="times10Speed">
               <property name="text">
                <string>10x</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_8">
+             <widget class="QPushButton" name="times20Speed">
               <property name="text">
                <string>20x</string>
               </property>
@@ -227,22 +247,8 @@
      </item>
     </layout>
    </widget>
+   <zorder>layoutWidget</zorder>
    <zorder>openGLWidget</zorder>
-   <zorder>label_3</zorder>
-   <zorder>lcdNumber</zorder>
-   <zorder>pushButton_2</zorder>
-   <zorder>pushButton_3</zorder>
-   <zorder>pushButton_4</zorder>
-   <zorder>pushButton_5</zorder>
-   <zorder>pushButton_6</zorder>
-   <zorder>pushButton_7</zorder>
-   <zorder>pushButton_8</zorder>
-   <zorder>label_2</zorder>
-   <zorder>verticalSpacer</zorder>
-   <zorder>horizontalSpacer</zorder>
-   <zorder>groupBox</zorder>
-   <zorder>groupBox_2</zorder>
-   <zorder>groupBox_3</zorder>
    <zorder>CreateRect</zorder>
    <zorder>pushButton</zorder>
   </widget>
