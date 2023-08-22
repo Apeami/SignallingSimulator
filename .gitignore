@@ -18,3 +18,5 @@ src/__pycache__/tileMapper.cpython-36.pyc
 .gitignore
 src/__pycache__/ui_mainGUI.cpython-36.pyc
 .gitignore
+src/__pycache__/timetable.cpython-36.pyc
+src/__pycache__/train.cpython-36.pyc

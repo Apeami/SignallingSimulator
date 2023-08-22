@@ -18,6 +18,7 @@ from extra import *
 
 from train import Train
 from clock import Clock
+from timetable import Timetable
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -32,6 +33,7 @@ class MainWindow(QMainWindow):
         self.tileMap = None
 
         self.ui.actionOpen_Map.triggered.connect(self.openMap)
+        self.ui.actionOpen_Timetable.triggered.connect(self.openTimetable)
 
         self.ui.actionRed.triggered.connect(lambda: self.setSignal("Red"))
         self.ui.actionyellow.triggered.connect(lambda: self.setSignal("DYellow"))
@@ -53,7 +55,7 @@ class MainWindow(QMainWindow):
 
     
     def openMap(self):
-        Train(",.u",self.opengl,self.opengl.shapes,"9K94").drawTrain((50,50))
+        
         self.tileMap = TileMapper(self.opengl,self.opengl.shapes)
         #try:
         self.tileMap.openFile(QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)"))
@@ -62,6 +64,11 @@ class MainWindow(QMainWindow):
         #     popup = PopupWindow("File failed to open", "Error").exec_()
         self.opengl.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
         self.zoomToActualSize()
+
+    def openTimetable(self):
+        self.timetable = Timetable(self.opengl,self.opengl.shapes)
+        self.timetable.openFile(QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)"))
+        self.opengl.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
 
     def setSignal(self, type):
         if self.tileMap!=None:

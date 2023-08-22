@@ -5,6 +5,7 @@ class Train:
         self.openGlInstance = openGlInstance
         self.shape = shape
         self.headcode = headcode
+        self.trainCoord = [0,0]
 
         #self.headcode = trainData['Headcode']
         #self.maxSpeed = trainData['MaxSpeed']
@@ -21,9 +22,12 @@ class Train:
 
     def drawTrain(self,worldPos):
 
-        width, height = 40, 20
-        x = worldPos[0]+25 -(width/2)
-        y = worldPos[1]+25 -(height/2)
+        
+        self.width, self.height = 40, 20
+        x = worldPos[0]+25 -(self.width/2)
+        y = worldPos[1]+25 -(self.height/2)
+
+        self.trainCoord = [x,y]
 
         rectLayer = pyglet.graphics.OrderedGroup(2)
         textLayer = pyglet.graphics.OrderedGroup(3)
@@ -32,13 +36,13 @@ class Train:
         label = pyglet.text.Label(self.headcode,
             font_name='Arial',
             font_size=12,
-            x=x + width/2, y=y + height/2,
+            x=x + self.width/2, y=y + self.height/2,
             anchor_x='center', anchor_y='center',
             batch=self.openGlInstance.batch,
             group = textLayer
         )
 
-        rectangle_vertices = (x, y, x + width, y, x + width, y + height, x, y + height)
+        rectangle_vertices = (x, y, x + self.width, y, x + self.width, y + self.height, x, y + self.height)
         rectangle_colors = (255, 0, 0, 255, 0, 0, 255, 0, 0, 255, 0, 0)
         self.openGlInstance.batch.add(4, pyglet.gl.GL_QUADS,rectLayer,
               ('v2f', rectangle_vertices),
