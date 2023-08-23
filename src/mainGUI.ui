@@ -229,7 +229,11 @@
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
          <item row="0" column="0">
-          <widget class="QTextEdit" name="LogTextBox"/>
+          <widget class="QTextEdit" name="LogTextBox">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -237,8 +241,6 @@
      </layout>
     </item>
    </layout>
-   <zorder>layoutWidget</zorder>
-   <zorder>openGLWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

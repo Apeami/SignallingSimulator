@@ -10,6 +10,7 @@ from PyQt5.QtOpenGL import QGLWidget as OpenGLWidget
 from pyglet.gl import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtCore import Qt
+import logging
 
 from pygletWidget import PygletWidget
 from ui_mainGUI import Ui_MainWindow
@@ -19,21 +20,28 @@ from extra import *
 from train import Train
 from clock import Clock
 from timetable import Timetable
+from eventBox import EventBox
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        #Setui the ui and window
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
         self.setWindowTitle("Signalling Simulator")
 
+        #Get the opengl widget
         self.opengl = self.ui.openGLWidget
-        self.tileMap = None
 
+        #These are the maps to be loaded
+        self.tileMap = None
+        self.timetable = None
+
+        #Bind the actions
         self.ui.actionOpen_Map.triggered.connect(self.openMap)
         self.ui.actionOpen_Timetable.triggered.connect(self.openTimetable)
+        self.ui.actionNew_Simulation.triggered.connect(self.newMap)
 
         self.ui.actionRed.triggered.connect(lambda: self.setSignal("Red"))
         self.ui.actionyellow.triggered.connect(lambda: self.setSignal("DYellow"))
@@ -44,14 +52,26 @@ class MainWindow(QMainWindow):
 
         self.ui.actionZoom_In.triggered.connect(lambda: self.opengl.zoomScreen(1/1.2,self.opengl.width/2,self.opengl.height/2))
         self.ui.actionZoom_Out.triggered.connect(lambda: self.opengl.zoomScreen(1.2,self.opengl.width/2,self.opengl.height/2))
-        self.ui.actionActual_Size.triggered.connect(self.zoomToActualSize)
+        self.ui.actionActual_Size.triggered.connect(lambda: self.opengl.zoomToActualSize(self.tileMap))
 
-
+        #Enable events
         self.setMouseTracking(True)
         self.installEventFilter(self)
 
         #Setup Clock
         Clock(self.ui)
+
+        #Setup EventBox
+        self.textBox = self.ui.LogTextBox
+        self.textBox.setReadOnly(True)
+
+        self.logger = logging.getLogger("my_logger")
+        self.logger.setLevel(logging.INFO)
+
+        # Create a handler to direct log messages to the QTextEdit widget
+        handler = QtHandler(self.textBox)
+        self.logger.addHandler(handler)
+        self.logger.info("Started the simulator")
 
     
     def openMap(self):
@@ -63,12 +83,18 @@ class MainWindow(QMainWindow):
         #     print("File Failed to open")
         #     popup = PopupWindow("File failed to open", "Error").exec_()
         self.opengl.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
-        self.zoomToActualSize()
+        self.opengl.zoomToActualSize(self.tileMap)
 
     def openTimetable(self):
         self.timetable = Timetable(self.opengl,self.opengl.shapes,self.ui)
         self.timetable.openFile(QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)"))
         self.opengl.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
+
+    def newMap(self):
+        #AKA reset everything
+        self.timetable = None
+        self.tileMap = None
+        self.opengl.shapes = []
 
     def setSignal(self, type):
         if self.tileMap!=None:
@@ -79,25 +105,14 @@ class MainWindow(QMainWindow):
         if self.tileMap!=None:
             self.tileMap.togglePoint()
 
-    def zoomToActualSize(self):
+class QtHandler(logging.Handler):
+    def __init__(self, text_edit):
+        super().__init__()
+        self.text_edit = text_edit
 
-        zoomHeightOld = self.opengl.zoomed_height
-        prop = self.opengl.zoomed_width / self.opengl.zoomed_height
-
-        if self.tileMap.width>self.tileMap.height:
-            self.opengl.zoomed_width = self.tileMap.width*50
-            self.opengl.zoomed_height = self.opengl.zoomed_width /prop
-        else:
-            self.opengl.zoomed_height = self.tileMap.height*50
-            self.opengl.zoomed_width = self.opengl.zoomed_height * prop
-
-        self.opengl.left = 0
-        self.opengl.bottom = 0
-        self.opengl.right = self.opengl.zoomed_width
-        self.opengl.top = self.opengl.zoomed_height
-
-        self.opengl.zoom_level = self.opengl.zoom_level * (self.opengl.zoomed_height/zoomHeightOld)
-
+    def emit(self, record):
+        log_message = self.format(record)
+        self.text_edit.append(log_message)
 
 
 if __name__ == '__main__':    

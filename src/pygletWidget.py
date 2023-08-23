@@ -21,7 +21,7 @@ class PygletWidget(OpenGLWidget):
     def __init__(self, parent):
         super().__init__(parent)
         width, height = 1441, 521
-        self.setMinimumSize(width, height)
+        #self.setMinimumSize(width, height)
 
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self._pyglet_update)
@@ -91,7 +91,30 @@ class PygletWidget(OpenGLWidget):
         glPopMatrix()     
         
         
+    def resizeGL(self, width, height):
+        print("Resized to:", width, "x", height)
+        prevWidth  = self.width
+        prevHeight = self.height
 
+        prevZoomWidth = self.right - self.left
+        prevZoomHeight = self.bottom - self.top
+
+        CZoomWidth = (width * prevZoomWidth) // prevWidth
+        CZoomHeight = (height * prevZoomHeight) // prevHeight
+
+        self.right = self.left + CZoomWidth
+        self.top = self.bottom + CZoomHeight
+
+        self.zoom_level = 1
+        self.zoomed_width  = width
+        self.zoomed_height = height
+
+        self.width = width
+        self.height = height
+
+        self.zoomScreen(1.2,0,0)
+        self.zoomScreen(0.833,0,0)
+        #self.projection.set(self.width, self.height, self.width, self.height)
 
     def initializeGL(self):
         """Call anything that needs a context to be created."""
@@ -138,7 +161,7 @@ class PygletWidget(OpenGLWidget):
         self.zoomScreen(f,x,y)
 
     def zoomScreen(self, f,x,y):
-
+        print(f)
         # If zoom_level is in the proper range
         if .2 < self.zoom_level*f < 5:
             self.zoom_level *= f
@@ -164,3 +187,22 @@ class PygletWidget(OpenGLWidget):
             x = event.x()
             y = event.y()
             self.mousePressSignal.emit(x, y,self.left,self.right,self.top,self.bottom,self.width,self.height)  # Emit the signal with x and y coordinates
+
+    def zoomToActualSize(self,tilemap):
+
+        zoomHeightOld = self.zoomed_height
+        prop = self.zoomed_width / self.zoomed_height
+
+        if tilemap.width>tilemap.height:
+            self.zoomed_width = tilemap.width*50
+            self.zoomed_height = self.zoomed_width /prop
+        else:
+            self.zoomed_height = tilemap.height*50
+            self.zoomed_width = self.zoomed_height * prop
+
+        self.left = 0
+        self.bottom = 0
+        self.right = self.zoomed_width
+        self.top = self.zoomed_height
+
+        self.zoom_level = self.zoom_level * (self.zoomed_height/zoomHeightOld)
