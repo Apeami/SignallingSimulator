@@ -2,7 +2,7 @@ import pyglet
 import random
 
 class TileBase:
-    def __init__(self, openGlInstance, imagePath, point,flip ,location, clickable=False):
+    def __init__(self, openGlInstance, batch, imagePath, point,flip ,location, clickable=False):
         print("tilebase Create")
 
         #Image creation
@@ -18,13 +18,14 @@ class TileBase:
         self.openGlInstance = openGlInstance
         self.location = location
         self.flip=flip
+        self.batch = batch
 
         #Sprite managment
 
         if self.flip:
             image = image.get_texture().get_transform(flip_y=True)  
 
-        self.sprite = pyglet.sprite.Sprite(image, batch=openGlInstance.batch)
+        self.sprite = pyglet.sprite.Sprite(image, batch=self.batch)
 
         self.sprite.anchor_x = self.width // 2
         self.sprite.anchor_y = self.height // 2
@@ -66,7 +67,7 @@ class TileBase:
             self.handleClickOff()
         else:
             image = pyglet.image.load("Assets/select.png")
-            self.highlight = pyglet.sprite.Sprite(image, batch=self.openGlInstance.batch)
+            self.highlight = pyglet.sprite.Sprite(image, batch=self.batch)
             self.highlight.update(self.location[0], self.location[1])
             self.openGlInstance.shapes.append(self.highlight)
             self.highlighted=True
@@ -80,13 +81,13 @@ class TileBase:
 
 
 class TrackTile(TileBase):
-    def __init__(self, openGlInstance, imagePath, point, flip,location,distance, clickable=False):
-        super().__init__(openGlInstance, imagePath, point,flip ,location, clickable)
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,distance, clickable=False):
+        super().__init__(openGlInstance,batch, imagePath, point,flip ,location, clickable)
         self.distance = distance
 
 class SignalTile(TrackTile):
-    def __init__(self, openGlInstance, imagePath, point, flip,location, clickable=False, signal="Red"):
-        super().__init__(openGlInstance, imagePath, point,flip ,location,50, clickable)
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location, clickable=False, signal="Red"):
+        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,50, clickable)
         self.signal = signal
 
     def setSignal(self,signal):
@@ -112,8 +113,8 @@ class SignalTile(TrackTile):
 
 
 class PointTile(TrackTile):
-    def __init__(self, openGlInstance, imagePath, point, flip,location, clickable=False, diverge=False):
-        super().__init__(openGlInstance, imagePath, point,flip ,location,50, clickable)
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location, clickable=False, diverge=False):
+        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,50, clickable)
         self.diverge=diverge
 
     def togglePoint(self):

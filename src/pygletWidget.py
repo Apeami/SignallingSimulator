@@ -42,6 +42,7 @@ class PygletWidget(OpenGLWidget):
         self.camera_scale = 1
 
         self.shapes = []
+        self.batchList = {}
 
 
 
@@ -86,6 +87,9 @@ class PygletWidget(OpenGLWidget):
         glEnd()
 
         self.batch.draw()
+
+        for batch in self.batchList:
+            self.batchList[batch].draw()
 
         # Remove default modelview matrix
         glPopMatrix()     
@@ -206,3 +210,15 @@ class PygletWidget(OpenGLWidget):
         self.top = self.zoomed_height
 
         self.zoom_level = self.zoom_level * (self.zoomed_height/zoomHeightOld)
+
+    def createNewBatch(self, name):
+        batch = pyglet.graphics.Batch()
+
+        self.batchList[name] = batch
+
+        return batch
+
+    def removeBatch(self, name):
+        if name in self.batchList:
+            del self.batchList[name]
+

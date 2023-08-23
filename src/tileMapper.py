@@ -15,6 +15,8 @@ class TileMapper:
         self.map_name = ""
         self.shapes = shape
 
+        self.tileBatch = self.openGlInstance.createNewBatch("tileMapper")
+
     def openFile(self, fileName):
 
         #Read from the json file
@@ -47,19 +49,19 @@ class TileMapper:
 
             # Determine the tile type and create the appropriate tile object
             if type == "signalTrack":
-                tileObj = SignalTile(self.openGlInstance, "assets/trackRedSignal.png", point, flip, realCoord)
+                tileObj = SignalTile(self.openGlInstance,self.tileBatch, "assets/trackRedSignal.png", point, flip, realCoord)
             elif type == "contTrack":
-                tileObj = TileBase(self.openGlInstance, "assets/trackContinuation.png", point, flip, realCoord)
+                tileObj = TileBase(self.openGlInstance,self.tileBatch, "assets/trackContinuation.png", point, flip, realCoord)
             elif type == "platTrack":
-                tileObj = TileBase(self.openGlInstance, "assets/platform.png", point, flip, realCoord)
+                tileObj = TileBase(self.openGlInstance,self.tileBatch, "assets/platform.png", point, flip, realCoord)
             elif type == "track":
-                tileObj = TrackTile(self.openGlInstance, "assets/trackHorizontal.png", point, flip, realCoord, tile['distance'])
+                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackHorizontal.png", point, flip, realCoord, tile['distance'])
             elif type == "pointTrack":
-                tileObj = PointTile(self.openGlInstance, "assets/pointStraight.png", point, flip, realCoord)
+                tileObj = PointTile(self.openGlInstance, self.tileBatch, "assets/pointStraight.png", point, flip, realCoord)
             elif type == "curveTrack":
-                tileObj = TileBase(self.openGlInstance, "assets/trackCurve.png", point, flip, realCoord)
+                tileObj = TileBase(self.openGlInstance, self.tileBatch, "assets/trackCurve.png", point, flip, realCoord)
             elif type == "bufferTrack":
-                tileObj = TileBase(self.openGlInstance, "assets/trackBuffer.png", point, flip, realCoord)
+                tileObj = TileBase(self.openGlInstance, self.tileBatch, "assets/trackBuffer.png", point, flip, realCoord)
 
             # Assign the created tile object to the appropriate location in the tile map
             self.tileMap[row][column] = tileObj
@@ -80,7 +82,7 @@ class TileMapper:
                 x=realCoord[0], y=realCoord[1],  # Position of the text label
                 anchor_x="center", anchor_y="center",  # Anchoring at the center
                 color=(255, 255, 255, 255),  # Text color in RGBA format (white in this case)
-                batch=self.openGlInstance.batch,
+                batch=self.tileBatch,
             )
         
     #This function opens the file.
@@ -128,3 +130,6 @@ class TileMapper:
                 if tile!=None and tile.highlighted==True and isinstance(tile, PointTile):
                     print("Toggling Point")
                     tile.togglePoint()  
+
+    def delete(self):
+        self.openGlInstance.removeBatch("tileMapper")

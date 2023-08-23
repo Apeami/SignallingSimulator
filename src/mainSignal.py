@@ -8,7 +8,7 @@ from PyQt5 import QtGui
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtOpenGL import QGLWidget as OpenGLWidget
 from pyglet.gl import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
 from PyQt5.QtCore import Qt
 import logging
 
@@ -76,25 +76,81 @@ class MainWindow(QMainWindow):
     
     def openMap(self):
         
+        if self.tileMap!=None:
+            confirm_box = QMessageBox(self)
+            confirm_box.setIcon(QMessageBox.Question)
+            confirm_box.setWindowTitle('Confirmation')
+            confirm_box.setText('You have a map open already, are you sure you want to open another one?')
+            confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            confirm_box.setDefaultButton(QMessageBox.No)
+
+            button_clicked = confirm_box.exec_()
+
+            if button_clicked == QMessageBox.No:
+                return
+
+        self.timetable = None
         self.tileMap = TileMapper(self.opengl,self.opengl.shapes)
-        #try:
-        self.tileMap.openFile(QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)"))
-        # except: 
-        #     print("File Failed to open")
-        #     popup = PopupWindow("File failed to open", "Error").exec_()
+
+        fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
+        print(fileName)
+        if fileName!=('', ''):
+            try:
+                self.tileMap.openFile(fileName)
+            except:
+                print("File Failed to open")
+                popup = WarningBox("File failed to open", "Error").exec_()
+                self.tileMap=None
+                return
+        else:
+            print("File Search cancelled")
+            self.tileMap=None
+            return
+
+
+        #Connect the mouse and zoom to the map
         self.opengl.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
         self.opengl.zoomToActualSize(self.tileMap)
 
     def openTimetable(self):
-        self.timetable = Timetable(self.opengl,self.opengl.shapes,self.ui)
-        self.timetable.openFile(QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)"))
-        self.opengl.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
+
+        if self.tileMap!=None:
+            if self.timetable!=None:
+                confirm_box = QMessageBox(self)
+                confirm_box.setIcon(QMessageBox.Question)
+                confirm_box.setWindowTitle('Confirmation')
+                confirm_box.setText('You have a timetable open already, are you sure you want to open another one?')
+                confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                confirm_box.setDefaultButton(QMessageBox.No)
+
+                button_clicked = confirm_box.exec_()
+
+                if button_clicked == QMessageBox.No:
+                    return
+
+            self.timetable = Timetable(self.opengl,self.opengl.shapes,self.ui)
+            fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
+            if fileName!=('',''):
+                self.timetable.openFile(fileName)
+            else:
+                print("File Search Cancelled")
+                self.timetable=None
+                return
+            self.opengl.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
+        else:
+            print("No Tilemap imported")
+            popup = WarningBox("No map imported yet. Cannot import timetable", "Info").exec_()
 
     def newMap(self):
         #AKA reset everything
+        if self.timetable!=None:
+            self.timetable.delete()
+        if self.tileMap!=None:
+            self.tileMap.delete()
         self.timetable = None
         self.tileMap = None
         self.opengl.shapes = []
+        
 
     def setSignal(self, type):
         if self.tileMap!=None:

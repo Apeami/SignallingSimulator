@@ -17,6 +17,8 @@ class Timetable:
         self.trainTimetable = self.ui.TrainTimetable
         self.trainListTable = self.ui.TrainList
 
+        self.trainBatch = self.openGlInstance.createNewBatch("trainList")
+
     def openFile(self,fileName):
         #Read from the json file
         timetableData = self.load_json_from_file(fileName)
@@ -28,7 +30,7 @@ class Timetable:
         trainData = timetableData["Trains"]
 
         for train in trainData:
-            self.trainList.append(Train(train,self.openGlInstance,self.shape))
+            self.trainList.append(Train(train,self.trainBatch,self.shape))
 
         
         self.trainList[0].drawTrain((50,50))
@@ -85,17 +87,13 @@ class Timetable:
         mapX = left + propX * (right-left)
         mapY = top + propY * (bottom-top)
 
-        print("Start")
-        print(mapX)
-        print(mapY)
         
         index = 0
         for train in self.trainList:
-            print(train.trainCoord)
-            print(train.width)
-            print(train.height)
             if mapX>train.trainCoord[0] and mapX<train.trainCoord[0]+train.width and mapY>train.trainCoord[1] and mapY<train.trainCoord[1]+train.height:
-                print("Train Click")
                 self.selectedTrainIndex = index
                 self.updateTrainInformation()
             index = index + 1
+
+    def delete(self):
+        self.openGlInstance.removeBatch("trainList")

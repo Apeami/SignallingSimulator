@@ -1,8 +1,8 @@
 import pyglet
 
 class Train:
-    def __init__(self,trainData,openGlInstance,shape):
-        self.openGlInstance = openGlInstance
+    def __init__(self,trainData,batch,shape):
+        self.batch = batch
         self.shape = shape
         self.trainCoord = [0,0]
 
@@ -34,18 +34,20 @@ class Train:
         textLayer = pyglet.graphics.OrderedGroup(3)
 
         # Draw text on the rectangle
-        label = pyglet.text.Label(self.headcode,
+        self.label = pyglet.text.Label(self.headcode,
             font_name='Arial',
             font_size=12,
             x=x + self.width/2, y=y + self.height/2,
             anchor_x='center', anchor_y='center',
-            batch=self.openGlInstance.batch,
+            batch=self.batch,
             group = textLayer
         )
 
         rectangle_vertices = (x, y, x + self.width, y, x + self.width, y + self.height, x, y + self.height)
         rectangle_colors = (255, 0, 0, 255, 0, 0, 255, 0, 0, 255, 0, 0)
-        self.openGlInstance.batch.add(4, pyglet.gl.GL_QUADS,rectLayer,
+        self.rectangle = self.batch.add(4, pyglet.gl.GL_QUADS,rectLayer,
               ('v2f', rectangle_vertices),
               ('c3B', rectangle_colors))
+    
+
 
