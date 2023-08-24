@@ -13,7 +13,7 @@
 
 
     "data" : [ 
-        { "row": 1, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"WestIn","distance":1000 },
+        { "row": 1, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"WestOut","distance":1000 },
         { "row": 1, "column": 1, "type": "signalTrack", "point":"west","flip":false,"distance":1000 },
         { "row": 1, "column": 2, "type": "platTrack","point":"west","flip":false, "waypoint":"Station1" },
         { "row": 1, "column": 3, "type": "platTrack","point":"west","flip":false},
@@ -24,7 +24,7 @@
         { "row": 1, "column": 8, "type": "track","point":"west","flip":false,"distance":1000},
         { "row": 1, "column": 9, "type": "pointTrack","point":"west","flip":true},
 
-        { "row": 2, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"WestOut","distance":1000},
+        { "row": 2, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"WestIn","distance":1000},
         { "row": 2, "column": 1, "type": "signalTrack", "point":"east","flip":false,"distance":1000},
         { "row": 2, "column": 2, "type": "platTrack","point":"east","flip":false, "waypoint":"Station1" },
         { "row": 2, "column": 3, "type": "platTrack","point":"east","flip":false},
@@ -42,7 +42,7 @@
         { "row": 1, "column": 14, "type": "signalTrack","point":"west","flip":false,"distance":1000},
         { "row": 1, "column": 15, "type": "track","point":"west","flip":false,"distance":1000},
         { "row": 1, "column": 16, "type": "track","point":"west","flip":false,"distance":1000},
-        { "row": 1, "column": 17, "type": "contTrack","point":"east","flip":false,"waypoint":"EastOut","distance":1000},
+        { "row": 1, "column": 17, "type": "contTrack","point":"east","flip":false,"waypoint":"EastIn","distance":1000},
 
         { "row": 0, "column": 11, "type": "curveTrack","point":"west","flip":true,"distance":50},
         { "row": 0, "column": 12, "type": "signalTrack","point":"west","flip":false,"distance":50},
@@ -56,7 +56,7 @@
         { "row": 2, "column": 14, "type": "signalTrack","point":"east","flip":false,"distance":1000},
         { "row": 2, "column": 15, "type": "track","point":"east","flip":false,"distance":1000},
         { "row": 2, "column": 16, "type": "track","point":"east","flip":false,"distance":1000},
-        { "row": 2, "column": 17, "type": "contTrack","point":"east","flip":false,"waypoint":"EastIn","distance":1000}
+        { "row": 2, "column": 17, "type": "contTrack","point":"east","flip":false,"waypoint":"EastOut","distance":1000}
         
     ]     
 }

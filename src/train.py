@@ -1,4 +1,5 @@
 import pyglet
+from tileBase import *
 
 class Train:
     def __init__(self,trainData,batch,shape,tileMapper):
@@ -18,7 +19,9 @@ class Train:
         self.width, self.height = 40, 20
 
         self.exist = False
-        
+        self.currentTile = None
+
+        self.prevDistance = None
 
     def updateEvent(self,time):
 
@@ -31,11 +34,13 @@ class Train:
 
             if event['Action'] =='Spawn':
                 spawnName = event['Location']
-                coord = self.tileMapper.getCoordFromName(spawnName)
+                tempTile = self.tileMapper.getCoordFromName(spawnName)
+                self.currentTile = [tempTile[0],tempTile[1]]
                 self.tileProgress = 0
-                self.tileObj = self.tileMapper.tileMap[coord[0]][coord[1]]
+                self.tileObj = self.tileMapper.tileMap[self.currentTile[0]][self.currentTile[1]]
                 self.entryToTile = self.tileObj.getDefaultStartDir()
                 worldCoord = self.tileObj.getWorldCoordFromProgress(self.tileProgress,self.entryToTile)
+                self.prevDistance = self.tileObj.distance
                 self.drawTrain(worldCoord)
                 self.exist=True
             if self.currentEvent<len(self.sorted_schedule)-1:
@@ -49,6 +54,32 @@ class Train:
         realDistanceIncrease = speed * timeIncrease
         progressInclease = realDistanceIncrease / (self.tileObj.distance/1000)
         self.tileProgress = self.tileProgress +progressInclease 
+
+        if isinstance(self.tileObj, SignalTile) and self.tileObj.signal=="Red":
+                self.tileProgress=0        
+
+        if self.tileProgress>1:
+            nextTileAdder = self.tileObj.getNextTileAdd(self.entryToTile)
+            self.currentTile[0] = self.currentTile[0] + nextTileAdder[0]
+            self.currentTile[1] = self.currentTile[1] + nextTileAdder[1]
+            self.tileObj = self.tileMapper.tileMap[self.currentTile[0]][self.currentTile[1]]
+            print("NextPos")
+            print(self.tileProgress)
+
+            if isinstance(self.tileObj, SignalTile) and self.tileObj.signal=="Red":
+                    self.tileProgress=0
+            else:
+                tileProgressRemainder = self.tileProgress - 1
+
+                #self.tileProgress = tileProgressRemainder
+                
+                print(tileProgressRemainder)
+                print(self.prevDistance / self.tileObj.distance)
+                self.tileProgress = tileProgressRemainder * (self.prevDistance / self.tileObj.distance)
+                print(self.tileProgress)
+                self.prevDistance = self.tileObj.distance
+
+
         return self.tileObj.getWorldCoordFromProgress(self.tileProgress,self.entryToTile)
 
 

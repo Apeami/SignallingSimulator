@@ -118,12 +118,22 @@ class TrackTile(TileBase):
         if self.point =="north":
             return "south"
         
+    def getNextTileAdd(self,startDir):
+        if startDir == "east":
+            return (0,1)
+        elif startDir == "west":
+            return (0,-1)
+        elif startDir == "north":
+            return (1,0)
+        elif startDir == "south":
+            return (-1,0)
+        
 
 
 
 class SignalTile(TrackTile):
     def __init__(self, openGlInstance,batch, imagePath, point, flip,location, clickable=False, signal="Red"):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,50, clickable)
+        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,100, clickable)
         self.signal = signal
 
     def setSignal(self,signal):
