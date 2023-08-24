@@ -3,8 +3,9 @@ from PyQt5.QtCore import QTimer, QTime
 
 
 class Clock:
-    def __init__(self, ui):
+    def __init__(self, ui, function,startTime):
         self.ui = ui
+        self.function = function
 
         #initialize buttons
         self.lcd = ui.lcdNumber
@@ -34,7 +35,15 @@ class Clock:
         self.counter = 0
 
         #Manage initial time
-        initial_time = QTime(7, 30, 00)
+        second = startTime
+        hour = second // 3600
+        second %= 3600
+        minute = second // 60
+        second %= 60
+        print(hour)
+        print(minute)
+        print(second)
+        initial_time = QTime(hour, minute, second)
         self.counter = initial_time.hour() * 3600 + initial_time.minute() * 60 + initial_time.second()
 
 
@@ -52,8 +61,8 @@ class Clock:
             self.timer.start(1000 // self.speed)
 
     def update_lcd(self):
-        self.counter += 1
         time = QTime(0, 0).addSecs(self.counter)
         time_str = time.toString("hh:mm:ss")
         self.lcd.display(time_str)
-        print("Second Tick")
+        self.function(self.counter)
+        self.counter += 1

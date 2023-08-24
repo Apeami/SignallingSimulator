@@ -1,28 +1,30 @@
 {
     "MapName":"Test Example Map",
-    "SimTime":15,
+    "EndTime":"7:10:00",
     "StartTime": "07:00:00",
     "Trains": [
         {
             "Headcode": "9k34",
             "MaxSpeed": 100,
             "Destination": "Faraway Station 1",
+            "LoadTime" : "7:00:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": 0, "Location": "WestIn" },
-                { "Action": "Stop", "Time": 1, "Location": "Station 1" },
-                { "Action": "Stop", "Time": 4, "Location": "Station 2" },
-                { "Action": "Despawn", "Time": 6, "Location": "EastOut" }
+                { "Action": "Spawn", "Time": "7:01:00", "Location": "WestIn" },
+                { "Action": "Stop", "Time": "7:01:00", "Location": "Station 1" },
+                { "Action": "Stop", "Time": "7:04:00", "Location": "Station 2" },
+                { "Action": "Despawn", "Time": "7:02:00", "Location": "EastOut" }
             ]
         },
         {
             "Headcode": "2m17",
             "MaxSpeed": 120,
             "Destination": "Faraway Station 2",
+            "LoadTime" : "7:01:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": 0, "Location": "EastIn" },
-                { "Action": "Stop", "Time": 2, "Location": "Station 2" },
-                { "Action": "Stop", "Time": 5, "Location": "Station 1" },
-                { "Action": "Despawn", "Time": 7, "Location": "WestOut" }
+                { "Action": "Spawn", "Time": "7:02:00", "Location": "EastIn" },
+                { "Action": "Stop", "Time": "7:03:00", "Location": "Station 2" },
+                { "Action": "Stop", "Time": "7:05:00", "Location": "Station 1" },
+                { "Action": "Despawn", "Time": "7:07:00", "Location": "WestOut" }
             ]
         }
     ]

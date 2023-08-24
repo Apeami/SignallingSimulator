@@ -15,6 +15,8 @@ class TileMapper:
         self.map_name = ""
         self.shapes = shape
 
+        self.tileDimension = 50
+
         self.tileBatch = self.openGlInstance.createNewBatch("tileMapper")
 
     def openFile(self, fileName):
@@ -31,10 +33,10 @@ class TileMapper:
         self.tileMap = [[None for _ in range(self.width)] for _ in range(self.height)]
 
         # Extract the 'data' field from the trackData dictionary
-        map_data = trackData["data"]
+        self.map_data = trackData["data"]
 
         # Iterate through each tile in the map data
-        for tile in map_data:
+        for tile in self.map_data:
             # Extract row and column values for the current tile
             row = tile['row']
             column = tile['column']
@@ -51,15 +53,15 @@ class TileMapper:
             if type == "signalTrack":
                 tileObj = SignalTile(self.openGlInstance,self.tileBatch, "assets/trackRedSignal.png", point, flip, realCoord)
             elif type == "contTrack":
-                tileObj = TileBase(self.openGlInstance,self.tileBatch, "assets/trackContinuation.png", point, flip, realCoord)
+                tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/trackContinuation.png", point, flip, realCoord,1000)
             elif type == "platTrack":
-                tileObj = TileBase(self.openGlInstance,self.tileBatch, "assets/platform.png", point, flip, realCoord)
+                tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/platform.png", point, flip, realCoord,100)
             elif type == "track":
                 tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackHorizontal.png", point, flip, realCoord, tile['distance'])
             elif type == "pointTrack":
                 tileObj = PointTile(self.openGlInstance, self.tileBatch, "assets/pointStraight.png", point, flip, realCoord)
             elif type == "curveTrack":
-                tileObj = TileBase(self.openGlInstance, self.tileBatch, "assets/trackCurve.png", point, flip, realCoord)
+                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackCurve.png", point, flip, realCoord,100)
             elif type == "bufferTrack":
                 tileObj = TileBase(self.openGlInstance, self.tileBatch, "assets/trackBuffer.png", point, flip, realCoord)
 
@@ -133,3 +135,10 @@ class TileMapper:
 
     def delete(self):
         self.openGlInstance.removeBatch("tileMapper")
+
+    def getCoordFromName(self,name):
+        for tile in self.map_data:
+            if "waypoint" in tile:
+                if tile['waypoint']==name:
+                    return (tile['row'],tile['column'])
+                

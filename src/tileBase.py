@@ -81,9 +81,45 @@ class TileBase:
 
 
 class TrackTile(TileBase):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,distance, clickable=False):
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,distance, clickable=False,dimension = 50):
         super().__init__(openGlInstance,batch, imagePath, point,flip ,location, clickable)
         self.distance = distance
+        self.dimension = dimension
+
+
+
+    def getWorldCoordFromProgress(self, progress, startDir):
+
+        if startDir == "east":
+            self.startCoord = (self.location[0] - self.dimension/2, self.location[1])
+            self.endCoord = (self.location[0] + self.dimension/2, self.location[1])
+        elif startDir == "west":
+            self.startCoord = (self.location[0] + self.dimension/2, self.location[1])
+            self.endCoord = (self.location[0] - self.dimension/2, self.location[1])
+        elif startDir == "north":
+            self.startCoord = (self.location[0], self.location[1] + self.dimension/2)
+            self.endCoord = (self.location[0], self.location[1] - self.dimension/2)
+        elif startDir == "south":
+            self.startCoord = (self.location[0], self.location[1] - self.dimension/2)
+            self.endCoord = (self.location[0], self.location[1] + self.dimension/2)
+
+        current_x = self.startCoord[0] + (self.endCoord[0] - self.startCoord[0]) * progress
+        current_y = self.startCoord[1] + (self.endCoord[1] - self.startCoord[1]) * progress
+        return (current_x, current_y)
+
+    
+    def getDefaultStartDir(self):
+        if self.point =="east":
+            return "west"
+        if self.point =="west":
+            return "east"
+        if self.point =="north":
+            return "south"
+        if self.point =="north":
+            return "south"
+        
+
+
 
 class SignalTile(TrackTile):
     def __init__(self, openGlInstance,batch, imagePath, point, flip,location, clickable=False, signal="Red"):

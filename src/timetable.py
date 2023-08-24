@@ -5,13 +5,17 @@ from train import Train
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtCore import Qt
 
+from datetime import datetime, timedelta
+from extra import *
+
 class Timetable:
-    def __init__(self,openGlInstance,shape,ui):
+    def __init__(self,openGlInstance,shape,ui,tileMapper):
         self.openGlInstance=openGlInstance
         self.shape = shape
         self.ui = ui
         self.trainList = []
         self.selectedTrainIndex = None
+        self.tileMapper = tileMapper
 
         self.headcodeLabel = self.ui.CurrentHeadcode
         self.trainTimetable = self.ui.TrainTimetable
@@ -19,24 +23,48 @@ class Timetable:
 
         self.trainBatch = self.openGlInstance.createNewBatch("trainList")
 
+        self.end = False
+
+
+    def updateClock(self, time):
+
+        if time == self.endTime:
+            print("Simulation Ended")
+            WarningBox("The simulation has ended because the alloted time has passed", "Info").exec_()
+            self.end = True
+        if self.end==False:
+            for train in self.trainData:
+                if self.time_to_seconds(train['LoadTime']) == time:
+                    #load the train in
+                    for event in train['Schedule']:
+                        event['Time'] = self.time_to_seconds(event['Time'])
+                    self.trainList.append(Train(train,self.trainBatch,self.shape,self.tileMapper))
+                    self.updateTrainList()
+
+            for activeTrain in self.trainList:
+                activeTrain.updateEvent(time)
+
     def openFile(self,fileName):
         #Read from the json file
         timetableData = self.load_json_from_file(fileName)
 
         #Extract track metadata and dimensions from loaded JSON data.
         self.map_name = timetableData["MapName"]
-        self.simTime = timetableData["SimTime"]
         
-        trainData = timetableData["Trains"]
+        self.trainData = timetableData["Trains"]
 
-        for train in trainData:
-            self.trainList.append(Train(train,self.trainBatch,self.shape))
+        self.startTime = self.time_to_seconds(timetableData['StartTime'])
+        self.endTime = self.time_to_seconds(timetableData['EndTime'])
+
+
+        # for train in trainData:
+        #     self.trainList.append(Train(train,self.trainBatch,self.shape))
 
         
-        self.trainList[0].drawTrain((50,50))
-        self.trainList[1].drawTrain((150,50))
+        # self.trainList[0].drawTrain((50,50))
+        # self.trainList[1].drawTrain((150,50))
 
-        self.updateTrainList()
+        # self.updateTrainList()
 
     #This function opens the file.
     def load_json_from_file(self, file_path):
@@ -97,3 +125,11 @@ class Timetable:
 
     def delete(self):
         self.openGlInstance.removeBatch("trainList")
+
+    def time_to_seconds(self,time_str):
+        time_format = "%H:%M:%S"
+        midnight = datetime.strptime("00:00:00", time_format)
+        time = datetime.strptime(time_str, time_format)
+        seconds_past_midnight = (time - midnight).seconds
+        return seconds_past_midnight
+    

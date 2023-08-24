@@ -58,8 +58,6 @@ class MainWindow(QMainWindow):
         self.setMouseTracking(True)
         self.installEventFilter(self)
 
-        #Setup Clock
-        Clock(self.ui)
 
         #Setup EventBox
         self.textBox = self.ui.LogTextBox
@@ -128,7 +126,7 @@ class MainWindow(QMainWindow):
                 if button_clicked == QMessageBox.No:
                     return
 
-            self.timetable = Timetable(self.opengl,self.opengl.shapes,self.ui)
+            self.timetable = Timetable(self.opengl,self.opengl.shapes,self.ui, self.tileMap)
             fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
             if fileName!=('',''):
                 self.timetable.openFile(fileName)
@@ -137,6 +135,10 @@ class MainWindow(QMainWindow):
                 self.timetable=None
                 return
             self.opengl.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
+            #Here is when the timetable is loaded, the simulation can begin
+            #Setup Clock
+            self.clock = Clock(self.ui,self.timetable.updateClock,self.timetable.startTime)
+
         else:
             print("No Tilemap imported")
             popup = WarningBox("No map imported yet. Cannot import timetable", "Info").exec_()
