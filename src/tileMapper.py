@@ -53,7 +53,7 @@ class TileMapper:
             if type == "signalTrack":
                 tileObj = SignalTile(self.openGlInstance,self.tileBatch, "assets/trackRedSignal.png", point, flip, realCoord)
             elif type == "contTrack":
-                tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/trackContinuation.png", point, flip, realCoord,1000)
+                tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/trackContinuation.png", point, flip, realCoord,tile['distance'])
             elif type == "platTrack":
                 tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/platform.png", point, flip, realCoord,100)
             elif type == "track":
@@ -61,9 +61,11 @@ class TileMapper:
             elif type == "pointTrack":
                 tileObj = PointTile(self.openGlInstance, self.tileBatch, "assets/pointStraight.png", point, flip, realCoord)
             elif type == "curveTrack":
-                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackCurve.png", point, flip, realCoord,100)
+                tileObj = CurveTile(self.openGlInstance, self.tileBatch, "assets/trackCurve.png", point, flip, realCoord,tile['distance'])
             elif type == "bufferTrack":
                 tileObj = TileBase(self.openGlInstance, self.tileBatch, "assets/trackBuffer.png", point, flip, realCoord)
+            elif type == "diagonalTrack":
+                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackDiagonal.png", point, flip, realCoord,tile['distance'])
 
             # Assign the created tile object to the appropriate location in the tile map
             self.tileMap[row][column] = tileObj
@@ -141,4 +143,10 @@ class TileMapper:
             if "waypoint" in tile:
                 if tile['waypoint']==name:
                     return (tile['row'],tile['column'])
+                
+    def getNameFromCoord(self,coord):
+        for tile in self.map_data:
+            if tile['row'] == coord[0] and tile['column'] == coord[1]:
+                if "waypoint" in tile:
+                    return tile['waypoint']
                 

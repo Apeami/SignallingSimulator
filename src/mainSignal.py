@@ -93,13 +93,13 @@ class MainWindow(QMainWindow):
         fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
         print(fileName)
         if fileName!=('', ''):
-            try:
-                self.tileMap.openFile(fileName)
-            except:
-                print("File Failed to open")
-                popup = WarningBox("File failed to open", "Error").exec_()
-                self.tileMap=None
-                return
+            #try:
+            self.tileMap.openFile(fileName)
+            # except:
+            #     print("File Failed to open")
+            #     popup = WarningBox("File failed to open", "Error").exec_()
+            #     self.tileMap=None
+            #     return
         else:
             print("File Search cancelled")
             self.tileMap=None

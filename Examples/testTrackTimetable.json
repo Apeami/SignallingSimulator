@@ -10,9 +10,9 @@
             "LoadTime" : "7:00:00",
             "Schedule": [
                 { "Action": "Spawn", "Time": "7:01:00", "Location": "WestIn" },
-                { "Action": "Stop", "Time": "7:01:00", "Location": "Station 1" },
-                { "Action": "Stop", "Time": "7:04:00", "Location": "Station 2" },
-                { "Action": "Despawn", "Time": "7:02:00", "Location": "EastOut" }
+                { "Action": "Stop", "Time": "7:03:00", "Location": "Station 1" },
+                { "Action": "Stop", "Time": "7:06:00", "Location": "Station 2" },
+                { "Action": "Despawn", "Time": "7:09:00", "Location": "EastOut" }
             ]
         },
         {

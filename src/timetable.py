@@ -28,6 +28,9 @@ class Timetable:
 
     def updateClock(self, time):
 
+        # if self.selectedTrainIndex!=None:
+        #     self.updateTrainInformation(time)
+
         if time == self.endTime:
             print("Simulation Ended")
             WarningBox("The simulation has ended because the alloted time has passed", "Info").exec_()
@@ -79,7 +82,8 @@ class Timetable:
         for train in self.trainList:
             self.trainListTable.setItem(rowNum, 0, QTableWidgetItem(train.headcode)) #Headcode
             self.trainListTable.setItem(rowNum, 1, QTableWidgetItem(train.sorted_schedule[train.currentEvent]['Location'])) #Next Station
-            self.trainListTable.setItem(rowNum, 2, QTableWidgetItem(str(train.sorted_schedule[train.currentEvent]['Time']))) #Time of next arrival
+
+            self.trainListTable.setItem(rowNum, 2, QTableWidgetItem(self.secondsToTime(train.sorted_schedule[train.currentEvent]['Time']))) #Time of next arrival
             self.trainListTable.setItem(rowNum, 3, QTableWidgetItem(train.destination)) #FinalDestination
             self.trainListTable.setItem(rowNum, 4, QTableWidgetItem(train.sorted_schedule[-1]['Location'])) #End Section
             self.trainListTable.setItem(rowNum, 5, QTableWidgetItem(""))
@@ -101,10 +105,26 @@ class Timetable:
         self.trainTimetable.setRowCount(len(train.sorted_schedule))  # Number of rows
 
         for row, item in enumerate(train.sorted_schedule):
-            for col, value in enumerate(item.values()):
-                cell_item = QTableWidgetItem(str(value))
-                cell_item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-                self.trainTimetable.setItem(row, col, cell_item)
+            # if item['Time']< time:
+            #     for col in range(4):
+            #         highlighted_item = self.trainTimetable.item(row, col)  # Assuming you want to highlight the first cell of the row
+            #         highlighted_item.setBackground(Qt.red)
+            self.trainTimetable.setItem(row, 0, QTableWidgetItem(self.secondsToTime(item['Time']))) #Time
+            self.trainTimetable.setItem(row, 1, QTableWidgetItem(item['Action'])) #Action
+
+            self.trainTimetable.setItem(row, 2, QTableWidgetItem(item['Location'])) #Location
+            self.trainTimetable.setItem(row, 3, QTableWidgetItem("")) #Center
+
+
+            for col in range(self.trainTimetable.columnCount()):
+                cell_item = self.trainTimetable.item(row, col)
+                if cell_item is not None:
+                    cell_item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+
+            # for col, value in enumerate(item.values()):
+            #     cell_item = QTableWidgetItem(str(value))
+            #     cell_item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+            #     self.trainTimetable.setItem(row, col, cell_item)
 
         self.trainTimetable.resizeColumnsToContents()
 
@@ -133,3 +153,10 @@ class Timetable:
         seconds_past_midnight = (time - midnight).seconds
         return seconds_past_midnight
     
+    def secondsToTime(self,startTime):
+        second = startTime
+        hour = second // 3600
+        second %= 3600
+        minute = second // 60
+        second %= 60
+        return f"{hour:02}:{minute:02}:{second:02}"

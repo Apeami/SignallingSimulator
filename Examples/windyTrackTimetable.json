@@ -1,0 +1,17 @@
+{
+    "MapName":"WindyMap",
+    "EndTime":"7:10:00",
+    "StartTime": "07:00:00",
+    "Trains": [
+        {
+            "Headcode": "9k34",
+            "MaxSpeed": 100,
+            "Destination": "Faraway Station 1",
+            "LoadTime" : "7:00:00",
+            "Schedule": [
+                { "Action": "Spawn", "Time": "7:00:10", "Location": "In" },
+                { "Action": "Despawn", "Time": "7:10:00", "Location": "Out" }
+            ]
+        }
+    ]
+}

@@ -40,9 +40,6 @@ class Clock:
         second %= 3600
         minute = second // 60
         second %= 60
-        print(hour)
-        print(minute)
-        print(second)
         initial_time = QTime(hour, minute, second)
         self.counter = initial_time.hour() * 3600 + initial_time.minute() * 60 + initial_time.second()
 
