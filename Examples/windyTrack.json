@@ -9,7 +9,7 @@
     ],
 
     "data" : [ 
-        { "row": 1, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"In","distance":500 },
+        { "row": 1, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"In","connect":"None","distance":500 },
         { "row": 1, "column": 1, "type": "curveTrack", "point": "east","flip":false,"distance":500 },
         { "row": 2, "column": 2, "type": "diagonalTrack", "point": "west","flip":true,"distance":500 },
         { "row": 3, "column": 3, "type": "curveTrack", "point": "south","flip":true,"distance":500 },
@@ -77,7 +77,7 @@
         { "row": 11, "column": 9, "type": "track", "point": "east","flip":false,"distance":500 },
         { "row": 11, "column": 8, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
         { "row": 11, "column": 7, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 11, "column": 6, "type": "contTrack", "point": "west","flip":false,"distance":500,"connect":"OutTop" },
+        { "row": 11, "column": 6, "type": "contTrack", "point": "west","flip":false,"distance":500,"connect":"Top" },
 
         { "row": 10, "column": 16, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
         { "row": 10, "column": 15, "type": "track", "point": "east","flip":false,"distance":500 },
@@ -89,9 +89,9 @@
         { "row": 10, "column": 9, "type": "track", "point": "east","flip":false,"distance":500 },
         { "row": 10, "column": 8, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
         { "row": 10, "column": 7, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 10, "column": 6, "type": "contTrack", "point": "west","flip":false,"distance":500,"connect":"OutBottom" },
+        { "row": 10, "column": 6, "type": "contTrack", "point": "west","flip":false,"distance":500,"connect":"Bottom" },
 
-        { "row": 13, "column": 18, "type": "contTrack", "point": "east","flip":false,"distance":500,"connect":"InTop" },
+        { "row": 13, "column": 18, "type": "contTrack", "point": "east","flip":false,"distance":500,"connect":"Top" },
         { "row": 13, "column": 17, "type": "track", "point": "west","flip":false,"distance":500 },
         { "row": 13, "column": 16, "type": "bufferTrack", "point": "west","flip":false,"distance":500}
 

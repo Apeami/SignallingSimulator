@@ -127,10 +127,20 @@ class Train:
         if self.tileProgress>0.5 and not self.tileIncreased: #Get Next Tile Obj
             self.tileIncreased = True
             nextTileAdder = self.tileObj.getNextTileAdd(self.entryToTile)
-            self.currentTile[0] = self.currentTile[0] + nextTileAdder[0]
-            self.currentTile[1] = self.currentTile[1] + nextTileAdder[1]
+            print(nextTileAdder)
+            if nextTileAdder[0]=="tele":
+                self.currentTile[0] = nextTileAdder[2][0]
+                self.currentTile[1] = nextTileAdder[2][1]
+                self.entryToTile = (nextTileAdder[1][0],nextTileAdder[1][1])
+            else:
+                self.currentTile[0] = self.currentTile[0] + nextTileAdder[0]
+                self.currentTile[1] = self.currentTile[1] + nextTileAdder[1]
+                self.entryToTile = (-nextTileAdder[0],-nextTileAdder[1])  
+
+   
+
             self.tileObjNext = self.tileMapper.tileMap[self.currentTile[0]][self.currentTile[1]]
-            self.entryToTile = (-nextTileAdder[0],-nextTileAdder[1])
+            
             self.manageNewTile()
         elif self.tileProgress>1: #Move to the next tile
             self.tileObj = self.tileObjNext

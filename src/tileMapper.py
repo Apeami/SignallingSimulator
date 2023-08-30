@@ -43,6 +43,7 @@ class TileMapper:
 
             # Convert tile coordinates to real coordinates on the screen
             realCoord = self.tileToCoord((column, row))
+            tileCoord = (column,row)
 
             # Extract properties of the tile
             type = tile['type']
@@ -51,27 +52,31 @@ class TileMapper:
 
             # Determine the tile type and create the appropriate tile object
             if type == "signalTrack":
-                tileObj = SignalTile(self.openGlInstance,self.tileBatch, "assets/trackRedSignal.png", point, flip, realCoord)
+                tileObj = SignalTile(self.openGlInstance,self.tileBatch, "assets/trackRedSignal.png", point, flip, realCoord,tileCoord)
             elif type == "contTrack":
-                tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/trackContinuation.png", point, flip, realCoord,tile['distance'])
+
+                tileObj = PortalTile(self.openGlInstance,self.tileBatch, "assets/trackContinuation.png", point, flip, realCoord,tileCoord,tile['distance'],self.tileMap,tile.get('connect', None))
             elif type == "platTrack":
-                tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/platform.png", point, flip, realCoord,100)
+                tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/platform.png", point, flip, realCoord,tileCoord,100)
             elif type == "track":
-                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackHorizontal.png", point, flip, realCoord, tile['distance'])
+                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackHorizontal.png", point, flip, realCoord,tileCoord, tile['distance'])
             elif type == "pointTrack":
-                tileObj = PointTile(self.openGlInstance, self.tileBatch, "assets/pointStraight.png", point, flip, realCoord)
+                tileObj = PointTile(self.openGlInstance, self.tileBatch, "assets/pointStraight.png", point, flip, realCoord,tileCoord)
             elif type == "curveTrack":
-                tileObj = CurveTile(self.openGlInstance, self.tileBatch, "assets/trackCurve.png", point, flip, realCoord,tile['distance'])
+                tileObj = CurveTile(self.openGlInstance, self.tileBatch, "assets/trackCurve.png", point, flip, realCoord,tileCoord,tile['distance'])
             elif type == "bufferTrack":
-                tileObj = TileBase(self.openGlInstance, self.tileBatch, "assets/trackBuffer.png", point, flip, realCoord)
+                tileObj = TileBase(self.openGlInstance, self.tileBatch, "assets/trackBuffer.png", point, flip, realCoord,tileCoord)
             elif type == "diagonalTrack":
-                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackDiagonal.png", point, flip, realCoord,tile['distance'])
+                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackDiagonal.png", point, flip, realCoord,tileCoord,tile['distance'])
 
             # Assign the created tile object to the appropriate location in the tile map
             self.tileMap[row][column] = tileObj
 
         # Extract text data from trackData
         textData = trackData['text']
+
+        #Configure the signal tile
+        self.signalTileConfigure()
 
         # Iterate through each text object in textData
         for textObject in textData:
@@ -149,4 +154,36 @@ class TileMapper:
             if tile['row'] == coord[0] and tile['column'] == coord[1]:
                 if "waypoint" in tile:
                     return tile['waypoint']
+
+    def findNextSignal(self,tile,tileDirection):
+        if isinstance(tile,SignalTile):
+            return tile
+        entryDir = [-tileDirection[0],-tileDirection[1]]
+        coords = tile.getEntryAndExitCoord()
+
+        tileList =[]
+        for coord in coords:
+            if coord!=entryDir:
+                newTile = self.tileMap[tile.tileCoord[0]+coord[0]][tile.tileCoord[1]+coord[1]]
+                tileList.extend(self.findNextSignal(newTile,coord))
+        return tileList
+
+
+
+    def signalTileConfigure(self):
+        print("SignalTileConfig")
+        for row in self.tileMap:
+            for column in row:
+                if isinstance(column,SignalTile):
+                    tile = column
+                    startDir = tile.getDefaultStartDir()
+                    entryLoc = [-startDir[0],-startDir[1]]
+                    print(startDir)
+                    print(tile.tileCoord)
+                    print(tile.tileCoord[1]+startDir[0])
+                    print(tile.tileCoord[0]+startDir[1])
+                    newTile = self.tileMap[tile.tileCoord[1]+startDir[0]][tile.tileCoord[0]+startDir[1]]
+                    print(newTile)
+                    tileList = self.findNextSignal(newTile,entryLoc)
+                    print(tileList)
                 

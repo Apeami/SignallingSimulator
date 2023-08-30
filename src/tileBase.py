@@ -1,8 +1,9 @@
 import pyglet
 import random
+import math
 
 class TileBase:
-    def __init__(self, openGlInstance, batch, imagePath, point,flip ,location, clickable=False):
+    def __init__(self, openGlInstance, batch, imagePath, point,flip ,location,tileCoord,clickable=False):
         print("tilebase Create")
 
         #Image creation
@@ -19,6 +20,8 @@ class TileBase:
         self.location = location
         self.flip=flip
         self.batch = batch
+        self.tileCoord = tileCoord
+        self.tileLoc = (math.floor(self.location[0]/50), math.floor(self.location[1]/50))
 
         #Sprite managment
 
@@ -83,8 +86,8 @@ class TileBase:
 
 
 class TrackTile(TileBase):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,distance, clickable=False,dimension = 50):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location, clickable)
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord,distance, clickable=False,dimension = 50):
+        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,tileCoord, clickable)
         self.distance = distance
         self.dimension = dimension
 
@@ -104,16 +107,16 @@ class TrackTile(TileBase):
         elif startDir == (1,0):
             self.startCoord = (self.location[0], self.location[1] + self.dimension/2)
             self.endCoord = (self.location[0], self.location[1] - self.dimension/2)
-        elif startDir == (1,1):
+        elif startDir == (-1,-1):
             self.startCoord = (self.location[0]- self.dimension/2, self.location[1] - self.dimension/2)
             self.endCoord = (self.location[0]+ self.dimension/2, self.location[1] + self.dimension/2)
-        elif startDir == (-1,-1):
+        elif startDir == (1,1):
             self.startCoord = (self.location[0]+ self.dimension/2, self.location[1] + self.dimension/2)
             self.endCoord = (self.location[0]- self.dimension/2, self.location[1] - self.dimension/2)
-        elif startDir == (1,-1):
+        elif startDir == (-1,1):
             self.startCoord = (self.location[0]- self.dimension/2, self.location[1] + self.dimension/2)
             self.endCoord = (self.location[0]+ self.dimension/2, self.location[1] - self.dimension/2)
-        elif startDir == (-1,1):
+        elif startDir == (1,-1):
             self.startCoord = (self.location[0]+ self.dimension/2, self.location[1] - self.dimension/2)
             self.endCoord = (self.location[0]- self.dimension/2, self.location[1] + self.dimension/2)
 
@@ -122,7 +125,12 @@ class TrackTile(TileBase):
         current_y = self.startCoord[1] + (self.endCoord[1] - self.startCoord[1]) * progress
         return (current_x, current_y)
 
-    
+    def getEntryAndExitCoord(self):
+        if self.point=="east" or self.point=="west":
+            return((0,1),(0,-1))
+        elif self.point=="north" or self.point=="south":
+            return((1,0),(-1,0))
+
     def getDefaultStartDir(self):
         if self.point =="east":
             return (0,1)
@@ -134,21 +142,24 @@ class TrackTile(TileBase):
             return (1,0)
         
     def getNextTileAdd(self,startDir):
-        if startDir == (0,1):
-            return (0,-1)
-        elif startDir == (0,-1):
-            return (0,1)
-        elif startDir == (1,0):
-            return (-1,0)
-        elif startDir == (-1,0):
-            return (1,0)
+        return (-startDir[0],-startDir[1])
+        # if startDir == (0,1):
+        #     return (0,-1)
+        # elif startDir == (0,-1):
+        #     return (0,1)
+        # elif startDir == (1,0):
+        #     return (-1,0)
+        # elif startDir == (-1,0):
+        #     return (1,0)
+        # else:
+        #     return (0,0)
         
 
 
 
 class SignalTile(TrackTile):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location, clickable=False, signal="Red"):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,100, clickable)
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord, clickable=False, signal="Red"):
+        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,tileCoord,100, clickable)
         self.signal = signal
 
     def setSignal(self,signal):
@@ -174,8 +185,8 @@ class SignalTile(TrackTile):
 
 
 class CurveTile(TrackTile):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,distance, clickable=False):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,distance, clickable)
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,distance,tileCoord, clickable=False):
+        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,distance,tileCoord, clickable)
         self.exit = None
 
     def getEntryAndExitCoord(self):
@@ -206,10 +217,6 @@ class CurveTile(TrackTile):
 
         EntryA, EntryB = self.getEntryAndExitCoord()
 
-        print("PROGRESS CURVE")
-        print(EntryA)
-        print(EntryB)
-
         if EntryA == startDir:
             exit = EntryB
             entry = EntryA
@@ -220,20 +227,29 @@ class CurveTile(TrackTile):
             print("No matching entry")
             exit = (0,0)
             entry = (0,0)
-        self.exit = exit
-        self.startCoord = (self.location[0] +(entry[1]*self.dimension/2), self.location[0] +(entry[0]*self.dimension/2))
-        self.endCoord = (self.location[0] +(exit[1]*self.dimension/2), self.location[0] +(exit[0]*self.dimension/2))
 
-        current_x = self.startCoord[0] + (self.endCoord[0] - self.startCoord[0]) * progress
-        current_y = self.startCoord[1] + (self.endCoord[1] - self.startCoord[1]) * progress
+        
+        self.exit = exit
+        self.startCoord = (self.location[0] +(entry[1]*self.dimension/2), self.location[1] +(entry[0]*self.dimension/2))
+        self.endCoord = (self.location[0] +(exit[1]*self.dimension/2), self.location[1] +(exit[0]*self.dimension/2))
+        #midCoord = self.location
+
+
+        if progress<0.5:
+            current_x = self.startCoord[0] + (self.location[0] - self.startCoord[0]) * (progress*2)
+            current_y = self.startCoord[1] + (self.location[1] - self.startCoord[1]) * (progress*2)
+        elif progress>=0.5:
+            current_x = self.location[0] + (self.endCoord[0] - self.location[0]) * ((progress-0.5)*2)
+            current_y = self.location[1] + (self.endCoord[1] - self.location[1]) * ((progress-0.5)*2)
+
         return (current_x, current_y)
     
     def getNextTileAdd(self, startDir):
         return self.exit
 
 class PointTile(CurveTile):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location, clickable=False, diverge=False):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,50, clickable)
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord, clickable=False, diverge=False):
+        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,tileCoord,50, clickable)
         self.diverge=diverge
 
     def togglePoint(self):
@@ -253,30 +269,75 @@ class PointTile(CurveTile):
         self.sprite.image = new_image
 
     def getWorldCoordFromProgress(self, progress, startDir):
-        # self.point
-        # self.flip
-        # startDir
-        # self.diverge
+        if self.diverge:
+            return super().getWorldCoordFromProgress(progress, startDir)
+        else:
+            return super(CurveTile, self).getWorldCoordFromProgress(progress, startDir)
 
-        self.startCoord = (self.location[0] -(startDir[1]*self.dimension/2), self.location[0] -(startDir[0]*self.dimension/2))
 
-        endDir = (0,0)
+    def getEntryAndExitCoord(self):
+        curveComponent = super().getEntryAndExitCoord()
+        straightComponent = super(CurveTile,self).getEntryAndExitCoord()
 
-        if self.diverge ==False:
-            endDir = startDir
+        finalComponent =[]
 
-        # if self.point =="east":
-        #     if self.flip ==True:
-        #         if self.startDir ==(0,1):
-        #             if self.diverge:
-        #                 endDir = (0,1)
-        #             else:
-        #                 endDir = (-1,1)
-        #         if self.startDir == (0,-1) and self.diverge:
-        #             endDir = (0,-1)
+        for item in curveComponent:
+            if item not in finalComponent:
+                finalComponent.append(item)
+        for item in straightComponent:
+            if item not in finalComponent:
+                finalComponent.append(item)
+
+    def getNextTileAdd(self, startDir):
+        if self.diverge:
+            return super().getNextTileAdd(startDir)
+        else:
+            return super(CurveTile, self).getNextTileAdd(startDir)
+
+
+class PortalTile(TrackTile):
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord,distance, tilemap, connect ,clickable=False):
+        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,tileCoord,distance, clickable)
+        self.tilemap = tilemap
+        self.connect = connect
 
 
 
     def getNextTileAdd(self, startDir):
-        pass
+        nextStartDir = (0,0)
+        teleport = False
 
+        if self.point =="east":
+            nextStartDir= (0,-1)
+            if startDir==(0,1):
+                return nextStartDir
+        elif self.point =="west":
+            nextStartDir= (0,1)
+            if startDir==(0,-1):
+                return nextStartDir
+        elif self.point =="south":
+            nextStartDir= (-1,0)
+            if startDir==(1,0):
+                return nextStartDir
+        elif self.point =="north" :
+            nextStartDir= (1,0)
+            if startDir==(-1,0):
+                return nextStartDir
+            
+        
+        #WE go to the portal tile
+        for row in range(len(self.tilemap)):
+            for column in range(len(self.tilemap[row])):
+                tile = self.tilemap[row][column]
+                if isinstance(tile,PortalTile):
+                    print("TILE CONNECT")
+                    print(tile.connect)
+                    print(self.connect)
+                    if tile.connect == self.connect:
+                        print("POSSIBLE MATCH")
+                        print((row,column))
+                        print(self.tileLoc)
+                        print(tile.tileLoc)
+                        if self.tileLoc != tile.tileLoc:
+                            return ("tele",tile.getDefaultStartDir(),(row,column))
+        return (0,0)
