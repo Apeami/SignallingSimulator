@@ -17,6 +17,11 @@ class TileMapper:
 
         self.tileDimension = 50
 
+        self.highLightedTile = None
+
+        self.autoTrackInitialTile = None
+        self.routingInitialTile = None
+
         self.tileBatch = self.openGlInstance.createNewBatch("tileMapper")
 
     def openFile(self, fileName):
@@ -65,7 +70,7 @@ class TileMapper:
             elif type == "curveTrack":
                 tileObj = CurveTile(self.openGlInstance, self.tileBatch, "assets/trackCurve.png", point, flip, realCoord,tileCoord,tile['distance'])
             elif type == "bufferTrack":
-                tileObj = TileBase(self.openGlInstance, self.tileBatch, "assets/trackBuffer.png", point, flip, realCoord,tileCoord)
+                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackBuffer.png", point, flip, realCoord,tileCoord,tile['distance'])
             elif type == "diagonalTrack":
                 tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackDiagonal.png", point, flip, realCoord,tileCoord,tile['distance'])
 
@@ -124,6 +129,21 @@ class TileMapper:
                     tile.handleClickOff()
         if 0<=pressedCoord[1]<self.height and 0<=pressedCoord[0]<self.width and self.tileMap[pressedCoord[1]][pressedCoord[0]]!=None:
             self.tileMap[pressedCoord[1]][pressedCoord[0]].handleClick()
+            self.handleClickOnTile(self.tileMap[pressedCoord[1]][pressedCoord[0]])
+
+    def handleClickOnTile(self, tile):
+        self.highLightedTile = tile
+        print(tile.tileCoord)
+
+        if self.routingInitialTile!=None:
+            firstTile = self.routingInitialTile
+            secondTile = self.highLightedTile
+            self.routingInitialTile=None
+
+        if self.autoTrackInitialTile!=None:
+            firstTile = self.autoTrackInitialTile
+            secondTile = self.highLightedTile
+            self.autoTrackInitialTile = None
 
     #This are used to set the signal of any highlighted tile.
     def setSignal(self,type):
@@ -132,6 +152,12 @@ class TileMapper:
                 if tile!=None and tile.highlighted==True and isinstance(tile, SignalTile):
                     print("CHanging to: ", type)
                     tile.setSignal(type)
+
+        for j in range(4):
+            for i in self.tileMap:
+                for tile in i:
+                    if tile!=None and isinstance(tile, SignalTile):
+                        tile.updateSignal()
 
     def togglePoint(self):
         for i in self.tileMap:
@@ -155,18 +181,56 @@ class TileMapper:
                 if "waypoint" in tile:
                     return tile['waypoint']
 
-    def findNextSignal(self,tile,tileDirection):
-        if isinstance(tile,SignalTile):
-            return tile
-        entryDir = [-tileDirection[0],-tileDirection[1]]
+    def findNextSignal(self, tile, tileDirection, visited=None):
+
+        if visited is None:
+            visited = set()
+
+        if tile is None or tile.tileCoord in visited:
+            return []
+
+        print("FINDING NEXT SIGNAL")
+        print("TileLocation")
+        print(tile.tileCoord)
+        print("Search Direction")
+        print(tileDirection)
+
+        visited.add(tile.tileCoord)
+
+        if isinstance(tile, SignalTile):
+            print("ReturningTile")
+            print(tile.tileCoord)
+            return [tile]
+
+        entryDir = (-tileDirection[0], -tileDirection[1])
         coords = tile.getEntryAndExitCoord()
 
-        tileList =[]
+        print("directional Coords")
+        print(coords)
+        print("entry Dir")
+        print(entryDir)
+
+        tileList = []
         for coord in coords:
-            if coord!=entryDir:
-                newTile = self.tileMap[tile.tileCoord[0]+coord[0]][tile.tileCoord[1]+coord[1]]
-                tileList.extend(self.findNextSignal(newTile,coord))
+            if coord != entryDir:
+                newTileCoordX = tile.tileCoord[0] + coord[1]
+                newTileCoordY = tile.tileCoord[1] + coord[0]
+
+                newTile = self.tileMap[newTileCoordY][newTileCoordX]
+                print("Calling Function")
+                print("Direction Coord")
+                print(coord)
+                print("X")
+                print(newTileCoordX)
+                print("Y")
+                print(newTileCoordY)
+                result = self.findNextSignal(newTile, coord, visited)
+                #result = []
+                for i in result:
+                    tileList.append(i)
+
         return tileList
+
 
 
 
@@ -177,13 +241,31 @@ class TileMapper:
                 if isinstance(column,SignalTile):
                     tile = column
                     startDir = tile.getDefaultStartDir()
-                    entryLoc = [-startDir[0],-startDir[1]]
-                    print(startDir)
-                    print(tile.tileCoord)
-                    print(tile.tileCoord[1]+startDir[0])
-                    print(tile.tileCoord[0]+startDir[1])
+                    entryLoc = (startDir[0],startDir[1])
                     newTile = self.tileMap[tile.tileCoord[1]+startDir[0]][tile.tileCoord[0]+startDir[1]]
-                    print(newTile)
                     tileList = self.findNextSignal(newTile,entryLoc)
-                    print(tileList)
+
+                    print("SIGNAL OUTPUT")
+                    print("InputTile")
+                    print(tile.tileCoord)
+                    print("OUTPUT TILE LIST")
+                    for item in tileList:
+                        print(item.tileCoord)
+                    print("End of SIGNAL tile config")
+
+                    tile.nextSignalList = tileList
+
+                    if len(tileList)==0:
+                        tile.lastSignal = True
+
+                    tile.updateSignal()
                 
+
+    def manageAutoTrack(self):
+        self.autoTrackInitialTile = self.highLightedTile
+
+    def manageTrainRoute(self):
+        self.routingInitialTile = self.highLightedTile
+
+    def manageDeleteRouting(self):
+        print("Managing delete route")

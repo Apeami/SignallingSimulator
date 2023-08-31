@@ -303,6 +303,7 @@
    <addaction name="separator"/>
    <addaction name="actionAuto_Track"/>
    <addaction name="actionRoute_Train"/>
+   <addaction name="actionDeleteRouting"/>
   </widget>
   <action name="actionRed">
    <property name="text">
@@ -403,6 +404,11 @@
    </property>
    <property name="text">
     <string>Warnings</string>
+   </property>
+  </action>
+  <action name="actionDeleteRouting">
+   <property name="text">
+    <string>DeleteRouting</string>
    </property>
   </action>
  </widget>

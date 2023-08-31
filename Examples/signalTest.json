@@ -1,0 +1,26 @@
+{
+    "name" : "Windy Map",
+    "grid_size" : {
+        "rows" : 15,
+        "columns" : 25
+    },
+
+    "text" : [
+    ],
+
+    "data" : [ 
+        { "row": 0, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"In","connect":"None","distance":500 },
+        { "row": 0, "column": 1, "type": "signalTrack", "point": "east","flip":false,"distance":500 },
+        { "row": 0, "column": 2, "type": "track", "point": "west","flip":true,"distance":500 },
+        { "row": 0, "column": 3, "type": "signalTrack", "point": "east","flip":true,"distance":500 },
+        { "row": 0, "column": 4, "type": "track", "point": "west","flip":true,"distance":500 },
+        { "row": 0, "column": 5, "type": "signalTrack", "point": "east","flip":true,"distance":500 },
+        { "row": 0, "column": 6, "type": "track", "point": "west","flip":true,"distance":500 },
+        { "row": 0, "column": 7, "type": "signalTrack", "point": "east","flip":true,"distance":500 },
+        { "row": 0, "column": 8, "type": "track", "point": "west","flip":true,"distance":500 },
+        { "row": 0, "column": 9, "type": "signalTrack", "point": "east","flip":true,"distance":500 },
+        { "row": 0, "column": 10, "type": "track", "point": "west","flip":true,"distance":500 },
+        { "row": 0, "column": 11, "type": "signalTrack", "point": "east","flip":true,"distance":500 },
+        { "row": 0, "column": 12, "type": "bufferTrack", "point": "east","flip":true,"distance":500 }
+    ]
+}   

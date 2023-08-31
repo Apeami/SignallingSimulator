@@ -105,6 +105,11 @@ class MainWindow(QMainWindow):
             self.tileMap=None
             return
 
+        #Connect the actions related routing
+        self.ui.actionAuto_Track.triggered.connect(self.tileMap.manageAutoTrack)
+        self.ui.actionRoute_Train.triggered.connect(self.tileMap.manageTrainRoute)
+        self.ui.actionDeleteRouting.triggered.connect(self.tileMap.manageDeleteRouting)
+
 
         #Connect the mouse and zoom to the map
         self.opengl.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)

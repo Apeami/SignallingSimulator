@@ -194,6 +194,8 @@ class Ui_MainWindow(object):
         self.actionWarnings = QtWidgets.QAction(MainWindow)
         self.actionWarnings.setCheckable(True)
         self.actionWarnings.setObjectName("actionWarnings")
+        self.actionDeleteRouting = QtWidgets.QAction(MainWindow)
+        self.actionDeleteRouting.setObjectName("actionDeleteRouting")
         self.menuFile.addAction(self.actionNew_Simulation)
         self.menuFile.addAction(self.actionOpen_Map)
         self.menuFile.addAction(self.actionOpen_Timetable)
@@ -219,6 +221,7 @@ class Ui_MainWindow(object):
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionAuto_Track)
         self.toolBar.addAction(self.actionRoute_Train)
+        self.toolBar.addAction(self.actionDeleteRouting)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -275,4 +278,5 @@ class Ui_MainWindow(object):
         self.actionToggle_Grid.setText(_translate("MainWindow", "Toggle Grid"))
         self.actionErrors.setText(_translate("MainWindow", "Errors"))
         self.actionWarnings.setText(_translate("MainWindow", "Warnings"))
+        self.actionDeleteRouting.setText(_translate("MainWindow", "DeleteRouting"))
 from pygletWidget import PygletWidget
