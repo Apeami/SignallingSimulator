@@ -3,6 +3,8 @@ import pyglet
 import json
 from PyQt5.QtCore import Qt
 import math
+from extra import WarningBox
+from routing import *
 
 
 class TileMapper:
@@ -21,6 +23,9 @@ class TileMapper:
 
         self.autoTrackInitialTile = None
         self.routingInitialTile = None
+
+        self.autoTrackObjects = []
+        self.routingObjects = []
 
         self.tileBatch = self.openGlInstance.createNewBatch("tileMapper")
 
@@ -133,17 +138,22 @@ class TileMapper:
 
     def handleClickOnTile(self, tile):
         self.highLightedTile = tile
+        print("Handle Click on Tile")
         print(tile.tileCoord)
-
+        print(self.autoTrackInitialTile)
         if self.routingInitialTile!=None:
+            print("Route Track Manage")
             firstTile = self.routingInitialTile
             secondTile = self.highLightedTile
             self.routingInitialTile=None
+            self.routingObjects.append(RoutingTrack(firstTile,secondTile,self))
 
         if self.autoTrackInitialTile!=None:
+            print("Auto Track Manage")
             firstTile = self.autoTrackInitialTile
             secondTile = self.highLightedTile
             self.autoTrackInitialTile = None
+            self.autoTrackObjects.append(AutoTrack(firstTile,secondTile,self))
 
     #This are used to set the signal of any highlighted tile.
     def setSignal(self,type):
@@ -181,57 +191,6 @@ class TileMapper:
                 if "waypoint" in tile:
                     return tile['waypoint']
 
-    def findNextSignal(self, tile, tileDirection, visited=None):
-
-        if visited is None:
-            visited = set()
-
-        if tile is None or tile.tileCoord in visited:
-            return []
-
-        print("FINDING NEXT SIGNAL")
-        print("TileLocation")
-        print(tile.tileCoord)
-        print("Search Direction")
-        print(tileDirection)
-
-        visited.add(tile.tileCoord)
-
-        if isinstance(tile, SignalTile):
-            print("ReturningTile")
-            print(tile.tileCoord)
-            return [tile]
-
-        entryDir = (-tileDirection[0], -tileDirection[1])
-        coords = tile.getEntryAndExitCoord()
-
-        print("directional Coords")
-        print(coords)
-        print("entry Dir")
-        print(entryDir)
-
-        tileList = []
-        for coord in coords:
-            if coord != entryDir:
-                newTileCoordX = tile.tileCoord[0] + coord[1]
-                newTileCoordY = tile.tileCoord[1] + coord[0]
-
-                newTile = self.tileMap[newTileCoordY][newTileCoordX]
-                print("Calling Function")
-                print("Direction Coord")
-                print(coord)
-                print("X")
-                print(newTileCoordX)
-                print("Y")
-                print(newTileCoordY)
-                result = self.findNextSignal(newTile, coord, visited)
-                #result = []
-                for i in result:
-                    tileList.append(i)
-
-        return tileList
-
-
 
 
     def signalTileConfigure(self):
@@ -240,10 +199,7 @@ class TileMapper:
             for column in row:
                 if isinstance(column,SignalTile):
                     tile = column
-                    startDir = tile.getDefaultStartDir()
-                    entryLoc = (startDir[0],startDir[1])
-                    newTile = self.tileMap[tile.tileCoord[1]+startDir[0]][tile.tileCoord[0]+startDir[1]]
-                    tileList = self.findNextSignal(newTile,entryLoc)
+                    tileList = BranchSignalTile(self).getSignalList(tile)
 
                     print("SIGNAL OUTPUT")
                     print("InputTile")
@@ -269,3 +225,7 @@ class TileMapper:
 
     def manageDeleteRouting(self):
         print("Managing delete route")
+        for route in self.autoTrackObjects:
+            route.deleteIfSelected(self.highLightedTile)
+        for route in self.routingObjects:
+            route.deleteIfSelected(self.highLightedTile)

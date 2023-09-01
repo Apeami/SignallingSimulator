@@ -3,17 +3,19 @@ import random
 import math
 from extra import ReplacableImage
 
+
 class TileBase:
     def __init__(self, openGlInstance, batch, imagePath, point,flip ,location,tileCoord,clickable=False):
         print("tilebase Create")
 
         #Image creation
         image = ReplacableImage(imagePath)
-        image.set_replacement_color((0,255,255))
+        image.set_replacement_color((255,255,255))
         image = image.render()
         #image = pyglet.image.load(imagePath)
 
         #Variable and constant creation
+        self.imagePath = imagePath
         self.width = image.width
         self.height = image.height
         self.point = point
@@ -26,6 +28,7 @@ class TileBase:
         self.batch = batch
         self.tileCoord = tileCoord
         self.tileLoc = (math.floor(self.location[0]/50), math.floor(self.location[1]/50))
+        self.color = (255,255,255)
 
         #Sprite managment
 
@@ -67,6 +70,16 @@ class TileBase:
         self.openGlInstance.shapes.append(self.sprite)
 
         
+    def changeColor(self, color):
+        self.color = color
+        new_image = ReplacableImage(self.imagePath)
+        new_image.set_replacement_color(color)
+        new_image = new_image.render()
+
+        if self.flip:
+            new_image = new_image.get_texture().get_transform(flip_y=True)  
+
+        self.sprite.image = new_image
 
     def remove_from_batch(self):
         self.sprite.delete()
@@ -129,7 +142,7 @@ class TrackTile(TileBase):
         current_y = self.startCoord[1] + (self.endCoord[1] - self.startCoord[1]) * progress
         return (current_x, current_y)
 
-    def getEntryAndExitCoord(self):
+    def getEntryAndExitCoord(self,entryDir = None, currentStatus = False):
         if self.point=="east" or self.point=="west":
             return((0,1),(0,-1))
         elif self.point=="north" or self.point=="south":
@@ -225,8 +238,9 @@ class SignalTile(TrackTile):
 
         #new_image = pyglet.image.load(newImagePath)
         new_image = ReplacableImage(newImagePath)
-        new_image.set_replacement_color((0,255,255))
+        new_image.set_replacement_color(self.color)
         new_image = new_image.render()
+        self.imagePath = newImagePath
 
         if self.flip:
             new_image = new_image.get_texture().get_transform(flip_y=True)  
@@ -239,7 +253,7 @@ class CurveTile(TrackTile):
         super().__init__(openGlInstance,batch, imagePath, point,flip ,location,distance,tileCoord, clickable)
         self.exit = None
 
-    def getEntryAndExitCoord(self):
+    def getEntryAndExitCoord(self,entryDir=None, currentStatus = False):
         entry = super().getDefaultStartDir()
         noDiverge = (-entry[0],-entry[1])
 
@@ -325,18 +339,40 @@ class PointTile(CurveTile):
             return super(CurveTile, self).getWorldCoordFromProgress(progress, startDir)
 
 
-    def getEntryAndExitCoord(self):
+    def getEntryAndExitCoord(self, entryDir=None, currentStatus = False):
         curveComponent = super().getEntryAndExitCoord()
         straightComponent = super(CurveTile,self).getEntryAndExitCoord()
 
-        finalComponent =[]
+        if currentStatus==True:
+            if self.diverge==True:
+                return curveComponent
+            elif self.diverge==False:
+                return straightComponent
 
-        for item in curveComponent:
-            if item not in finalComponent:
-                finalComponent.append(item)
-        for item in straightComponent:
-            if item not in finalComponent:
-                finalComponent.append(item)
+        if currentStatus==False:
+            mixedComponent =[]
+
+            for item in curveComponent:
+                if item not in mixedComponent:
+                    mixedComponent.append(item)
+            for item in straightComponent:
+                if item not in mixedComponent:
+                    mixedComponent.append(item)
+
+            if entryDir==None:
+                return mixedComponent
+
+            print("GET ENTRY AND EXIT OF POINT")
+            print(curveComponent)
+            print(straightComponent)
+            print(entryDir)
+            
+            if entryDir in curveComponent and entryDir in straightComponent:
+                return mixedComponent
+            if entryDir in curveComponent:
+                return curveComponent
+            if entryDir in straightComponent:
+                return straightComponent
 
     def getNextTileAdd(self, startDir):
         if self.diverge:
