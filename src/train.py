@@ -43,6 +43,8 @@ class Train:
         self.trainReadyTime = 0
         self.trainStopped = False
 
+        self.prevSignalTile = None
+
     def updateEvent(self,time):
         self.time = time
 
@@ -94,6 +96,11 @@ class Train:
     def manageRestartSignal(self):
         if isinstance(self.tileObjNext, SignalTile) and self.tileObjNext.signal!="Red":
             self.currentSpeed = self.maxSpeed
+            self.tileObjNext.trainInBlock = True
+            if self.prevSignalTile!=None:
+                self.prevSignalTile.trainInBlock=False
+            self.tileMapper.updateSignals()
+            self.prevSignalTile = self.tileObjNext
 
     def manageRestartStop(self):
         if self.stopEventBacklog.qsize()>0 and self.trainReady:
@@ -103,9 +110,20 @@ class Train:
 
 
     def manageNewTile(self):
-        if isinstance(self.tileObjNext, SignalTile) and self.tileObjNext.signal=="Red":
-            self.currentSpeed = 0
-            self.tileProgress = 0.5
+        if isinstance(self.tileObjNext, SignalTile):
+            
+
+            if self.tileObjNext.signal=="Red":
+                self.currentSpeed = 0
+                self.tileProgress = 0.5
+
+            if self.tileObjNext.signal!="Red":
+                self.tileObjNext.trainInBlock = True
+                if self.prevSignalTile!=None:
+                    self.prevSignalTile.trainInBlock=False
+                self.tileMapper.updateSignals()
+                self.prevSignalTile = self.tileObjNext
+                
 
         if self.currentTileName == self.nextWaypointName:
             self.currentSpeed = 0
@@ -121,14 +139,14 @@ class Train:
         progressInclease = realDistanceIncrease / (self.tileObj.distance/1000)
         self.tileProgress = self.tileProgress +progressInclease 
 
-        if isinstance(self.tileObj, SignalTile) and self.tileObj.signal=="Red":
-                self.tileProgress=0        
+        # if isinstance(self.tileObj, SignalTile) and self.tileObj.signal=="Red":
+        #         self.tileProgress=0        
 
         if self.tileProgress>0.5 and not self.tileIncreased: #Get Next Tile Obj
             self.tileIncreased = True
             nextTileAdder = self.tileObj.getNextTileAdd(self.entryToTile)
             print(nextTileAdder)
-            if nextTileAdder[0]=="tele":
+            if nextTileAdder[0]=="tele":#Teleport
                 self.currentTile[0] = nextTileAdder[2][0]
                 self.currentTile[1] = nextTileAdder[2][1]
                 self.entryToTile = (nextTileAdder[1][0],nextTileAdder[1][1])
@@ -137,7 +155,6 @@ class Train:
                 self.currentTile[1] = self.currentTile[1] + nextTileAdder[1]
                 self.entryToTile = (-nextTileAdder[0],-nextTileAdder[1])  
 
-   
 
             self.tileObjNext = self.tileMapper.tileMap[self.currentTile[0]][self.currentTile[1]]
             

@@ -8,8 +8,8 @@ from PyQt5 import QtGui
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtOpenGL import QGLWidget as OpenGLWidget
 from pyglet.gl import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox,QWidget
+from PyQt5.QtCore import Qt, QProcess
 import logging
 
 from pygletWidget import PygletWidget
@@ -149,14 +149,32 @@ class MainWindow(QMainWindow):
             popup = WarningBox("No map imported yet. Cannot import timetable", "Info").exec_()
 
     def newMap(self):
-        #AKA reset everything
-        if self.timetable!=None:
-            self.timetable.delete()
-        if self.tileMap!=None:
-            self.tileMap.delete()
-        self.timetable = None
-        self.tileMap = None
-        self.opengl.shapes = []
+
+        if self.tileMap!=None or self.timetable!=None:
+            confirm_box = QMessageBox(self)
+            confirm_box.setIcon(QMessageBox.Question)
+            confirm_box.setWindowTitle('Confirmation')
+            confirm_box.setText('You have a timetable open already, are you sure you want to start a new session?')
+            confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            confirm_box.setDefaultButton(QMessageBox.No)
+
+            button_clicked = confirm_box.exec_()
+
+            if button_clicked == QMessageBox.Yes:
+                if self.timetable!=None:
+                    self.timetable.delete()
+                if self.tileMap!=None:
+                    self.tileMap.delete()
+                self.timetable = None
+                self.tileMap = None
+                self.opengl.shapes = []
+
+                for child in self.ui.centralwidget.children():
+                    if isinstance(child, QWidget):
+                        child.deleteLater()
+
+                self.ui = Ui_MainWindow()
+                self.ui.setupUi(self)
         
 
     def setSignal(self, type):

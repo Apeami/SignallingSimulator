@@ -162,7 +162,9 @@ class TileMapper:
                 if tile!=None and tile.highlighted==True and isinstance(tile, SignalTile):
                     print("CHanging to: ", type)
                     tile.setSignal(type)
+        self.updateSignals()
 
+    def updateSignals(self):
         for j in range(4):
             for i in self.tileMap:
                 for tile in i:

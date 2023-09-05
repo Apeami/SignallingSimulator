@@ -184,6 +184,7 @@ class SignalTile(TrackTile):
         self.leaveSignal = False
 
         self.trainInBlock = False
+        self.lock = False
 
         self.nextSignalList = []
 
@@ -192,13 +193,15 @@ class SignalTile(TrackTile):
         signalWeight = {"Red":4,"Yellow":3,"DYellow":2,"Green":1}
         reverseSignalWeight = {4:"Red",3:"Yellow",2:"DYellow",1:"Green"}
 
+        modifiedDesiredSignal = self.desiredSignal
+
         if self.trainInBlock ==True:
-            self.desiredSignal = "Red"
+            modifiedDesiredSignal = "Red"
         elif self.lastSignal ==True:
             if self.desiredSignal!="Red":
-                self.desiredSignal = "Yellow"
+                modifiedDesiredSignal = "Yellow"
         elif self.leaveSignal ==True:
-            self.desiredSignal = "Green"
+            modifiedDesiredSignal = "Green"
 
         maxWeight = 0
         for signalTile in self.nextSignalList:
@@ -211,16 +214,17 @@ class SignalTile(TrackTile):
         if currentSignalWeight<1:
             currentSignalWeight=1
 
-        if signalWeight[self.desiredSignal]>currentSignalWeight:
-            currentSignalWeight = signalWeight[self.desiredSignal]
+        if signalWeight[modifiedDesiredSignal]>currentSignalWeight:
+            currentSignalWeight = signalWeight[modifiedDesiredSignal]
             
         currentSignal = reverseSignalWeight[currentSignalWeight]
 
         self.setSignalValue(currentSignal)
             
-    def setSignal(self,signal):
-        self.desiredSignal = signal
-        self.updateSignal()
+    def setSignal(self,signal,source = "User"):
+        if (source =="Router" and self.lock ==True) or self.lock ==False:
+            self.desiredSignal = signal
+            self.updateSignal()
 
     def setSignalValue(self,signal):
         self.signal = signal
@@ -279,7 +283,9 @@ class CurveTile(TrackTile):
 
     def getWorldCoordFromProgress(self, progress, startDir):
 
-        EntryA, EntryB = self.getEntryAndExitCoord()
+
+        print(CurveTile.getEntryAndExitCoord(self))
+        EntryA, EntryB = CurveTile.getEntryAndExitCoord(self)
 
         if EntryA == startDir:
             exit = EntryB
@@ -316,21 +322,30 @@ class PointTile(CurveTile):
         super().__init__(openGlInstance,batch, imagePath, point,flip ,location,tileCoord,50, clickable)
         self.diverge=diverge
 
-    def togglePoint(self):
+    def updatePoint(self,diverge):
+        self.diverge = diverge
 
-        if self.diverge:
-            self.diverge = False
+        if not self.diverge:
             newImagePath = "Assets/pointStraight.png"
         else:
-            self.diverge = True
             newImagePath = "Assets/pointCurve.png"
 
-        new_image = pyglet.image.load(newImagePath)
-
+        #new_image = pyglet.image.load(newImagePath)
+        new_image = ReplacableImage(newImagePath)
+        new_image.set_replacement_color(self.color)
+        new_image = new_image.render()
+        self.imagePath = newImagePath
         if self.flip:
             new_image = new_image.get_texture().get_transform(flip_y=True)  
 
         self.sprite.image = new_image
+
+    def togglePoint(self):
+        if self.diverge==True:
+            self.updatePoint(False)
+        elif self.diverge==False:
+            self.updatePoint(True)
+
 
     def getWorldCoordFromProgress(self, progress, startDir):
         if self.diverge:
@@ -339,14 +354,19 @@ class PointTile(CurveTile):
             return super(CurveTile, self).getWorldCoordFromProgress(progress, startDir)
 
 
-    def getEntryAndExitCoord(self, entryDir=None, currentStatus = False):
+    def getEntryAndExitCoord(self, entryDir=None, currentStatus = False,diverge = None):
         curveComponent = super().getEntryAndExitCoord()
         straightComponent = super(CurveTile,self).getEntryAndExitCoord()
 
+        if diverge==None:
+            tempDiverge = self.diverge
+        else:
+            tempDiverge =diverge
+
         if currentStatus==True:
-            if self.diverge==True:
+            if tempDiverge==True:
                 return curveComponent
-            elif self.diverge==False:
+            elif tempDiverge==False:
                 return straightComponent
 
         if currentStatus==False:

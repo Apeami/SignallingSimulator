@@ -30,7 +30,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="11.313708"
-     inkscape:cx="32.747884"
+     inkscape:cx="33.013049"
      inkscape:cy="23.422913"
      inkscape:window-width="1440"
      inkscape:window-height="800"
@@ -47,16 +47,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#ffffff;stroke-width:0.252835"
-       id="rect195"
-       width="18.146189"
-       height="2.6458333"
-       x="-16.333794"
-       y="6.2177081"
-       ry="0"
-       transform="scale(-1,1)" />
-    <rect
-       style="fill:#ffffff;stroke-width:0.192531"
+       style="fill:#fefefe;stroke-width:0.192531;fill-opacity:1"
        id="rect195-0"
        width="10.522325"
        height="2.6458333"
@@ -97,4 +88,18 @@
       </cc:License>
     </rdf:RDF>
   </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Layer 2">
+    <rect
+       style="fill:#ffffff;stroke-width:0.252835"
+       id="rect195"
+       width="18.146189"
+       height="2.6458333"
+       x="-16.333794"
+       y="6.2177081"
+       ry="0"
+       transform="scale(-1,1)" />
+  </g>
 </svg>

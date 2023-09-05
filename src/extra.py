@@ -45,9 +45,13 @@ class ReplacableImage:
     def __init__(self, image_path):
         self.original_image = pyglet.image.load(image_path)
         self.replace_color = (0, 0, 255)  # Default replacement color is blue
+        self.origin_color = (255,255,255)
 
     def set_replacement_color(self, color):
         self.replace_color = color
+
+    def set_origin_color(self,color):
+        self.origin_color = color
 
     def render(self):
         if self.replace_color is None:
@@ -59,7 +63,7 @@ class ReplacableImage:
 
         modified_pixel_data = bytearray()
         for pixel in pixels:
-            if pixel[:3] == (255, 255, 255):  # Replace white pixels
+            if pixel[:3] == self.origin_color:  # Replace white pixels
                 modified_pixel_data.extend(bytes([self.replace_color[0], self.replace_color[1], self.replace_color[2], pixel[3]]))
             else:
                 modified_pixel_data.extend(bytes(pixel))
