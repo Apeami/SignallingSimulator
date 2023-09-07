@@ -184,7 +184,13 @@ class SignalTile(TrackTile):
         self.leaveSignal = False
 
         self.trainInBlock = False
-        self.lock = False
+
+        self.firstRouteSignal = False
+        self.lastRouteSignal = False
+
+        self.trianPassedFunc = None
+
+        self.lock = False #Decreped
 
         self.nextSignalList = []
 
@@ -202,6 +208,11 @@ class SignalTile(TrackTile):
                 modifiedDesiredSignal = "Yellow"
         elif self.leaveSignal ==True:
             modifiedDesiredSignal = "Green"
+        elif self.firstRouteSignal ==True:
+            modifiedDesiredSignal = "Green"
+        elif self.lastRouteSignal ==True:
+            modifiedDesiredSignal ="Red"
+        
 
         maxWeight = 0
         for signalTile in self.nextSignalList:
@@ -221,6 +232,13 @@ class SignalTile(TrackTile):
 
         self.setSignalValue(currentSignal)
             
+    def trainPassed(self):
+        if self.trianPassedFunc!=None:
+            self.trianPassedFunc()
+
+    def setTrainPassedAlert(self,function):
+        self.trianPassedFunc = function
+
     def setSignal(self,signal,source = "User"):
         if (source =="Router" and self.lock ==True) or self.lock ==False:
             self.desiredSignal = signal
@@ -353,6 +371,17 @@ class PointTile(CurveTile):
         else:
             return super(CurveTile, self).getWorldCoordFromProgress(progress, startDir)
 
+
+    def isMouth(self,entryCoord):
+        curveComponent = super().getEntryAndExitCoord()
+        straightComponent = super(CurveTile,self).getEntryAndExitCoord()
+
+        mouth = False
+        for i in curveComponent:
+            if i in straightComponent:
+                if i == entryCoord:
+                    mouth = True
+        return mouth
 
     def getEntryAndExitCoord(self, entryDir=None, currentStatus = False,diverge = None):
         curveComponent = super().getEntryAndExitCoord()

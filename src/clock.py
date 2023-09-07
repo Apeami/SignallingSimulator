@@ -33,6 +33,7 @@ class Clock:
         self.timer.timeout.connect(self.update_lcd)
         self.speed = 1
         self.counter = 0
+        self.enabled = True
 
         #Manage initial time
         second = startTime
@@ -45,8 +46,11 @@ class Clock:
 
 
     def start_timer(self):
-        self.timer.start(1000 // self.speed)  # Adjust the interval based on speed
-
+        if self.enabled:
+            self.timer.start(1000 // self.speed)  # Adjust the interval based on speed
+        else:
+            self.counter = 0
+            self.update_lcd()
 
     def stop_timer(self):
         self.timer.stop()
@@ -61,5 +65,7 @@ class Clock:
         time = QTime(0, 0).addSecs(self.counter)
         time_str = time.toString("hh:mm:ss")
         self.lcd.display(time_str)
-        self.function(self.counter)
+        self.enabled = self.function(self.counter)
+        if not self.enabled:
+            self.stop_timer()
         self.counter += 1

@@ -1,0 +1,177 @@
+{
+    "name" : "Hackney downs station",
+    "grid_size" : {
+        "rows" : 5,
+        "columns" : 40
+    },
+
+    "text" : [
+        {"row":14 , "column":5, "text":"Cambridge Heath"},
+        {"row":23 , "column":5, "text":"London Fields"}
+
+    ],
+
+    "data" : [ 
+        { "row": 0, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"SlowIn","distance":1000 },
+        { "row": 1, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"SlowOut","distance":1000 },
+        { "row": 2, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"FastIn","distance":1000 },
+        { "row": 3, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"FastOut","distance":1000 },
+
+        { "row": 0, "column": 1, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 1, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 1, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 1, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 2, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 1, "column": 2, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 2, "column": 2, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 3, "column": 2, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+    
+        { "row": 0, "column": 3, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 3, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 3, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 3, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 4, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 4, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 4, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 4, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 5, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 1, "column": 5, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 2, "column": 5, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 3, "column": 5, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 6, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 6, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 6, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 6, "type": "pointTrack", "point": "east","flip":true,"distance":1000 },
+
+        { "row": 0, "column": 7, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 7, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 7, "type": "pointTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 3, "column": 7, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 8, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 8, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 8, "type": "pointTrack", "point": "east","flip":true,"distance":1000 },
+        { "row": 3, "column": 8, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 9, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 9, "type": "pointTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 2, "column": 9, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 9, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 10, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 10, "type": "pointTrack", "point": "east","flip":true,"distance":1000 },
+        { "row": 2, "column": 10, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 10, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 11, "type": "pointTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 1, "column": 11, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 11, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 11, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+
+        { "row": 0, "column": 12, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 1, "column": 12, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 2, "column": 12, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 3, "column": 12, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 13, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 13, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 13, "type": "platTrack", "point": "west","flip":false,"waypoint":"Cambridge Heath","distance":1000 },
+        { "row": 3, "column": 13, "type": "platTrack", "point": "west","flip":true,"distance":1000 },
+
+        { "row": 0, "column": 14, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 14, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 14, "type": "platTrack", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 14, "type": "platTrack", "point": "west","flip":true,"waypoint":"Cambridge Heath","distance":1000 },
+
+        { "row": 0, "column": 15, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 1, "column": 15, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 2, "column": 15, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 3, "column": 15, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 16, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 16, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 16, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 16, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 17, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 17, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 17, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 17, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 18, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 1, "column": 18, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 2, "column": 18, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 3, "column": 18, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 19, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 19, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 19, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 19, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 20, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 20, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 20, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 20, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 21, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 1, "column": 21, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 2, "column": 21, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 3, "column": 21, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 22, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 22, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 22, "type": "platTrack", "point": "west","flip":false,"waypoint":"London Fields","distance":1000 },
+        { "row": 3, "column": 22, "type": "platTrack", "point": "west","flip":true,"distance":1000 },
+
+        { "row": 0, "column": 23, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 23, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 23, "type": "platTrack", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 23, "type": "platTrack", "point": "west","flip":true,"waypoint":"London Fields","distance":1000 },
+
+        { "row": 0, "column": 24, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 1, "column": 24, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 2, "column": 24, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 3, "column": 24, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 25, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 25, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 25, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 25, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 26, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 26, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 26, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 26, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 27, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 1, "column": 27, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 2, "column": 27, "type": "signalTrack", "point": "west","flip":true,"distance":1000 },
+        { "row": 3, "column": 27, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+
+
+        { "row": 0, "column": 28, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 28, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 28, "type": "pointTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 3, "column": 28, "type": "track", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 29, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 29, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 29, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 29, "type": "pointTrack", "point": "west","flip":false,"distance":1000 },
+
+        { "row": 0, "column": 30, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 1, "column": 30, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 2, "column": 30, "type": "track", "point": "west","flip":false,"distance":1000 },
+        { "row": 3, "column": 30, "type": "pointTrack", "point": "east","flip":false,"distance":1000 },
+
+        { "row": 4, "column": 31, "type": "curveTrack", "point": "west","flip":false,"distance":1000 },
+        { "row": 4, "column": 32, "type": "signalTrack", "point": "west","flip":false,"distance":1000 },
+        { "row": 4, "column": 33, "type": "signalTrack", "point": "east","flip":false,"distance":1000 },
+        { "row": 4, "column": 34, "type": "contTrack", "point": "east","flip":false,"distance":1000 ,"waypoint":"North Line Portal"}
+]
+}

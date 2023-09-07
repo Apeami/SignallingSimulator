@@ -115,6 +115,9 @@ class MainWindow(QMainWindow):
         self.opengl.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
         self.opengl.zoomToActualSize(self.tileMap)
 
+        #Alert the user
+        self.logger.info("Succesfully opened the map")
+
     def openTimetable(self):
 
         if self.tileMap!=None:
@@ -143,6 +146,9 @@ class MainWindow(QMainWindow):
             #Here is when the timetable is loaded, the simulation can begin
             #Setup Clock
             self.clock = Clock(self.ui,self.timetable.updateClock,self.timetable.startTime)
+
+            #Alert user
+            self.logger.info("Succesfully opened the timetable")
 
         else:
             print("No Tilemap imported")

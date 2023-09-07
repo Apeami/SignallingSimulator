@@ -136,6 +136,15 @@ class TileMapper:
             self.tileMap[pressedCoord[1]][pressedCoord[0]].handleClick()
             self.handleClickOnTile(self.tileMap[pressedCoord[1]][pressedCoord[0]])
 
+    def checkRoutingCompatibility(self,routing):
+        for initroute in self.routingObjects + self.autoTrackObjects:
+                for inittile in initroute.tileList:
+                    for comptile in routing.tileList:
+                        if inittile!=initroute.firstTile and inittile!=initroute.secondTile and comptile!=routing.firstTile and comptile!=routing.secondTile:
+                            if inittile == comptile:
+                                return False
+        return True
+
     def handleClickOnTile(self, tile):
         self.highLightedTile = tile
         print("Handle Click on Tile")
@@ -146,14 +155,44 @@ class TileMapper:
             firstTile = self.routingInitialTile
             secondTile = self.highLightedTile
             self.routingInitialTile=None
-            self.routingObjects.append(RoutingTrack(firstTile,secondTile,self))
+
+            routing = RoutingTrack(firstTile,secondTile,self)
+            print(routing.success)
+
+            if self.checkRoutingCompatibility(routing):
+                if routing.success:
+                    routing.createRouting()
+                    self.routingObjects.append(routing)
+                    self.updateRoutings()
+            else:
+                WarningBox("This routing is over another routing.","Cannot complete").exec_()
 
         if self.autoTrackInitialTile!=None:
             print("Auto Track Manage")
             firstTile = self.autoTrackInitialTile
             secondTile = self.highLightedTile
             self.autoTrackInitialTile = None
-            self.autoTrackObjects.append(AutoTrack(firstTile,secondTile,self))
+
+            routing = AutoTrack(firstTile,secondTile,self)
+
+            if self.checkRoutingCompatibility(routing):
+                if routing.success:
+                    routing.createRouting()
+                    self.autoTrackObjects.append(routing)
+                    self.updateRoutings()
+            else:
+                WarningBox("This routing is over another routing.","Cannot complete").exec_()
+
+    def updateRoutings(self):
+        # for routing in self.autoTrackObjects + self.routingObjects:
+        #     routing.delete()
+        #     routing.active = True
+
+        for routing in self.autoTrackObjects:
+            routing.createRouting()
+
+        for routing in self.routingObjects:
+            routing.createRouting()
 
     #This are used to set the signal of any highlighted tile.
     def setSignal(self,type):
@@ -221,13 +260,18 @@ class TileMapper:
 
     def manageAutoTrack(self):
         self.autoTrackInitialTile = self.highLightedTile
+        self.routingInitialTile = None
 
     def manageTrainRoute(self):
         self.routingInitialTile = self.highLightedTile
+        self.autoTrackInitialTile = None
 
     def manageDeleteRouting(self):
         print("Managing delete route")
         for route in self.autoTrackObjects:
-            route.deleteIfSelected(self.highLightedTile)
+            if route.deleteIfSelected(self.highLightedTile):
+                self.autoTrackObjects.remove(route)
         for route in self.routingObjects:
-            route.deleteIfSelected(self.highLightedTile)
+            if route.deleteIfSelected(self.highLightedTile):
+                self.routingObjects.remove(route)
+        self.updateRoutings()

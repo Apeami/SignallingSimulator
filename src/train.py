@@ -16,6 +16,7 @@ class Train:
 
         self.sorted_schedule = sorted(trainData["Schedule"], key=lambda x: x["Time"])
 
+
         self.currentEvent = 0
 
         self.width, self.height = 40, 20
@@ -39,56 +40,39 @@ class Train:
 
         self.stopEventBacklog = queue.Queue()
 
-        self.trainReady = False
         self.trainReadyTime = 0
         self.trainStopped = False
 
         self.prevSignalTile = None
 
+        self.canDespawn = False
+        self.despawnTileName = None
+
+        self.deleted = False
+
     def updateEvent(self,time):
         self.time = time
 
-        if self.trainReadyTime == time:
-            print("Getting TRAIN READY")
-            self.trainReady = True
 
         self.manageRestartSignal()
         self.manageRestartStop()
-
-        event = self.sorted_schedule[self.currentEvent]
-        if event['Time'] == time:
-            print("Train event")
-            print(self.headcode)
-            print(event['Action'])
-
-            if event['Action'] =='Spawn':
-                spawnName = event['Location']
-                tempTile = self.tileMapper.getCoordFromName(spawnName)
-                self.currentTile = [tempTile[0],tempTile[1]]
-                self.tileProgress = 0
-                self.tileObj = self.tileMapper.tileMap[self.currentTile[0]][self.currentTile[1]]
-                self.entryToTile = self.tileObj.getDefaultStartDir()
-                self.entryToTilePrev = self.entryToTile
-                worldCoord = self.tileObj.getWorldCoordFromProgress(self.tileProgress,self.entryToTile)
-                self.prevDistance = self.tileObj.distance
-                self.drawTrain(worldCoord)
-                self.currentTileName = self.tileMapper.getNameFromCoord(self.currentTile)
-                if len(self.sorted_schedule)>self.currentEvent+1:
-                    self.nextWaypointName = self.sorted_schedule[self.currentEvent+1]['Location']
-                else:
-                    print("No Stopping Waypoint")
-                self.exist=True
-                self.currentSpeed = self.maxSpeed
-
-            if event['Action'] =="Stop":
-                self.stopEventBacklog.put(event['Location'])
+        
 
 
-            if self.currentEvent<len(self.sorted_schedule)-1:
-                self.currentEvent = self.currentEvent + 1
+        if self.currentEvent == 0:
+            event = self.sorted_schedule[self.currentEvent]
+            if event['Time'] == time and event['Action'] =='Spawn':
+                    self.spawnTrain(event['Location'])
+                    self.currentEvent = self.currentEvent + 1
+
+                    if len(self.sorted_schedule)>self.currentEvent:
+                        self.nextWaypointName = self.sorted_schedule[self.currentEvent]['Location']
+                        self.nextWaypointAction =self.sorted_schedule[self.currentEvent]['Action']
+                        self.nextWaypointTime = self.sorted_schedule[self.currentEvent]['Time']
 
 
         if self.exist:
+            self.manageAction()
             self.reDrawTrain(self.getNextPosition(self.currentSpeed,0.000277))
 
 
@@ -96,6 +80,7 @@ class Train:
     def manageRestartSignal(self):
         if isinstance(self.tileObjNext, SignalTile) and self.tileObjNext.signal!="Red":
             self.currentSpeed = self.maxSpeed
+            self.tileObjNext.trainPassed()
             self.tileObjNext.trainInBlock = True
             if self.prevSignalTile!=None:
                 self.prevSignalTile.trainInBlock=False
@@ -103,35 +88,78 @@ class Train:
             self.prevSignalTile = self.tileObjNext
 
     def manageRestartStop(self):
-        if self.stopEventBacklog.qsize()>0 and self.trainReady:
+        if self.trainStopped and self.trainReadyTime<=self.time:
             self.currentSpeed = self.maxSpeed
-            self.trainReady = False
-            self.nextWaypointName = self.sorted_schedule[self.currentEvent]['Location']
+            self.trainStopped = False
 
 
     def manageNewTile(self):
         if isinstance(self.tileObjNext, SignalTile):
             
+            print("SIGNAL MANAGE")
+            print(self.tileObjNext.getDefaultStartDir())
+            print(self.entryToTile)
+            if self.tileObjNext.getDefaultStartDir()==(-self.entryToTile[0],-self.entryToTile[1]): #If signal in same direction
+                if self.tileObjNext.signal=="Red":
+                    self.currentSpeed = 0
+                    self.tileProgress = 0.5
+                else:
+                    self.tileObjNext.trainPassed()
+                    self.tileObjNext.trainInBlock = True
+                    if self.prevSignalTile!=None:
+                        self.prevSignalTile.trainInBlock=False
+                    self.tileMapper.updateSignals()
+                    self.prevSignalTile = self.tileObjNext
+                
 
-            if self.tileObjNext.signal=="Red":
+    def manageAction(self):
+        if self.currentTileName == self.nextWaypointName:#The train has arrived at the certain waypoint
+            print("ARRIVED AT WAYPOINT")
+            print(self.currentTileName)
+            print(self.nextWaypointAction)
+            if self.nextWaypointAction =="Call":
                 self.currentSpeed = 0
                 self.tileProgress = 0.5
 
-            if self.tileObjNext.signal!="Red":
-                self.tileObjNext.trainInBlock = True
+                waitTime = 10
+                if self.time<self.nextWaypointTime- waitTime:
+                    self.trainReadyTime = self.nextWaypointTime
+                else: 
+                    self.trainReadyTime = self.time + waitTime
+
+                self.trainStopped = True
+                print("Action Stop")
+            
+            if self.nextWaypointAction =="Despawn":
+                self.deleteTrain()
                 if self.prevSignalTile!=None:
                     self.prevSignalTile.trainInBlock=False
                 self.tileMapper.updateSignals()
-                self.prevSignalTile = self.tileObjNext
-                
 
-        if self.currentTileName == self.nextWaypointName:
-            self.currentSpeed = 0
-            self.tileProgress = 0.5
-            self.trainReadyTime = self.time+10
-            self.trainReady = False
-            print("Action Stop")
+            if self.nextWaypointAction == "Stop":
+                self.currentSpeed = 0
+                self.tileProgress = 0.5
 
+            if self.nextWaypointAction =="Start":
+                print("STARTING")
+                if self.time<self.nextWaypointTime:
+                    self.trainReadyTime = self.nextWaypointTime
+                else: 
+                    self.trainReadyTime = self.time + 1
+                self.trainStopped=True
+
+            if self.nextWaypointAction =="Reverse":
+                print("REVERSING")
+                self.entryToTile = [-self.entryToTilePrev[0],-self.entryToTilePrev[1]]
+                self.entryToTilePrev = [-self.entryToTile[0],-self.entryToTile[1]]
+
+
+            self.currentEvent = self.currentEvent + 1
+
+            if len(self.sorted_schedule)>self.currentEvent:
+                self.nextWaypointName = self.sorted_schedule[self.currentEvent]['Location']
+                self.nextWaypointAction =self.sorted_schedule[self.currentEvent]['Action']
+                self.nextWaypointTime = self.sorted_schedule[self.currentEvent]['Time']
             
 
     def getNextPosition(self,speed,timeIncrease):
@@ -159,6 +187,8 @@ class Train:
             self.tileObjNext = self.tileMapper.tileMap[self.currentTile[0]][self.currentTile[1]]
             
             self.manageNewTile()
+
+
         elif self.tileProgress>1: #Move to the next tile
             self.tileObj = self.tileObjNext
             self.currentTileName = self.tileMapper.getNameFromCoord(self.currentTile)
@@ -178,6 +208,28 @@ class Train:
 
         return self.tileObj.getWorldCoordFromProgress(self.tileProgress,self.entryToTilePrev)
 
+    def spawnTrain(self,spawnName):
+        
+        tempTile = self.tileMapper.getCoordFromName(spawnName)
+        self.currentTile = [tempTile[0],tempTile[1]]
+        self.tileProgress = 0
+        self.tileObj = self.tileMapper.tileMap[self.currentTile[0]][self.currentTile[1]]
+        self.entryToTile = self.tileObj.getDefaultStartDir()
+        self.entryToTilePrev = self.entryToTile
+        worldCoord = self.tileObj.getWorldCoordFromProgress(self.tileProgress,self.entryToTile)
+        self.prevDistance = self.tileObj.distance
+        self.drawTrain(worldCoord)
+        self.currentTileName = self.tileMapper.getNameFromCoord(self.currentTile)
+
+        self.exist=True
+        self.currentSpeed = self.maxSpeed
+
+
+    def deleteTrain(self):
+        if self.deleted == False:
+            self.label.delete()
+            self.rectangle.delete()
+            self.deleted = True
 
     def reDrawTrain(self, worldPos):
         x = worldPos[0] + 25 - (self.width / 2)

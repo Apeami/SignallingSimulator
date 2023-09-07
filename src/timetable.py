@@ -35,6 +35,7 @@ class Timetable:
             print("Simulation Ended")
             WarningBox("The simulation has ended because the alloted time has passed", "Info").exec_()
             self.end = True
+            return False
         if self.end==False:
             for train in self.trainData:
                 if self.time_to_seconds(train['LoadTime']) == time:
@@ -46,6 +47,7 @@ class Timetable:
 
             for activeTrain in self.trainList:
                 activeTrain.updateEvent(time)
+        return True
 
     def openFile(self,fileName):
         #Read from the json file
