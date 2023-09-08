@@ -41,6 +41,10 @@ class AbstractTrackSection:
                 tile.firstRouteSignal = False
                 tile.lastRouteSignal = False
 
+        if isinstance(self,RoutingTrack) and self in self.tileMapper.routingObjects:
+            self.tileMapper.routingObjects.remove(self)
+            self.tileMapper.updateRoutings(self)
+
         self.tileMapper.updateSignals()
 
 class AutoTrack(AbstractTrackSection):
@@ -59,8 +63,9 @@ class AutoTrack(AbstractTrackSection):
 
                 if isinstance(newTile,PointTile):
                     self.delete()
-                    WarningBox("Cannot Find a route for auto track","Cannot Complete").exec_()
                     self.success = False
+                    WarningBox("Cannot Find a route for auto track","Cannot Complete").exec_()
+                    return
                 
                 if isinstance(newTile,PointTile):
                     defaultDir = newTile.getDefaultStartDir()
@@ -76,7 +81,12 @@ class AutoTrack(AbstractTrackSection):
                 newTileCoordX = newTile.tileCoord[0] + coord[1]
                 newTileCoordY = newTile.tileCoord[1] + coord[0]
 
-                newTile = self.tileMapper.tileMap[newTileCoordY][newTileCoordX]
+                try:
+                    newTile = self.tileMapper.tileMap[newTileCoordY][newTileCoordX]
+                except:
+                    self.success = False
+                    WarningBox("Cannot Find a route for auto track","Cannot Complete").exec_()
+                    return
                 entryDir = (-coord[0],-coord[1])
                 timerOut = timerOut +1 
 
@@ -246,6 +256,10 @@ class RoutingTrack(AbstractTrackSection):
             self.redSignals = []
 
             signalList = self.getSignalList(self.firstTile, blocking=True)
+
+            #TempCode to disable
+            signalList = []
+
             print(signalList)
             for signal in signalList:
                 if signal!=self.secondTile:

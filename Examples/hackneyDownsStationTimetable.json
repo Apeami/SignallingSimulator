@@ -41,7 +41,7 @@
             "Headcode": "2T48",
             "MaxSpeed": 75,
             "Destination": "Chingford",
-            "LoadTime" : "12:01:00",
+            "LoadTime" : "12:06:00",
             "Schedule": [
                 { "Action": "Spawn", "Time": "12:07:00", "Location": "Liverpool Street Portal Fast In" },
                 { "Action": "Call", "Time": "12:10:00", "Location": "Hackney Downs" },

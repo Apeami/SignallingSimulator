@@ -35,6 +35,18 @@
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
           <widget class="QTableWidget" name="TrainList">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>380</width>
+             <height>0</height>
+            </size>
+           </property>
            <row>
             <property name="text">
              <string/>
@@ -47,27 +59,27 @@
            </column>
            <column>
             <property name="text">
-             <string notr="true">Next Loc</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
              <string notr="true">Time</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string notr="true">Dest</string>
+             <string notr="true">Next Waypoint</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string>EndPoint</string>
+             <string notr="true">Destination</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string>Conter</string>
+             <string>End Portal</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Center</string>
             </property>
            </column>
            <item row="0" column="2">

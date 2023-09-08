@@ -67,7 +67,7 @@ class TileMapper:
 
                 tileObj = PortalTile(self.openGlInstance,self.tileBatch, "assets/trackContinuation.png", point, flip, realCoord,tileCoord,tile['distance'],self.tileMap,tile.get('connect', None))
             elif type == "platTrack":
-                tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/platform.png", point, flip, realCoord,tileCoord,100)
+                tileObj = TrackTile(self.openGlInstance,self.tileBatch, "assets/platform.png", point, flip, realCoord,tileCoord,tile['distance'])
             elif type == "track":
                 tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackHorizontal.png", point, flip, realCoord,tileCoord, tile['distance'])
             elif type == "pointTrack":
@@ -77,7 +77,7 @@ class TileMapper:
             elif type == "bufferTrack":
                 tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackBuffer.png", point, flip, realCoord,tileCoord,tile['distance'])
             elif type == "diagonalTrack":
-                tileObj = TrackTile(self.openGlInstance, self.tileBatch, "assets/trackDiagonal.png", point, flip, realCoord,tileCoord,tile['distance'])
+                tileObj = DiagonalTile(self.openGlInstance, self.tileBatch, "assets/trackDiagonal.png", point, flip, realCoord,tileCoord,tile['distance'])
 
             # Assign the created tile object to the appropriate location in the tile map
             self.tileMap[row][column] = tileObj
@@ -137,13 +137,16 @@ class TileMapper:
             self.handleClickOnTile(self.tileMap[pressedCoord[1]][pressedCoord[0]])
 
     def checkRoutingCompatibility(self,routing):
-        for initroute in self.routingObjects + self.autoTrackObjects:
-                for inittile in initroute.tileList:
-                    for comptile in routing.tileList:
-                        if inittile!=initroute.firstTile and inittile!=initroute.secondTile and comptile!=routing.firstTile and comptile!=routing.secondTile:
-                            if inittile == comptile:
-                                return False
-        return True
+        if routing.tileList!=None:
+            for initroute in self.routingObjects + self.autoTrackObjects:
+                    for inittile in initroute.tileList:
+                        for comptile in routing.tileList:
+                            if inittile!=initroute.firstTile and inittile!=initroute.secondTile and comptile!=routing.firstTile and comptile!=routing.secondTile:
+                                if inittile == comptile:
+                                    return False
+            return True
+        else:
+            return False
 
     def handleClickOnTile(self, tile):
         self.highLightedTile = tile
@@ -163,7 +166,7 @@ class TileMapper:
                 if routing.success:
                     routing.createRouting()
                     self.routingObjects.append(routing)
-                    self.updateRoutings()
+                    self.updateRoutings(routing)
             else:
                 WarningBox("This routing is over another routing.","Cannot complete").exec_()
 
@@ -179,15 +182,27 @@ class TileMapper:
                 if routing.success:
                     routing.createRouting()
                     self.autoTrackObjects.append(routing)
-                    self.updateRoutings()
+                    self.updateRoutings(routing)
             else:
                 WarningBox("This routing is over another routing.","Cannot complete").exec_()
 
-    def updateRoutings(self):
+    def updateRoutings(self,centralRouting):
         # for routing in self.autoTrackObjects + self.routingObjects:
         #     routing.delete()
         #     routing.active = True
 
+        # for routing in self.autoTrackObjects:
+        #     if routing.firstTile == centralRouting.secondTile or routing.secondTile ==centralRouting.firstTile:
+        #         routing.createRouting()
+        # if isinstance(centralRouting,AutoTrack):
+        #     centralRouting.createRouting()
+
+        # for routing in self.routingObjects:
+        #     if routing.firstTile == centralRouting.secondTile or routing.secondTile ==centralRouting.firstTile:
+        #         routing.createRouting()
+        # if isinstance(centralRouting,RoutingTrack):
+        #     centralRouting.createRouting()
+    
         for routing in self.autoTrackObjects:
             routing.createRouting()
 
@@ -201,7 +216,7 @@ class TileMapper:
                 if tile!=None and tile.highlighted==True and isinstance(tile, SignalTile):
                     print("CHanging to: ", type)
                     tile.setSignal(type)
-        self.updateSignals()
+                    #self.updateSignals(tile)
 
     def updateSignals(self):
         for j in range(4):
@@ -256,6 +271,13 @@ class TileMapper:
                         tile.lastSignal = True
 
                     tile.updateSignal()
+
+        for row in self.tileMap:
+            for column in row:
+                if isinstance(column,SignalTile):
+                    tile = column
+                    for nextSignal in tile.nextSignalList:
+                        nextSignal.prevSignalList.append(tile)
                 
 
     def manageAutoTrack(self):
@@ -263,15 +285,19 @@ class TileMapper:
         self.routingInitialTile = None
 
     def manageTrainRoute(self):
-        self.routingInitialTile = self.highLightedTile
         self.autoTrackInitialTile = None
+        self.routingInitialTile = self.highLightedTile
+
 
     def manageDeleteRouting(self):
         print("Managing delete route")
         for route in self.autoTrackObjects:
             if route.deleteIfSelected(self.highLightedTile):
-                self.autoTrackObjects.remove(route)
+                self.updateRoutings(route)
+                if route in self.autoTrackObjects:
+                    self.autoTrackObjects.remove(route)
         for route in self.routingObjects:
             if route.deleteIfSelected(self.highLightedTile):
-                self.routingObjects.remove(route)
-        self.updateRoutings()
+                self.updateRoutings(route)
+                if route in self.routingObjects:
+                    self.routingObjects.remove(route)

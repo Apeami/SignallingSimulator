@@ -172,7 +172,15 @@ class TrackTile(TileBase):
         #     return (0,0)
         
 
+class DiagonalTile(TrackTile):
+    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord,distance, clickable=False,dimension = 50):
+        super().__init__(openGlInstance,batch,imagePath,point,flip,location,tileCoord,distance)
 
+    def getEntryAndExitCoord(self,entryDir = None, currentStatus = False):
+        if self.point=="east":
+            return((1,1),(-1,-1))
+        elif self.point=="west":
+            return((1,-1),(-1,1))
 
 class SignalTile(TrackTile):
     def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord, clickable=False, signal="Red"):
@@ -193,6 +201,8 @@ class SignalTile(TrackTile):
         self.lock = False #Decreped
 
         self.nextSignalList = []
+
+        self.prevSignalList = []
 
     #Changes the signal due to train movements
     def updateSignal(self):
@@ -230,7 +240,13 @@ class SignalTile(TrackTile):
             
         currentSignal = reverseSignalWeight[currentSignalWeight]
 
-        self.setSignalValue(currentSignal)
+        if self.signal !=currentSignal:
+            self.setSignalValue(currentSignal)
+            for prevSignal in self.prevSignalList:
+                prevSignal.updateSignal()
+
+        elif self.signal == currentSignal:
+            pass
             
     def trainPassed(self):
         if self.trianPassedFunc!=None:

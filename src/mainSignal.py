@@ -44,8 +44,8 @@ class MainWindow(QMainWindow):
         self.ui.actionNew_Simulation.triggered.connect(self.newMap)
 
         self.ui.actionRed.triggered.connect(lambda: self.setSignal("Red"))
-        self.ui.actionyellow.triggered.connect(lambda: self.setSignal("DYellow"))
-        self.ui.actiondYellow.triggered.connect(lambda: self.setSignal("Yellow"))
+        self.ui.actionyellow.triggered.connect(lambda: self.setSignal("Yellow"))
+        self.ui.actiondYellow.triggered.connect(lambda: self.setSignal("DYellow"))
         self.ui.actionGreen.triggered.connect(lambda: self.setSignal("Green"))
 
         self.ui.actionToggle_Track.triggered.connect(self.togglePoint)

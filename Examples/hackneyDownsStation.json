@@ -265,8 +265,8 @@
         { "row": 4, "column": 47, "type": "track", "point": "west","flip":true,"distance":50 },
         { "row": 5, "column": 47, "type": "track", "point": "east","flip":false,"distance":50 },
 
-        { "row": 4, "column": 48, "type": "contTrack", "point": "east","flip":false,"distance":50 ,"waypoint":"Clapton Portal In" },
-        { "row": 5, "column": 48, "type": "contTrack", "point": "east","flip":false,"distance":50 ,"waypoint":"Clapton Portal Out"},
+        { "row": 4, "column": 48, "type": "contTrack", "point": "east","flip":false,"distance":50 ,"waypoint":"Rectory Road Portal In" },
+        { "row": 5, "column": 48, "type": "contTrack", "point": "east","flip":false,"distance":50 ,"waypoint":"Rectory Road Portal Out"},
 
         { "row": 0, "column": 45, "type": "signalTrack", "point": "west","flip":true,"distance":50 },
         { "row": 1, "column": 45, "type": "signalTrack", "point": "east","flip":false,"distance":50 },
@@ -283,8 +283,8 @@
         { "row": 0, "column": 49, "type": "track", "point": "west","flip":true,"distance":50 },
         { "row": 1, "column": 49, "type": "track", "point": "east","flip":false,"distance":50 },
 
-        { "row": 0, "column": 50, "type": "contTrack", "point": "east","flip":false,"distance":50,"waypoint":"Rectory Road Portal In" },
-        { "row": 1, "column": 50, "type": "contTrack", "point": "east","flip":false,"distance":50,"waypoint":"Rectory Road Portal Out"}
+        { "row": 0, "column": 50, "type": "contTrack", "point": "east","flip":false,"distance":50,"waypoint":"Clapton Portal In" },
+        { "row": 1, "column": 50, "type": "contTrack", "point": "east","flip":false,"distance":50,"waypoint":"Clapton Portal Out"}
 
 
 

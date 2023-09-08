@@ -4,6 +4,7 @@ from train import Train
 
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
 
 from datetime import datetime, timedelta
 from extra import *
@@ -23,6 +24,8 @@ class Timetable:
 
         self.trainBatch = self.openGlInstance.createNewBatch("trainList")
 
+        self.selectedTrain = None
+
         self.end = False
 
 
@@ -30,6 +33,13 @@ class Timetable:
 
         # if self.selectedTrainIndex!=None:
         #     self.updateTrainInformation(time)
+
+        self.updateTrainList()
+
+        for train in self.trainList:
+            if train.deleted == True:
+                self.trainList.remove(train)
+                self.updateTrainList()
 
         if time == self.endTime:
             print("Simulation Ended")
@@ -42,7 +52,7 @@ class Timetable:
                     #load the train in
                     for event in train['Schedule']:
                         event['Time'] = self.time_to_seconds(event['Time'])
-                    self.trainList.append(Train(train,self.trainBatch,self.shape,self.tileMapper))
+                    self.trainList.append(Train(train,self.trainBatch,self.shape,self.tileMapper,self))
                     self.updateTrainList()
 
             for activeTrain in self.trainList:
@@ -80,12 +90,14 @@ class Timetable:
     def updateTrainList(self):
         self.trainListTable.setRowCount(len(self.trainList))
 
-        rowNum = 0
-        for train in self.trainList:
-            self.trainListTable.setItem(rowNum, 0, QTableWidgetItem(train.headcode)) #Headcode
-            self.trainListTable.setItem(rowNum, 1, QTableWidgetItem(train.sorted_schedule[train.currentEvent]['Location'])) #Next Station
+        sorted_trains = sorted(self.trainList, key=lambda train: train.nextWaypointTime)
 
-            self.trainListTable.setItem(rowNum, 2, QTableWidgetItem(self.secondsToTime(train.sorted_schedule[train.currentEvent]['Time']))) #Time of next arrival
+        rowNum = 0
+        for train in sorted_trains:
+            self.trainListTable.setItem(rowNum, 0, QTableWidgetItem(train.headcode)) #Headcode
+            self.trainListTable.setItem(rowNum, 1, QTableWidgetItem(self.secondsToTime(train.nextWaypointTime))) #Time of next arrival
+            self.trainListTable.setItem(rowNum, 2, QTableWidgetItem(train.nextWaypointName)) #Next Station
+
             self.trainListTable.setItem(rowNum, 3, QTableWidgetItem(train.destination)) #FinalDestination
             self.trainListTable.setItem(rowNum, 4, QTableWidgetItem(train.sorted_schedule[-1]['Location'])) #End Section
             self.trainListTable.setItem(rowNum, 5, QTableWidgetItem(""))
@@ -94,6 +106,12 @@ class Timetable:
                 cell_item = self.trainListTable.item(rowNum, col)
                 if cell_item is not None:
                     cell_item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+
+            if train == self.selectedTrain:
+                for col in range(self.trainListTable.columnCount()):
+                    cell_item = self.trainListTable.item(rowNum, col)
+                    if cell_item is not None:
+                        cell_item.setForeground(QColor(255, 0, 0))
 
             rowNum = rowNum + 1
 
@@ -129,6 +147,7 @@ class Timetable:
             #     self.trainTimetable.setItem(row, col, cell_item)
 
         self.trainTimetable.resizeColumnsToContents()
+        self.updateTrainList()
 
     def canvasMousePressEvent(self, x,y,left,right,top,bottom,width,height):
         propX = x/width
@@ -142,6 +161,7 @@ class Timetable:
         for train in self.trainList:
             if mapX>train.trainCoord[0] and mapX<train.trainCoord[0]+train.width and mapY>train.trainCoord[1] and mapY<train.trainCoord[1]+train.height:
                 self.selectedTrainIndex = index
+                self.selectedTrain = self.trainList[self.selectedTrainIndex]
                 self.updateTrainInformation()
             index = index + 1
 

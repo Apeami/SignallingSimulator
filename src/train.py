@@ -2,13 +2,15 @@ import pyglet
 from tileBase import *
 import queue
 import asyncio
+from extra import WarningBox
 
 class Train:
-    def __init__(self,trainData,batch,shape,tileMapper):
+    def __init__(self,trainData,batch,shape,tileMapper,timetable):
         self.batch = batch
         self.shape = shape
         self.trainCoord = [0,0]
         self.tileMapper = tileMapper
+        self.timetable = timetable
 
         self.headcode = trainData['Headcode']
         self.maxSpeed = trainData['MaxSpeed']
@@ -16,8 +18,13 @@ class Train:
 
         self.sorted_schedule = sorted(trainData["Schedule"], key=lambda x: x["Time"])
 
+        self.nextWaypointName = self.sorted_schedule[0]['Location']
+        self.nextWaypointAction = self.sorted_schedule[0]['Action']
+        self.nextWaypointTime = self.sorted_schedule[0]['Time']
+        self.prevWaypointName = None
 
         self.currentEvent = 0
+        self.currentDisplayEvent = 0
 
         self.width, self.height = 40, 20
 
@@ -64,11 +71,15 @@ class Train:
             if event['Time'] == time and event['Action'] =='Spawn':
                     self.spawnTrain(event['Location'])
                     self.currentEvent = self.currentEvent + 1
+                    self.currentDisplayEvent = self.currentEvent
+                    self.timetable.updateTrainList()
 
                     if len(self.sorted_schedule)>self.currentEvent:
+                        self.prevWaypointName = self.nextWaypointName
                         self.nextWaypointName = self.sorted_schedule[self.currentEvent]['Location']
                         self.nextWaypointAction =self.sorted_schedule[self.currentEvent]['Action']
                         self.nextWaypointTime = self.sorted_schedule[self.currentEvent]['Time']
+
 
 
         if self.exist:
@@ -87,10 +98,13 @@ class Train:
             self.tileMapper.updateSignals()
             self.prevSignalTile = self.tileObjNext
 
+
     def manageRestartStop(self):
         if self.trainStopped and self.trainReadyTime<=self.time:
             self.currentSpeed = self.maxSpeed
             self.trainStopped = False
+            self.currentDisplayEvent = self.currentEvent
+            self.timetable.updateTrainList()
 
 
     def manageNewTile(self):
@@ -153,13 +167,29 @@ class Train:
                 self.entryToTile = [-self.entryToTilePrev[0],-self.entryToTilePrev[1]]
                 self.entryToTilePrev = [-self.entryToTile[0],-self.entryToTile[1]]
 
+            if self.nextWaypointAction!="Despawn" or self.nextWaypointAction!="Call" or self.nextWaypointAction!="Start":
+                self.currentDisplayEvent = self.currentDisplayEvent +1
 
-            self.currentEvent = self.currentEvent + 1
+            if self.nextWaypointAction!="Despawn":
+                self.currentEvent = self.currentEvent + 1
+
+
+            
+            self.timetable.updateTrainList()
 
             if len(self.sorted_schedule)>self.currentEvent:
+                self.prevWaypointName = self.nextWaypointName
                 self.nextWaypointName = self.sorted_schedule[self.currentEvent]['Location']
                 self.nextWaypointAction =self.sorted_schedule[self.currentEvent]['Action']
                 self.nextWaypointTime = self.sorted_schedule[self.currentEvent]['Time']
+
+        #New feature
+        # elif self.currentTileName != self.nextWaypointName and self.currentTileName!=None and self.currentTileName!=self.prevWaypointName:
+        #     self.deleteTrain() 
+        #     print("TRAIN AT WRONG WAYPOINT")
+        #     print(self.currentTileName)
+        #     print(self.nextWaypointName)
+        #     WarningBox(self.headcode + " may have arrived at the wrong waypoint.","Cannot complete").exec_()
             
 
     def getNextPosition(self,speed,timeIncrease):
