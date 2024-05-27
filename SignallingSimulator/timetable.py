@@ -10,9 +10,8 @@ from datetime import datetime, timedelta
 from extra import *
 
 class Timetable:
-    def __init__(self,openGlInstance,shape,ui,tileMapper):
-        self.openGlInstance=openGlInstance
-        self.shape = shape
+    def __init__(self,map_draw,ui,tileMapper):
+        self.map_draw=map_draw
         self.ui = ui
         self.trainList = []
         self.selectedTrainIndex = None
@@ -22,10 +21,7 @@ class Timetable:
         self.trainTimetable = self.ui.TrainTimetable
         self.trainListTable = self.ui.TrainList
 
-        self.trainBatch = self.openGlInstance.createNewBatch("trainList")
-
         self.selectedTrain = None
-
         self.end = False
 
 
@@ -52,7 +48,7 @@ class Timetable:
                     #load the train in
                     for event in train['Schedule']:
                         event['Time'] = self.time_to_seconds(event['Time'])
-                    self.trainList.append(Train(train,self.trainBatch,self.shape,self.tileMapper,self))
+                    self.trainList.append(Train(train,self.map_draw,self.tileMapper,self))
                     self.updateTrainList()
 
             for activeTrain in self.trainList:
@@ -70,16 +66,6 @@ class Timetable:
 
         self.startTime = self.time_to_seconds(timetableData['StartTime'])
         self.endTime = self.time_to_seconds(timetableData['EndTime'])
-
-
-        # for train in trainData:
-        #     self.trainList.append(Train(train,self.trainBatch,self.shape))
-
-        
-        # self.trainList[0].drawTrain((50,50))
-        # self.trainList[1].drawTrain((150,50))
-
-        # self.updateTrainList()
 
     #This function opens the file.
     def load_json_from_file(self, file_path):
@@ -149,24 +135,18 @@ class Timetable:
         self.trainTimetable.resizeColumnsToContents()
         self.updateTrainList()
 
-    def canvasMousePressEvent(self, x,y,left,right,top,bottom,width,height):
-        propX = x/width
-        propY = y/height
-
-        mapX = left + propX * (right-left)
-        mapY = top + propY * (bottom-top)
-
-        
+    def canvasMousePressEvent(self, mapX,mapY):
         index = 0
         for train in self.trainList:
-            if mapX>train.trainCoord[0] and mapX<train.trainCoord[0]+train.width and mapY>train.trainCoord[1] and mapY<train.trainCoord[1]+train.height:
+            if mapX>train.trainCoord[0] and mapX<train.trainCoord[0]+train.width and mapY>train.trainCoord[1]-train.height and mapY<train.trainCoord[1]:
                 self.selectedTrainIndex = index
                 self.selectedTrain = self.trainList[self.selectedTrainIndex]
                 self.updateTrainInformation()
             index = index + 1
 
     def delete(self):
-        self.openGlInstance.removeBatch("trainList")
+        self.map_draw.train_list = {}
+        #self.openGlInstance.removeBatch("trainList")
 
     def time_to_seconds(self,time_str):
         time_format = "%H:%M:%S"

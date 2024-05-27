@@ -26,8 +26,6 @@ class Clock:
         self.times20Button = ui.times20Speed
         self.times20Button.clicked.connect(lambda: self.change_speed(20))
 
-        print("Setup")
-
         # Initialize variables
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_lcd)

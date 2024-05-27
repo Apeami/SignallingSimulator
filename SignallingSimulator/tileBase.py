@@ -5,13 +5,11 @@ from extra import ReplacableImage
 
 
 class TileBase:
-    def __init__(self, openGlInstance, batch, imagePath, point,flip ,location,tileCoord,clickable=False):
-        print("tilebase Create")
+    def __init__(self, map_draw, imagePath, point,flip ,location,tileCoord,clickable=False):
 
-        #Image creation
+       #Image creation
         image = ReplacableImage(imagePath)
-        image.set_replacement_color((255,255,255))
-        image = image.render()
+        image.set_replacement_color((255,255,255,255))
         #image = pyglet.image.load(imagePath)
 
         #Variable and constant creation
@@ -22,23 +20,24 @@ class TileBase:
         self.convert = {"north":270,"east":0,"south":90,"west":180}
         self.highlighted = False
         self.highlight=None
-        self.openGlInstance = openGlInstance
+        self.map_draw = map_draw
         self.location = location
         self.flip=flip
-        self.batch = batch
         self.tileCoord = tileCoord
         self.tileLoc = (math.floor(self.location[0]/50), math.floor(self.location[1]/50))
-        self.color = (255,255,255)
+        self.color = (255,255,255,255)
+
+ 
 
         #Sprite managment
 
-        if self.flip:
-            image = image.get_texture().get_transform(flip_y=True)  
+        # if self.flip:
+        #     image = image.get_texture().get_transform(flip_y=True)  
 
-        self.sprite = pyglet.sprite.Sprite(image, batch=self.batch)
+        # self.sprite = pyglet.sprite.Sprite(image, batch=self.batch)
 
-        self.sprite.anchor_x = self.width // 2
-        self.sprite.anchor_y = self.height // 2
+        # self.sprite.anchor_x = self.width // 2
+        # self.sprite.anchor_y = self.height // 2
 
         locationEdited = [self.location[0],self.location[1]]
         if self.width>50:
@@ -46,40 +45,51 @@ class TileBase:
         if self.height>50:
             locationEdited[1] = locationEdited[1] - ((self.height-50)/2)
 
-            
-        if self.point=="west":
-            if self.flip:
-                locationEdited[1]=locationEdited[1]-self.height
-            self.sprite.update(locationEdited[0]+self.width, locationEdited[1]+self.height)
-        if self.point=="east":
-            if self.flip:
-                locationEdited[1]=locationEdited[1]+self.height
-            self.sprite.update(locationEdited[0], locationEdited[1])
-        if self.point=="north":
-            if self.flip:
-                locationEdited[0]=locationEdited[0]-self.width
-            self.sprite.update(locationEdited[0]+self.width, locationEdited[1])
-        if self.point=="south":
-            if self.flip:
-                locationEdited[0]=locationEdited[0]+self.width
-            self.sprite.update(locationEdited[0], locationEdited[1]+self.height)
+        self.locationEdited = locationEdited
 
-        self.sprite.rotation = self.convert[point]
+        image.flip = self.flip
+        image.point = self.convert[self.point]
+
+        # if self.point=="west":
+        #     if self.flip:
+        #         locationEdited[1]=locationEdited[1]-self.height
+        #     self.sprite.update(locationEdited[0]+self.width, locationEdited[1]+self.height)
+        # if self.point=="east":
+        #     if self.flip:
+        #         locationEdited[1]=locationEdited[1]+self.height
+        #     self.sprite.update(locationEdited[0], locationEdited[1])
+        # if self.point=="north":
+        #     if self.flip:
+        #         locationEdited[0]=locationEdited[0]-self.width
+        #     self.sprite.update(locationEdited[0]+self.width, locationEdited[1])
+        # if self.point=="south":
+        #     if self.flip:
+        #         locationEdited[0]=locationEdited[0]+self.width
+        #     self.sprite.update(locationEdited[0], locationEdited[1]+self.height)
+
+        # self.sprite.rotation = self.convert[point]
 
 
-        self.openGlInstance.shapes.append(self.sprite)
+        # self.map_draw.shapes.append(self.sprite)
+        self.map_draw.draw_tile(self.locationEdited,image)
 
         
     def changeColor(self, color):
         self.color = color
         new_image = ReplacableImage(self.imagePath)
         new_image.set_replacement_color(color)
-        new_image = new_image.render()
+        #new_image = new_image.render()
 
-        if self.flip:
-            new_image = new_image.get_texture().get_transform(flip_y=True)  
+        # if self.flip:
+        #     new_image = new_image.get_texture().get_transform(flip_y=True)  
 
-        self.sprite.image = new_image
+        # self.sprite.image = new_image
+
+        new_image.flip = self.flip
+        new_image.point = self.convert[self.point]
+        
+
+        self.map_draw.draw_tile(self.locationEdited,new_image)
 
     def remove_from_batch(self):
         self.sprite.delete()
@@ -89,22 +99,28 @@ class TileBase:
         if self.highlighted==True:
             self.handleClickOff()
         else:
-            image = pyglet.image.load("Assets/select.png")
-            self.highlight = pyglet.sprite.Sprite(image, batch=self.batch)
-            self.highlight.update(self.location[0], self.location[1])
-            self.openGlInstance.shapes.append(self.highlight)
+            # image = pyglet.image.load("Assets/select.png")
+            # self.highlight = pyglet.sprite.Sprite(image, batch=self.batch)
+            # self.highlight.update(self.location[0], self.location[1])
+            # self.map_draw.shapes.append(self.highlight)
+            self.map_draw.select_visible = True
+            self.map_draw.select_pos = self.location
             self.highlighted=True
+            self.map_draw.update()
 
     def handleClickOff(self):
-        if self.highlight != None:
-            self.highlight.delete()
-            self.highlighted = False
-            self.highlight=None
+        self.map_draw.select_visible=False
+        self.highlighted = False
+        self.map_draw.update()
+        # if self.highlight != None:
+        #     self.highlight.delete()
+        #     self.highlighted = False
+        #     self.highlight=None
 
 
 class TrackTile(TileBase):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord,distance, clickable=False,dimension = 50):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,tileCoord, clickable)
+    def __init__(self, map_draw, imagePath, point, flip,location,tileCoord,distance, clickable=False,dimension = 50):
+        super().__init__(map_draw, imagePath, point,flip ,location,tileCoord, clickable)
         self.distance = distance
         self.dimension = dimension
 
@@ -173,8 +189,8 @@ class TrackTile(TileBase):
         
 
 class DiagonalTile(TrackTile):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord,distance, clickable=False,dimension = 50):
-        super().__init__(openGlInstance,batch,imagePath,point,flip,location,tileCoord,distance)
+    def __init__(self, map_draw, imagePath, point, flip,location,tileCoord,distance, clickable=False,dimension = 50):
+        super().__init__(map_draw,imagePath,point,flip,location,tileCoord,distance)
 
     def getEntryAndExitCoord(self,entryDir = None, currentStatus = False):
         if self.point=="east":
@@ -183,8 +199,8 @@ class DiagonalTile(TrackTile):
             return((1,-1),(-1,1))
 
 class SignalTile(TrackTile):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord, clickable=False, signal="Red"):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,tileCoord,100, clickable)
+    def __init__(self, map_draw, imagePath, point, flip,location,tileCoord, clickable=False, signal="Red"):
+        super().__init__(map_draw, imagePath, point,flip ,location,tileCoord,100, clickable)
         self.signal = signal
         self.desiredSignal =signal
 
@@ -264,31 +280,36 @@ class SignalTile(TrackTile):
         self.signal = signal
 
         if signal == "Green":
-            newImagePath = "Assets/trackGreenSignal.png"
+            newImagePath = "assets/trackGreenSignal.png"
         elif signal == "DYellow":
-            newImagePath = "Assets/trackDYellowSignal.png"
+            newImagePath = "assets/trackDYellowSignal.png"
         elif signal == "Yellow":
-            newImagePath = "Assets/trackYellowSignal.png"
+            newImagePath = "assets/trackYellowSignal.png"
         elif signal == "Red":
-            newImagePath = "Assets/trackRedSignal.png"
+            newImagePath = "assets/trackRedSignal.png"
         else:
-            newImagePath = "Assets/trackRedSignal.png"
+            newImagePath = "assets/trackRedSignal.png"
 
         #new_image = pyglet.image.load(newImagePath)
         new_image = ReplacableImage(newImagePath)
         new_image.set_replacement_color(self.color)
-        new_image = new_image.render()
+
+        new_image.flip = self.flip
+        new_image.point = self.convert[self.point]
+        
         self.imagePath = newImagePath
 
-        if self.flip:
-            new_image = new_image.get_texture().get_transform(flip_y=True)  
+        self.map_draw.draw_tile(self.locationEdited,new_image)
 
-        self.sprite.image = new_image
+        # if self.flip:
+        #     new_image = new_image.get_texture().get_transform(flip_y=True)  
+
+        # self.sprite.image = new_image
 
 
 class CurveTile(TrackTile):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,distance,tileCoord, clickable=False):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,distance,tileCoord, clickable)
+    def __init__(self, map_draw, imagePath, point, flip,location,distance,tileCoord, clickable=False):
+        super().__init__(map_draw, imagePath, point,flip ,location,distance,tileCoord, clickable)
         self.exit = None
 
     def getEntryAndExitCoord(self,entryDir=None, currentStatus = False):
@@ -316,9 +337,6 @@ class CurveTile(TrackTile):
     
 
     def getWorldCoordFromProgress(self, progress, startDir):
-
-
-        print(CurveTile.getEntryAndExitCoord(self))
         EntryA, EntryB = CurveTile.getEntryAndExitCoord(self)
 
         if EntryA == startDir:
@@ -328,7 +346,6 @@ class CurveTile(TrackTile):
             exit = EntryA 
             entry = EntryB
         else:
-            print("No matching entry")
             exit = (0,0)
             entry = (0,0)
 
@@ -352,27 +369,33 @@ class CurveTile(TrackTile):
         return self.exit
 
 class PointTile(CurveTile):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord, clickable=False, diverge=False):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,tileCoord,50, clickable)
+    def __init__(self, map_draw, imagePath, point, flip,location,tileCoord, clickable=False, diverge=False):
+        super().__init__(map_draw, imagePath, point,flip ,location,tileCoord,50, clickable)
         self.diverge=diverge
 
     def updatePoint(self,diverge):
         self.diverge = diverge
 
         if not self.diverge:
-            newImagePath = "Assets/pointStraight.png"
+            newImagePath = "assets/pointStraight.png"
         else:
-            newImagePath = "Assets/pointCurve.png"
+            newImagePath = "assets/pointCurve.png"
 
         #new_image = pyglet.image.load(newImagePath)
         new_image = ReplacableImage(newImagePath)
         new_image.set_replacement_color(self.color)
-        new_image = new_image.render()
-        self.imagePath = newImagePath
-        if self.flip:
-            new_image = new_image.get_texture().get_transform(flip_y=True)  
+        #new_image = new_image.render()
+        new_image.flip = self.flip
+        new_image.point = self.convert[self.point]
+        
+        self.map_draw.draw_tile(self.locationEdited,new_image)
 
-        self.sprite.image = new_image
+
+        # self.imagePath = newImagePath
+        # if self.flip:
+        #     new_image = new_image.get_texture().get_transform(flip_y=True)  
+
+        # self.sprite.image = new_image
 
     def togglePoint(self):
         if self.diverge==True:
@@ -426,11 +449,6 @@ class PointTile(CurveTile):
 
             if entryDir==None:
                 return mixedComponent
-
-            print("GET ENTRY AND EXIT OF POINT")
-            print(curveComponent)
-            print(straightComponent)
-            print(entryDir)
             
             if entryDir in curveComponent and entryDir in straightComponent:
                 return mixedComponent
@@ -447,8 +465,8 @@ class PointTile(CurveTile):
 
 
 class PortalTile(TrackTile):
-    def __init__(self, openGlInstance,batch, imagePath, point, flip,location,tileCoord,distance, tilemap, connect ,clickable=False):
-        super().__init__(openGlInstance,batch, imagePath, point,flip ,location,tileCoord,distance, clickable)
+    def __init__(self, map_draw, imagePath, point, flip,location,tileCoord,distance, tilemap, connect ,clickable=False):
+        super().__init__(map_draw, imagePath, point,flip ,location,tileCoord,distance, clickable)
         self.tilemap = tilemap
         self.connect = connect
 
@@ -481,14 +499,7 @@ class PortalTile(TrackTile):
             for column in range(len(self.tilemap[row])):
                 tile = self.tilemap[row][column]
                 if isinstance(tile,PortalTile):
-                    print("TILE CONNECT")
-                    print(tile.connect)
-                    print(self.connect)
                     if tile.connect == self.connect:
-                        print("POSSIBLE MATCH")
-                        print((row,column))
-                        print(self.tileLoc)
-                        print(tile.tileLoc)
                         if self.tileLoc != tile.tileLoc:
                             return ("tele",tile.getDefaultStartDir(),(row,column))
         return (0,0)

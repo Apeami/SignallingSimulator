@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1440</width>
-    <height>800</height>
+    <height>1141</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,16 +15,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_4">
-    <item row="0" column="0">
-     <widget class="PygletWidget" name="openGLWidget">
-      <property name="minimumSize">
-       <size>
-        <width>600</width>
-        <height>450</height>
-       </size>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
@@ -252,6 +242,16 @@
       </item>
      </layout>
     </item>
+    <item row="0" column="0">
+     <widget class="MapDrawingWidget" name="MapWidget" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>600</width>
+        <height>450</height>
+       </size>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -426,9 +426,10 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PygletWidget</class>
-   <extends>QOpenGLWidget</extends>
-   <header>pygletWidget.h</header>
+   <class>MapDrawingWidget</class>
+   <extends>QWidget</extends>
+   <header>mapdrawingwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

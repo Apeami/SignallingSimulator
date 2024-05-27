@@ -11,14 +11,9 @@ class AbstractTrackSection:
         self.success = True
         self.tileList = []
 
-        print(firstTile)
-        print(firstTile.tileCoord)
-        print(secondTile)
-        print(secondTile.tileCoord)
         if not isinstance(firstTile, SignalTile) or not isinstance(secondTile,SignalTile):
             self.active = False
             self.success =False
-            print("Cann ot auto Track")
             WarningBox("The first and last tiles are not signals","Cannot complete").exec_()
             
             
@@ -32,10 +27,9 @@ class AbstractTrackSection:
         return False
 
     def delete(self):
-        print("Deleting")
         self.active = False
         for tile in self.tileList:
-            tile.changeColor((255,255,255))
+            tile.changeColor((255,255,255,255))
             if isinstance(tile, SignalTile):
                 tile.lock =False
                 tile.firstRouteSignal = False
@@ -64,7 +58,7 @@ class AutoTrack(AbstractTrackSection):
                 if isinstance(newTile,PointTile):
                     self.delete()
                     self.success = False
-                    WarningBox("Cannot Find a route for auto track","Cannot Complete").exec_()
+                    WarningBox("Cannot Find a route for auto track. There is a point tile in the route!","Cannot Complete").exec_()
                     return
                 
                 if isinstance(newTile,PointTile):
@@ -85,7 +79,7 @@ class AutoTrack(AbstractTrackSection):
                     newTile = self.tileMapper.tileMap[newTileCoordY][newTileCoordX]
                 except:
                     self.success = False
-                    WarningBox("Cannot Find a route for auto track","Cannot Complete").exec_()
+                    WarningBox("Cannot Find a route for auto track. Possible map error!","Cannot Complete").exec_()
                     return
                 entryDir = (-coord[0],-coord[1])
                 timerOut = timerOut +1 
@@ -96,7 +90,7 @@ class AutoTrack(AbstractTrackSection):
     def createRouting(self):
         if self.active:
             for tile in self.tileList:
-                tile.changeColor((0,255,255))
+                tile.changeColor((0,255,255,255))
                 if isinstance(tile,SignalTile):
                     if tile== self.secondTile:
                         tile.lastRouteSignal = True
@@ -120,18 +114,11 @@ class BranchSignalTile:
         if tile is None or tile.tileCoord in visited:
             return []
 
-        print("FINDING NEXT SIGNAL")
-        print("TileLocation")
-        print(tile.tileCoord)
-        print("Search Direction")
-        print(tileDirection)
 
         visited.add(tile.tileCoord)
 
         if isinstance(tile, SignalTile):
             if (tile.getDefaultStartDir() == tileDirection):
-                print("ReturningTile")
-                print(tile.tileCoord)
                 return [tile]
         if isinstance(tile,PortalTile):
             return []
@@ -140,10 +127,6 @@ class BranchSignalTile:
 
         coords = tile.getEntryAndExitCoord(entryDir=entryDir,currentStatus=False)
 
-        print("directional Coords")
-        print(coords)
-        print("entry Dir")
-        print(entryDir)
 
         tileList = []
         for coord in coords:
@@ -155,13 +138,6 @@ class BranchSignalTile:
                     newTile = self.tileMapper.tileMap[newTileCoordY][newTileCoordX]
                 except:
                     return []
-                print("Calling Function")
-                print("Direction Coord")
-                print(coord)
-                print("X")
-                print(newTileCoordX)
-                print("Y")
-                print(newTileCoordY)
                 result = self.findNextSignal(newTile, coord, visited=visited)
                 #result = []
                 for i in result:
@@ -171,8 +147,6 @@ class BranchSignalTile:
 
 
     def getSignalList(self,tile):
-        print("GETTING SIGNAL LIST")
-        print(tile.tileCoord)
         startDir = tile.getDefaultStartDir()
         entryLoc = (startDir[0],startDir[1])
         newTile = self.tileMapper.tileMap[tile.tileCoord[1]+startDir[0]][tile.tileCoord[0]+startDir[1]]
@@ -204,7 +178,6 @@ class RoutingTrack(AbstractTrackSection):
                             WarningBox("There is a train in the area","Cannot complete").exec_()
 
 
-            print(self.tileList)
         else:
             self.success = False
             WarningBox("Cannot find route or there is too many signals in the route","Cannot complete").exec_()
@@ -214,8 +187,7 @@ class RoutingTrack(AbstractTrackSection):
         if self.active:
             for i in range(len(self.tileList)):
                 tile = self.tileList[i]
-                tile.changeColor((0,0,255))
-                print(tile.tileCoord)
+                tile.changeColor((0,0,255,255))
 
                 if isinstance(tile,SignalTile):
                     if tile== self.secondTile:
@@ -238,19 +210,11 @@ class RoutingTrack(AbstractTrackSection):
                     nextTileOffset = (nextTileOffset[1],nextTileOffset[0])
                     prevTileOffset = (prevTileOffset[1],prevTileOffset[0])
 
-                    print("POINT IS CHANGING")
-                    print(tile.tileCoord)
-                    print(nextTileOffset)
-                    print(prevTileOffset)
-                    print(straightCoord)
-                    print(curveCoord)
 
                     if nextTileOffset in straightCoord and prevTileOffset in straightCoord:
-                        print("Straight point")
                         tile.updatePoint(False)
                     if nextTileOffset in curveCoord and prevTileOffset in curveCoord:
                         tile.updatePoint(True)
-                        print("CurvePoint")
 
 
             self.redSignals = []
@@ -260,11 +224,10 @@ class RoutingTrack(AbstractTrackSection):
             #TempCode to disable
             signalList = []
 
-            print(signalList)
             for signal in signalList:
                 if signal!=self.secondTile:
                     self.redSignals.append(signal)
-                    signal.changeColor((0,255,0))
+                    signal.changeColor((0,255,0,255))
 
 
 
@@ -282,7 +245,6 @@ class RoutingTrack(AbstractTrackSection):
         startDir = firstSignal.getDefaultStartDir()
         entryLoc = (startDir[0],startDir[1])
         newTile = self.tileMapper.tileMap[firstSignal.tileCoord[1]+startDir[0]][firstSignal.tileCoord[0]+startDir[1]]
-        print("FINGING NEXT SIGNAL PATH")
         path = self.findNextSignalPath(newTile,entryLoc, secondSignal)
         if path!=None:
             path.append(newTile)
@@ -302,8 +264,6 @@ class RoutingTrack(AbstractTrackSection):
 
         if isinstance(tile, SignalTile):
             if tile == targetTile:
-                print("TILE IS RETURNED")
-                print(tile.tileCoord)
                 return [tile]
 
         entryDir = (-tileDirection[0], -tileDirection[1])
@@ -323,21 +283,10 @@ class RoutingTrack(AbstractTrackSection):
 
 
                 result = self.findNextSignalPath(newTile, coord,targetTile, visited)
-                print("ITERATION RESULT")
-                print(tile.tileCoord)
-                print("RESULT")
-                print(result)
                 if result!=None:
-                    print("RESULT APPENDED")
-                    print(result)
-                    print(tile)
-                    print(result.append(tile))
                      
                     if isinstance(tile,SignalTile):
                         defaultDir = tile.getDefaultStartDir()
-                        print("SIGNAL TILE IN WAY")
-                        print(defaultDir)
-                        print(tileDirection)
 
                         if defaultDir == entryDir: #If signal is in opposite direction
                             result.append(tile)
@@ -360,18 +309,11 @@ class RoutingTrack(AbstractTrackSection):
         if tile is None or tile.tileCoord in visited:
             return []
 
-        print("FINDING NEXT SIGNAL")
-        print("TileLocation")
-        print(tile.tileCoord)
-        print("Search Direction")
-        print(tileDirection)
 
         visited.add(tile.tileCoord)
 
         if isinstance(tile, SignalTile):
             if (tile.getDefaultStartDir() == tileDirection):
-                print("ReturningTile")
-                print(tile.tileCoord)
                 return [tile]
         if blocking == False and isinstance(tile,PortalTile):
             return []
@@ -387,11 +329,6 @@ class RoutingTrack(AbstractTrackSection):
             else:
                 coords = tile.getEntryAndExitCoord()
 
-        print("directional Coords")
-        print(coords)
-        print("entry Dir")
-        print(entryDir)
-
         tileList = []
         for coord in coords:
             if coord != entryDir:
@@ -402,13 +339,6 @@ class RoutingTrack(AbstractTrackSection):
                     newTile = self.tileMapper.tileMap[newTileCoordY][newTileCoordX]
                 except:
                     return []
-                print("Calling Function")
-                print("Direction Coord")
-                print(coord)
-                print("X")
-                print(newTileCoordX)
-                print("Y")
-                print(newTileCoordY)
                 result = self.findNextSignal(newTile, coord, visited=visited, blocking=blocking)
                 #result = []
                 for i in result:
@@ -417,8 +347,6 @@ class RoutingTrack(AbstractTrackSection):
         return tileList
 
     def getSignalList(self,tile, blocking = True):
-        print("GETTING SIGNAL LIST")
-        print(tile.tileCoord)
         startDir = tile.getDefaultStartDir()
         entryLoc = (startDir[0],startDir[1])
         newTile = self.tileMapper.tileMap[tile.tileCoord[1]+startDir[0]][tile.tileCoord[0]+startDir[1]]

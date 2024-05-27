@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QVBoxLayout, QPushBut
 import pyglet
 from pyglet.image import SolidColorImagePattern
 
+from PyQt5.QtCore import Qt, QByteArray, QBuffer
+from PyQt5.QtGui import QImage, QPixmap, QTransform
 
 class WarningBox(QDialog):
     def __init__(self,message,title):
@@ -47,8 +49,12 @@ class ReplacableImage:
     def __init__(self, image_path):
 
         self.image_path = image_path
-        self.replace_color = (0, 0, 255)  # Default replacement color is blue
-        self.origin_color = (255,255,255)
+        self.replace_color = (0, 255, 255,255)  # Default replacement color is blue
+        self.origin_color = (255,255,255,255)
+        self.width=0
+        self.height=0
+        self.flip = False
+        self.point =0
 
     def set_replacement_color(self, color):
         self.replace_color = color
@@ -56,33 +62,74 @@ class ReplacableImage:
     def set_origin_color(self,color):
         self.origin_color = color
 
+    def transform_modified_image(self, image):
+
+        if self.flip:
+            image = image.transformed(QTransform().scale(1, -1))
+
+        if self.point!=0:
+            image = image.transformed(QTransform().rotate(self.point))
+
+
+
+        self.width = image.width()
+        self.height = image.height()
+
+        return image
+
     def render(self):
         # Create a unique key based on image_path and color settings
         cache_key = (self.image_path, self.origin_color, self.replace_color)
 
         if cache_key not in self._image_cache:
             # If the image is not in the cache, load it and process it
-            original_image = pyglet.image.load(self.image_path)
-            image_data = original_image.get_image_data()
-            pixel_data = image_data.get_data("RGBA", original_image.width * 4)
-            pixels = [(pixel_data[i], pixel_data[i + 1], pixel_data[i + 2], pixel_data[i + 3])
-                      for i in range(0, len(pixel_data), 4)]
+            # original_image = pyglet.image.load(self.image_path)
+            # image_data = original_image.get_image_data()
 
-            modified_pixel_data = bytearray()
-            for pixel in pixels:
-                if pixel[:3] == self.origin_color:
-                    modified_pixel_data.extend(
-                        bytes([self.replace_color[0], self.replace_color[1], self.replace_color[2], pixel[3]]))
-                else:
-                    modified_pixel_data.extend(bytes(pixel))
 
-            modified_image = pyglet.image.ImageData(original_image.width, original_image.height, 'RGBA',
-                                                    bytes(modified_pixel_data))
+            image = QImage(self.image_path)
+
+
+
+                # Ensure image format is RGBA32 to access raw bytes easily
+            image = image.convertToFormat(QImage.Format_RGBA8888)
+
+            # Access raw bytes
+            width = image.width()
+            height = image.height()
+            bytes_per_line = image.bytesPerLine()
+            ptr = image.bits()
+
+            if ptr == None:
+                raise Exception("No asset file found") 
+
+            ptr.setsize(height * bytes_per_line)
+
+
+            # Edit the bytes
+            edited_bytes = bytearray(ptr.asstring())
+            for i in range(0, len(edited_bytes), 4):
+                r = edited_bytes[i]
+                g = edited_bytes[i + 1]
+                b = edited_bytes[i + 2]
+                a = edited_bytes[i + 3]
+
+                if (r, g, b, a) == self.origin_color:
+                    edited_bytes[i] = self.replace_color[0]
+                    edited_bytes[i + 1] = self.replace_color[1]
+                    edited_bytes[i + 2] = self.replace_color[2]
+                    edited_bytes[i + 3] = self.replace_color[3]
+
+            # Create a new QImage from edited bytes
+            modified_image = QImage(edited_bytes, width, height, bytes_per_line, QImage.Format_RGBA8888)
 
             # Cache the modified image and its color settings for future use
             self._image_cache[cache_key] = modified_image
+
+        
         else:
             # If the image is in the cache, use the cached version
             modified_image = self._image_cache[cache_key]
 
+        modified_image = self.transform_modified_image(modified_image)
         return modified_image

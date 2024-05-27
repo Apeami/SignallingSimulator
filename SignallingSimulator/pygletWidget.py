@@ -7,7 +7,8 @@ from pyglet.gl import *
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QCursor
 import math
-
+from pyglet.math import Mat4
+from pyglet import shapes
 
 
 # Zooming constants
@@ -57,42 +58,54 @@ class PygletWidget(OpenGLWidget):
         """Pyglet equivalent of on_draw event for window"""
         
         # Initialize Projection matrix
-        glMatrixMode( GL_PROJECTION )
-        glLoadIdentity()
+        # glMatrixMode( GL_PROJECTION )
+        # glLoadIdentity()
 
-        # Initialize Modelview matrix
-        glMatrixMode( GL_MODELVIEW )
-        glLoadIdentity()
-        # Save the default modelview matrix
-        glPushMatrix()
+        # # Initialize Modelview matrix
+        # glMatrixMode( GL_MODELVIEW )
+        # glLoadIdentity()
+        # # Save the default modelview matrix
+        # glPushMatrix()
 
+        glClearColor(0.0, 0.0, 1.0, 1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+        print(current_context)
+        print(self.context())
+
+        # pyglet.window.projection = Mat4.orthogonal_projection(
+        #     self.left, self.right, self.bottom, self.top, 1, -1
+        # )
+        pyglet.window.projection = Mat4.orthogonal_projection(
+            -5, 5, -5, 5, 1, -1
+        )
         # Set orthographic projection matrix
-        glOrtho( self.left, self.right, self.bottom, self.top, 1, -1 )
+        #glOrtho( self.left, self.right, self.bottom, self.top, 1, -1 )
 
         # Draw quad 
-        glBegin( GL_QUADS )
-        glColor3ub( 0xFF, 0, 0 )
-        glVertex2i( 10, 10 )
+        # glBegin( GL_QUADS )
+        # glColor3ub( 0xFF, 0, 0 )
+        # glVertex2i( 10, 10 )
 
-        glColor3ub( 0xFF, 0xFF, 0 )
-        glVertex2i( 110, 10 )
+        # glColor3ub( 0xFF, 0xFF, 0 )
+        # glVertex2i( 110, 10 )
 
-        glColor3ub( 0, 0xFF, 0 )
-        glVertex2i( 110, 110 )
+        # glColor3ub( 0, 0xFF, 0 )
+        # glVertex2i( 110, 110 )
 
-        glColor3ub( 0, 0, 0xFF )
-        glVertex2i( 10, 110 )
-        glEnd()
+        # glColor3ub( 0, 0, 0xFF )
+        # glVertex2i( 10, 110 )
+        # glEnd()
 
-        self.batch.draw()
+        shapes.Rectangle(200, 200, 200, 200, color=(55, 55, 255)).draw()
 
-        for batch in self.batchList:
-            self.batchList[batch].draw()
+        # self.batch.draw()
+
+        # for batch in self.batchList:
+        #     self.batchList[batch].draw()
 
         # Remove default modelview matrix
-        glPopMatrix()     
+        #glPopMatrix()     
         
         
     def resizeGL(self, width, height):
@@ -126,8 +139,11 @@ class PygletWidget(OpenGLWidget):
         size = self.size()
         self.width, self.height = size.width(), size.height()
         
-        self.projection = pyglet.window.Projection2D()
-        self.projection.set(self.width, self.height, self.width, self.height)
+        # self.projection = pyglet.window.Projection2D()
+        # self.projection.set(self.width, self.height, self.width, self.height)
+        # pyglet.window.projection = Mat4.orthogonal_projection(
+        #     0, self.width, 0, self.height, -255, 255
+        # )
 
         self.left   = 0
         self.right  = self.width

@@ -5,9 +5,8 @@ import asyncio
 from extra import WarningBox
 
 class Train:
-    def __init__(self,trainData,batch,shape,tileMapper,timetable):
-        self.batch = batch
-        self.shape = shape
+    def __init__(self,trainData,map_draw,tileMapper,timetable):
+        self.map_draw = map_draw
         self.trainCoord = [0,0]
         self.tileMapper = tileMapper
         self.timetable = timetable
@@ -109,10 +108,6 @@ class Train:
 
     def manageNewTile(self):
         if isinstance(self.tileObjNext, SignalTile):
-            
-            print("SIGNAL MANAGE")
-            print(self.tileObjNext.getDefaultStartDir())
-            print(self.entryToTile)
             if self.tileObjNext.getDefaultStartDir()==(-self.entryToTile[0],-self.entryToTile[1]): #If signal in same direction
                 if self.tileObjNext.signal=="Red":
                     self.currentSpeed = 0
@@ -128,9 +123,6 @@ class Train:
 
     def manageAction(self):
         if self.currentTileName == self.nextWaypointName:#The train has arrived at the certain waypoint
-            print("ARRIVED AT WAYPOINT")
-            print(self.currentTileName)
-            print(self.nextWaypointAction)
             if self.nextWaypointAction =="Call":
                 self.currentSpeed = 0
                 self.tileProgress = 0.5
@@ -142,7 +134,6 @@ class Train:
                     self.trainReadyTime = self.time + waitTime
 
                 self.trainStopped = True
-                print("Action Stop")
             
             if self.nextWaypointAction =="Despawn":
                 self.deleteTrain()
@@ -155,7 +146,6 @@ class Train:
                 self.tileProgress = 0.5
 
             if self.nextWaypointAction =="Start":
-                print("STARTING")
                 if self.time<self.nextWaypointTime:
                     self.trainReadyTime = self.nextWaypointTime
                 else: 
@@ -163,7 +153,6 @@ class Train:
                 self.trainStopped=True
 
             if self.nextWaypointAction =="Reverse":
-                print("REVERSING")
                 self.entryToTile = [-self.entryToTilePrev[0],-self.entryToTilePrev[1]]
                 self.entryToTilePrev = [-self.entryToTile[0],-self.entryToTile[1]]
 
@@ -203,7 +192,6 @@ class Train:
         if self.tileProgress>0.5 and not self.tileIncreased: #Get Next Tile Obj
             self.tileIncreased = True
             nextTileAdder = self.tileObj.getNextTileAdd(self.entryToTile)
-            print(nextTileAdder)
             if nextTileAdder[0]=="tele":#Teleport
                 self.currentTile[0] = nextTileAdder[2][0]
                 self.currentTile[1] = nextTileAdder[2][1]
@@ -229,10 +217,9 @@ class Train:
             tileProgressRemainder = self.tileProgress - 1
             #self.tileProgress = tileProgressRemainder
                 
-            print(tileProgressRemainder)
-            print(self.prevDistance / self.tileObj.distance)
+
             self.tileProgress = tileProgressRemainder * (self.prevDistance / self.tileObj.distance)
-            print(self.tileProgress)
+
             self.prevDistance = self.tileObj.distance
 
 
@@ -257,49 +244,54 @@ class Train:
 
     def deleteTrain(self):
         if self.deleted == False:
-            self.label.delete()
-            self.rectangle.delete()
+            # self.label.delete()
+            # self.rectangle.delete()
+            self.map_draw.del_train(self.headcode)
             self.deleted = True
 
     def reDrawTrain(self, worldPos):
-        x = worldPos[0] + 25 - (self.width / 2)
-        y = worldPos[1] + 25 - (self.height / 2)
+        x = worldPos[0] +20#+ 25 - (self.width / 2)
+        y = worldPos[1] -13#+ 25 - (self.height / 2)
 
         self.trainCoord = [x, y]
 
-        # Update the label's position
-        self.label.x = x + self.width / 2
-        self.label.y = y + self.height / 2
+        self.map_draw.draw_train(self.trainCoord, self.headcode)
 
-        # Update the rectangle's vertices
-        rectangle_vertices = (x, y, x + self.width, y, x + self.width, y + self.height, x, y + self.height)
-        self.rectangle.vertices = rectangle_vertices
+        # # Update the label's position
+        # self.label.x = x + self.width / 2
+        # self.label.y = y + self.height / 2
+
+        # # Update the rectangle's vertices
+        # rectangle_vertices = (x, y, x + self.width, y, x + self.width, y + self.height, x, y + self.height)
+        # self.rectangle.vertices = rectangle_vertices
 
     def drawTrain(self,worldPos):
 
-        x = worldPos[0]+25 -(self.width/2)
-        y = worldPos[1]+25 -(self.height/2)
+        x = worldPos[0] +20#+(self.width/2)
+        y = worldPos[1] -13 #+(self.height/2)
 
         self.trainCoord = [x,y]
 
-        rectLayer = pyglet.graphics.OrderedGroup(2)
-        textLayer = pyglet.graphics.OrderedGroup(3)
+        self.map_draw.draw_train(self.trainCoord, self.headcode)
 
-        # Draw text on the rectangle
-        self.label = pyglet.text.Label(self.headcode,
-            font_name='Arial',
-            font_size=12,
-            x=x + self.width/2, y=y + self.height/2,
-            anchor_x='center', anchor_y='center',
-            batch=self.batch,
-            group = textLayer
-        )
+        # rectLayer = pyglet.graphics.OrderedGroup(2)
+        # textLayer = pyglet.graphics.OrderedGroup(3)
 
-        rectangle_vertices = (x, y, x + self.width, y, x + self.width, y + self.height, x, y + self.height)
-        rectangle_colors = (255, 0, 0, 255, 0, 0, 255, 0, 0, 255, 0, 0)
-        self.rectangle = self.batch.add(4, pyglet.gl.GL_QUADS,rectLayer,
-              ('v2f', rectangle_vertices),
-              ('c3B', rectangle_colors))
+        # # Draw text on the rectangle
+        # self.label = pyglet.text.Label(self.headcode,
+        #     font_name='Arial',
+        #     font_size=12,
+        #     x=x + self.width/2, y=y + self.height/2,
+        #     anchor_x='center', anchor_y='center',
+        #     batch=self.batch,
+        #     group = textLayer
+        # )
+
+        # rectangle_vertices = (x, y, x + self.width, y, x + self.width, y + self.height, x, y + self.height)
+        # rectangle_colors = (255, 0, 0, 255, 0, 0, 255, 0, 0, 255, 0, 0)
+        # self.rectangle = self.batch.add(4, pyglet.gl.GL_QUADS,rectLayer,
+        #       ('v2f', rectangle_vertices),
+        #       ('c3B', rectangle_colors))
     
 
 

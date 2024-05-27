@@ -1,26 +1,19 @@
 import sys
-import pyglet
 import random
 import time
-
-
-from PyQt5 import QtGui
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtOpenGL import QGLWidget as OpenGLWidget
-from pyglet.gl import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox,QWidget
-from PyQt5.QtCore import Qt, QProcess
 import logging
 
-from pygletWidget import PygletWidget
+from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox,QWidget
+from PyQt5.QtCore import Qt, QProcess
+
 from ui_mainGUI import Ui_MainWindow
 from tileMapper import TileMapper
-from extra import *
 
+from extra import *
 from train import Train
 from clock import Clock
 from timetable import Timetable
-from eventBox import EventBox
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -31,8 +24,8 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.setWindowTitle("Signalling Simulator")
 
-        #Get the opengl widget
-        self.opengl = self.ui.openGLWidget
+        #Get the map widget
+        self.map_draw = self.ui.MapWidget
 
         #These are the maps to be loaded
         self.tileMap = None
@@ -50,14 +43,13 @@ class MainWindow(QMainWindow):
 
         self.ui.actionToggle_Track.triggered.connect(self.togglePoint)
 
-        self.ui.actionZoom_In.triggered.connect(lambda: self.opengl.zoomScreen(1/1.2,self.opengl.width/2,self.opengl.height/2))
-        self.ui.actionZoom_Out.triggered.connect(lambda: self.opengl.zoomScreen(1.2,self.opengl.width/2,self.opengl.height/2))
-        self.ui.actionActual_Size.triggered.connect(lambda: self.opengl.zoomToActualSize(self.tileMap))
+        self.ui.actionZoom_In.triggered.connect(lambda: self.map_draw.zoomScreen(1/1.2))
+        self.ui.actionZoom_Out.triggered.connect(lambda: self.map_draw.zoomScreen(1.2))
+        self.ui.actionActual_Size.triggered.connect(lambda: self.map_draw.zoomToActualSize(self.tileMap))
 
         #Enable events
         self.setMouseTracking(True)
         self.installEventFilter(self)
-
 
         #Setup EventBox
         self.textBox = self.ui.LogTextBox
@@ -88,18 +80,18 @@ class MainWindow(QMainWindow):
                 return
 
         self.timetable = None
-        self.tileMap = TileMapper(self.opengl,self.opengl.shapes)
+        self.tileMap = TileMapper(self.map_draw)
 
         fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
-        print(fileName)
-        if fileName!=('', ''):
-            #try:
-            self.tileMap.openFile(fileName)
-            # except:
-            #     print("File Failed to open")
-            #     popup = WarningBox("File failed to open", "Error").exec_()
-            #     self.tileMap=None
-            #     return
+
+        if fileName!=('', ''): #User cancelled the file selection process
+            try:
+                self.tileMap.openFile(fileName)
+            except:
+                print("File Failed to open")
+                popup = WarningBox("File failed to open", "Error").exec_()
+                self.tileMap=None
+                return
         else:
             print("File Search cancelled")
             self.tileMap=None
@@ -110,16 +102,14 @@ class MainWindow(QMainWindow):
         self.ui.actionRoute_Train.triggered.connect(self.tileMap.manageTrainRoute)
         self.ui.actionDeleteRouting.triggered.connect(self.tileMap.manageDeleteRouting)
 
-
         #Connect the mouse and zoom to the map
-        self.opengl.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
-        self.opengl.zoomToActualSize(self.tileMap)
+        self.map_draw.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
+        #self.map_draw.zoomToActualSize(self.tileMap)
 
         #Alert the user
         self.logger.info("Succesfully opened the map")
 
     def openTimetable(self):
-
         if self.tileMap!=None:
             if self.timetable!=None:
                 confirm_box = QMessageBox(self)
@@ -134,7 +124,7 @@ class MainWindow(QMainWindow):
                 if button_clicked == QMessageBox.No:
                     return
 
-            self.timetable = Timetable(self.opengl,self.opengl.shapes,self.ui, self.tileMap)
+            self.timetable = Timetable(self.map_draw,self.ui, self.tileMap)
             fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
             if fileName!=('',''):
                 self.timetable.openFile(fileName)
@@ -142,7 +132,8 @@ class MainWindow(QMainWindow):
                 print("File Search Cancelled")
                 self.timetable=None
                 return
-            self.opengl.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
+            self.map_draw.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
+
             #Here is when the timetable is loaded, the simulation can begin
             #Setup Clock
             self.clock = Clock(self.ui,self.timetable.updateClock,self.timetable.startTime)
@@ -155,7 +146,6 @@ class MainWindow(QMainWindow):
             popup = WarningBox("No map imported yet. Cannot import timetable", "Info").exec_()
 
     def newMap(self):
-
         if self.tileMap!=None or self.timetable!=None:
             confirm_box = QMessageBox(self)
             confirm_box.setIcon(QMessageBox.Question)
@@ -188,7 +178,6 @@ class MainWindow(QMainWindow):
             self.tileMap.setSignal(type)
 
     def togglePoint(self):
-        print("Toggling")
         if self.tileMap!=None:
             self.tileMap.togglePoint()
 
