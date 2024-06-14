@@ -1,4 +1,3 @@
-import pyglet
 import random
 import math
 from extra import ReplacableImage

@@ -1,4 +1,3 @@
-import pyglet
 from tileBase import *
 import queue
 import asyncio
