@@ -1,9 +1,4 @@
 from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QVBoxLayout, QPushButton
-<<<<<<< HEAD
-
-=======
->>>>>>> 2171816d3b66abb8d3379cc4c8a3bc5f2437ba61
-
 from PyQt5.QtCore import Qt, QByteArray, QBuffer
 from PyQt5.QtGui import QImage, QPixmap, QTransform
 

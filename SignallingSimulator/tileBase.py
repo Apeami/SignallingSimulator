@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 2171816d3b66abb8d3379cc4c8a3bc5f2437ba61
 import random
 import math
 from extra import ReplacableImage
