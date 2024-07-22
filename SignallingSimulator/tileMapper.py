@@ -61,22 +61,22 @@ class TileMapper:
 
             # Determine the tile type and create the appropriate tile object
             if type == "signalTrack":
-                tileObj = SignalTile(self.map_draw, "assets/trackRedSignal.png", point, flip, realCoord,tileCoord)
+                tileObj = SignalTile(self.map_draw, "RedSignal", point, flip, realCoord,tileCoord)
             elif type == "contTrack":
 
-                tileObj = PortalTile(self.map_draw, "assets/trackContinuation.png", point, flip, realCoord,tileCoord,tile['distance'],self.tileMap,tile.get('connect', None))
+                tileObj = PortalTile(self.map_draw, "Continuation", point, flip, realCoord,tileCoord,tile['distance'],self.tileMap,tile.get('connect', None))
             elif type == "platTrack":
-                tileObj = TrackTile(self.map_draw, "assets/platform.png", point, flip, realCoord,tileCoord,tile['distance'])
+                tileObj = TrackTile(self.map_draw, "Platform", point, flip, realCoord,tileCoord,tile['distance'])
             elif type == "track":
-                tileObj = TrackTile(self.map_draw, "assets/trackHorizontal.png", point, flip, realCoord,tileCoord, tile['distance'])
+                tileObj = TrackTile(self.map_draw, "Straight", point, flip, realCoord,tileCoord, tile['distance'])
             elif type == "pointTrack":
-                tileObj = PointTile(self.map_draw, "assets/pointStraight.png", point, flip, realCoord,tileCoord)
+                tileObj = PointTile(self.map_draw, "PointOpen", point, flip, realCoord,tileCoord)
             elif type == "curveTrack":
-                tileObj = CurveTile(self.map_draw, "assets/trackCurve.png", point, flip, realCoord,tileCoord,tile['distance'])
+                tileObj = CurveTile(self.map_draw, "Curve", point, flip, realCoord,tileCoord,tile['distance'])
             elif type == "bufferTrack":
-                tileObj = TrackTile(self.map_draw, "assets/trackBuffer.png", point, flip, realCoord,tileCoord,tile['distance'])
+                tileObj = TrackTile(self.map_draw, "Buffer", point, flip, realCoord,tileCoord,tile['distance'])
             elif type == "diagonalTrack":
-                tileObj = DiagonalTile(self.map_draw, "assets/trackDiagonal.png", point, flip, realCoord,tileCoord,tile['distance'])
+                tileObj = DiagonalTile(self.map_draw, "Diagonal", point, flip, realCoord,tileCoord,tile['distance'])
 
             # Assign the created tile object to the appropriate location in the tile map
             self.tileMap[row][column] = tileObj
@@ -284,3 +284,7 @@ class TileMapper:
                 self.updateRoutings(route)
                 if route in self.routingObjects:
                     self.routingObjects.remove(route)
+
+    def zoomtopoint(self, loc):
+        print("Zooming to")
+        print(loc)

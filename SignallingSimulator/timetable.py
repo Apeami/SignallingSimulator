@@ -164,3 +164,10 @@ class Timetable:
         minute = second // 60
         second %= 60
         return f"{hour:02}:{minute:02}:{second:02}"
+
+    def zoomtotrain(self,headcode):
+        print("Zooming to ")
+        print(headcode)
+        for train in self.trainList:
+            if train.headcode == headcode:
+                self.map_draw.zoomToPoint(train.trainCoord)

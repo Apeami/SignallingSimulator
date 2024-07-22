@@ -14,6 +14,7 @@ from extra import *
 from train import Train
 from clock import Clock
 from timetable import Timetable
+import helpwindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -23,6 +24,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowTitle("Signalling Simulator")
+        self.show()
 
         #Initialize clock to null
         self.clock = None
@@ -33,6 +35,10 @@ class MainWindow(QMainWindow):
         #These are the maps to be loaded
         self.tileMap = None
         self.timetable = None
+
+        #Initial Window
+        self.welcome = helpwindow.WelcomeWindow()
+        self.welcome.show()
 
         #Bind the actions
         self.ui.actionOpen_Map.triggered.connect(self.openMap)
@@ -49,6 +55,10 @@ class MainWindow(QMainWindow):
         self.ui.actionZoom_In.triggered.connect(lambda: self.map_draw.zoomScreen(1/1.2))
         self.ui.actionZoom_Out.triggered.connect(lambda: self.map_draw.zoomScreen(1.2))
         self.ui.actionActual_Size.triggered.connect(lambda: self.map_draw.zoomToActualSize(self.tileMap))
+
+        self.ui.actionHelp.triggered.connect(lambda: self.welcome.showHelp(mainwindow = self))
+
+
 
         #Enable events
         self.setMouseTracking(True)
@@ -95,14 +105,14 @@ class MainWindow(QMainWindow):
         fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
 
         if fileName!=('', ''): #User cancelled the file selection process
-            try:
-                self.tileMap.openFile(fileName)
-            except:
-                print("File Failed to open")
-                popup = WarningBox("File failed to open", "Error").exec_()
-                self.connectMapFunction()
-                self.tileMap=None
-                return
+            # try:
+            self.tileMap.openFile(fileName)
+            # except:
+                # print("File Failed to open")
+                # popup = WarningBox("File failed to open", "Error").exec_()
+                # self.connectMapFunction()
+                # self.tileMap=None
+                # return
         else:
             print("File Search cancelled")
             self.connectMapFunction()
@@ -153,6 +163,11 @@ class MainWindow(QMainWindow):
             #Setup Clock
             self.clock = Clock(self.ui,self.timetable.updateClock,self.timetable.startTime)
 
+            print("create handleer")
+            #Create A handler for the clicks of Train List and Train Information
+            self.ui.TrainList.cellDoubleClicked.connect(self.trainlistclicked)
+            self.ui.TrainTimetable.cellDoubleClicked.connect(self.traintimetableclicked)
+
 
             #Alert user
             self.logger.info("Succesfully opened the timetable")
@@ -160,6 +175,16 @@ class MainWindow(QMainWindow):
         else:
             print("No Tilemap imported")
             popup = WarningBox("No map imported yet. Cannot import timetable", "Info").exec_()
+
+    def trainlistclicked(self, row, column):
+        item = self.ui.TrainList.item(row, 0)  # Get the item in the first column of the clicked row
+        if item:
+            self.timetable.zoomtotrain(item.text())
+
+    def traintimetableclicked(self,row,column):
+        item = self.ui.TrainTimetable.item(row, 2)  # Get the item in the first column of the clicked row
+        if item:
+            self.tileMap.zoomtopoint(item.text())
 
     def newMap(self):
         if self.tileMap!=None or self.timetable!=None:

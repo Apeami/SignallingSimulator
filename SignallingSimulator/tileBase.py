@@ -1,20 +1,21 @@
 import random
 import math
 from extra import ReplacableImage
-
+from DrawMapTile import DrawMapTile
+from PyQt5.QtGui import QColor
 
 class TileBase:
-    def __init__(self, map_draw, imagePath, point,flip ,location,tileCoord,clickable=False):
+    def __init__(self, map_draw, imagetype, point,flip ,location,tileCoord,clickable=False):
 
        #Image creation
-        image = ReplacableImage(imagePath)
-        image.set_replacement_color((255,255,255,255))
+        # image = ReplacableImage(imagePath)
+        # image.set_replacement_color((255,255,255,255))
         #image = pyglet.image.load(imagePath)
 
         #Variable and constant creation
-        self.imagePath = imagePath
-        self.width = image.width
-        self.height = image.height
+        self.imagetype = imagetype
+        # self.width = image.width
+        # self.height = image.height
         self.point = point
         self.convert = {"north":270,"east":0,"south":90,"west":180}
         self.highlighted = False
@@ -38,16 +39,16 @@ class TileBase:
         # self.sprite.anchor_x = self.width // 2
         # self.sprite.anchor_y = self.height // 2
 
-        locationEdited = [self.location[0],self.location[1]]
-        if self.width>50:
-            locationEdited[0] = locationEdited[0] - ((self.width-50)/2)
-        if self.height>50:
-            locationEdited[1] = locationEdited[1] - ((self.height-50)/2)
+        # locationEdited = [self.location[0],self.location[1]]
+        # if self.width>50:
+        #     locationEdited[0] = locationEdited[0] - ((self.width-50)/2)
+        # if self.height>50:
+        #     locationEdited[1] = locationEdited[1] - ((self.height-50)/2)
 
-        self.locationEdited = locationEdited
+        # self.locationEdited = locationEdited
 
-        image.flip = self.flip
-        image.point = self.convert[self.point]
+        # image.flip = self.flip
+        # image.point = self.convert[self.point]
 
         # if self.point=="west":
         #     if self.flip:
@@ -70,13 +71,16 @@ class TileBase:
 
 
         # self.map_draw.shapes.append(self.sprite)
-        self.map_draw.draw_tile(self.locationEdited,image)
+        # self.map_draw.draw_tile(self.locationEdited,image)
+
+        self.tile = DrawMapTile(self.flip, self.point, self.imagetype , QColor(255,255,255))
+        self.map_draw.draw_tile(self.location,self.tile)
 
         
     def changeColor(self, color):
         self.color = color
-        new_image = ReplacableImage(self.imagePath)
-        new_image.set_replacement_color(color)
+        # new_image = ReplacableImage(self.imagePath)
+        # new_image.set_replacement_color(color)
         #new_image = new_image.render()
 
         # if self.flip:
@@ -84,11 +88,14 @@ class TileBase:
 
         # self.sprite.image = new_image
 
-        new_image.flip = self.flip
-        new_image.point = self.convert[self.point]
+        self.tile.color = color
+        self.map_draw.update()
+
+        # new_image.flip = self.flip
+        # new_image.point = self.convert[self.point]
         
 
-        self.map_draw.draw_tile(self.locationEdited,new_image)
+        # self.map_draw.draw_tile(self.locationEdited,new_image)
 
     def remove_from_batch(self):
         self.sprite.delete()
@@ -279,26 +286,28 @@ class SignalTile(TrackTile):
         self.signal = signal
 
         if signal == "Green":
-            newImagePath = "assets/trackGreenSignal.png"
+            self.tile.tileType = "GreenSignal"
         elif signal == "DYellow":
-            newImagePath = "assets/trackDYellowSignal.png"
+            self.tile.tileType = "DYellowSignal"
         elif signal == "Yellow":
-            newImagePath = "assets/trackYellowSignal.png"
+            self.tile.tileType = "YellowSignal"
         elif signal == "Red":
-            newImagePath = "assets/trackRedSignal.png"
+            self.tile.tileType = "RedSignal"
         else:
-            newImagePath = "assets/trackRedSignal.png"
+            self.tile.tileType = "RedSignal"
 
+        self.map_draw.draw_tile(self.location,self.tile)
+        self.map_draw.update()
         #new_image = pyglet.image.load(newImagePath)
-        new_image = ReplacableImage(newImagePath)
-        new_image.set_replacement_color(self.color)
+        # new_image = ReplacableImage(newImagePath)
+        # new_image.set_replacement_color(self.color)
 
-        new_image.flip = self.flip
-        new_image.point = self.convert[self.point]
+        # new_image.flip = self.flip
+        # new_image.point = self.convert[self.point]
         
-        self.imagePath = newImagePath
+        # self.imagePath = newImagePath
 
-        self.map_draw.draw_tile(self.locationEdited,new_image)
+        # self.map_draw.draw_tile(self.locationEdited,new_image)
 
         # if self.flip:
         #     new_image = new_image.get_texture().get_transform(flip_y=True)  
@@ -376,18 +385,20 @@ class PointTile(CurveTile):
         self.diverge = diverge
 
         if not self.diverge:
-            newImagePath = "assets/pointStraight.png"
+            self.tile.tileType = "PointOpen"
         else:
-            newImagePath = "assets/pointCurve.png"
+            self.tile.tileType = "PointClose"
 
+        self.map_draw.draw_tile(self.location,self.tile)
+        self.map_draw.update()
         #new_image = pyglet.image.load(newImagePath)
-        new_image = ReplacableImage(newImagePath)
-        new_image.set_replacement_color(self.color)
-        #new_image = new_image.render()
-        new_image.flip = self.flip
-        new_image.point = self.convert[self.point]
+        # new_image = ReplacableImage(newImagePath)
+        # new_image.set_replacement_color(self.color)
+        # #new_image = new_image.render()
+        # new_image.flip = self.flip
+        # new_image.point = self.convert[self.point]
         
-        self.map_draw.draw_tile(self.locationEdited,new_image)
+        # self.map_draw.draw_tile(self.locationEdited,new_image)
 
 
         # self.imagePath = newImagePath

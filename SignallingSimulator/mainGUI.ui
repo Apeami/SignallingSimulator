@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1440</width>
-    <height>1141</height>
+    <width>1377</width>
+    <height>778</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
          <item row="0" column="0">
           <widget class="QTableWidget" name="TrainList">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -90,6 +90,18 @@
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="1" column="0">
           <widget class="QTableWidget" name="TrainTimetable">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
            <row>
             <property name="text">
              <string/>
@@ -136,7 +148,7 @@
          <item row="0" column="0">
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
               <widget class="QLabel" name="label_3">
                <property name="text">
@@ -146,6 +158,18 @@
              </item>
              <item>
               <widget class="QLCDNumber" name="lcdNumber">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>50</height>
+                </size>
+               </property>
                <property name="digitCount">
                 <number>8</number>
                </property>
@@ -163,57 +187,53 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout">
-             <item>
-              <widget class="QPushButton" name="playSimulation">
-               <property name="text">
-                <string>Play</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pauseSimulation">
-               <property name="text">
-                <string>Pause</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QPushButton" name="times1Speed">
-               <property name="text">
-                <string>1x</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="times2Speed">
-               <property name="text">
-                <string>2x</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="times5Speed">
-               <property name="text">
-                <string>5x</string>
-               </property>
-              </widget>
-             </item>
-             <item>
+            <layout class="QGridLayout" name="gridLayout_6">
+             <item row="3" column="0">
               <widget class="QPushButton" name="times10Speed">
                <property name="text">
                 <string>10x</string>
                </property>
               </widget>
              </item>
-             <item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="times2Speed">
+               <property name="text">
+                <string>2x</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
               <widget class="QPushButton" name="times20Speed">
                <property name="text">
                 <string>20x</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QPushButton" name="times5Speed">
+               <property name="text">
+                <string>5x</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pauseSimulation">
+               <property name="text">
+                <string>Pause</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="times1Speed">
+               <property name="text">
+                <string>1x</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QPushButton" name="playSimulation">
+               <property name="text">
+                <string>Play</string>
                </property>
               </widget>
              </item>
@@ -232,6 +252,18 @@
         <layout class="QGridLayout" name="gridLayout_5">
          <item row="0" column="0">
           <widget class="QTextEdit" name="LogTextBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>250</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -244,6 +276,12 @@
     </item>
     <item row="0" column="0">
      <widget class="MapDrawingWidget" name="MapWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>600</width>
@@ -259,7 +297,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1440</width>
+     <width>1377</width>
      <height>22</height>
     </rect>
    </property>
@@ -273,6 +311,7 @@
     <addaction name="actionSave_Scenario"/>
     <addaction name="actionOpen_Scenario"/>
     <addaction name="actionExit"/>
+    <addaction name="actionHelp"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -421,6 +460,11 @@
   <action name="actionDeleteRouting">
    <property name="text">
     <string>DeleteRouting</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>

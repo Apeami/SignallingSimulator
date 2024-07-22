@@ -1,6 +1,6 @@
 from extra import WarningBox
 from tileBase import *
-
+from PyQt5.QtGui import QColor
 
 class AbstractTrackSection:
     def __init__(self,firstTile,secondTile,tileMapper):
@@ -29,7 +29,7 @@ class AbstractTrackSection:
     def delete(self):
         self.active = False
         for tile in self.tileList:
-            tile.changeColor((255,255,255,255))
+            tile.changeColor(QColor(255,255,255))
             if isinstance(tile, SignalTile):
                 tile.lock =False
                 tile.firstRouteSignal = False
@@ -90,7 +90,7 @@ class AutoTrack(AbstractTrackSection):
     def createRouting(self):
         if self.active:
             for tile in self.tileList:
-                tile.changeColor((0,255,255,255))
+                tile.changeColor(QColor(0,255,255))
                 if isinstance(tile,SignalTile):
                     if tile== self.secondTile:
                         tile.lastRouteSignal = True
@@ -187,7 +187,7 @@ class RoutingTrack(AbstractTrackSection):
         if self.active:
             for i in range(len(self.tileList)):
                 tile = self.tileList[i]
-                tile.changeColor((0,0,255,255))
+                tile.changeColor(QColor(0,0,255))
 
                 if isinstance(tile,SignalTile):
                     if tile== self.secondTile:

@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
-from PyQt5.QtGui import QPainter, QBrush, QPen,QImage
+from PyQt5.QtGui import QPainter, QBrush, QPen,QImage ,QColor
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QRect
 from extra import ReplacableImage
 
@@ -96,6 +96,16 @@ class MapDrawingWidget(QWidget):
         painter.setBrush(QBrush(Qt.black, Qt.SolidPattern))
         painter.drawRect(self.rect())
 
+    def zoomToPoint(self,point):
+        print("ZOOM TO POINT")
+        print(self.width)
+        print(self.height)
+        print(point)
+        self.zoom_level = 1
+        self.center_x = point[0] - (self.width * self.zoom_level /2 )
+        self.center_y = point[1] - (self.height * self.zoom_level /2 )
+        self.update()
+
     def translate_distance(self,x,y, width, height):
 
         x = int((x - self.center_x)/self.zoom_level)
@@ -143,13 +153,14 @@ class MapDrawingWidget(QWidget):
 
 
         for item in self.tile_list:
-            image = item[0]
+            tile = item[0]
             pos = item[1]
             x,y,width,height = self.translate_distance(pos[0],pos[1],50,50)
 
-            image = image.render()
-            target_rect = QRect(x, y, width, height)
-            painter.drawImage(target_rect, image)
+            tile.draw_tile(painter, x,y,width)
+            # image = image.render()
+            # target_rect = QRect(x, y, width, height)
+            # painter.drawImage(target_rect, image)
 
         if self.train_to_del != None:
             self.train_list.pop(self.train_to_del)
@@ -172,7 +183,10 @@ class MapDrawingWidget(QWidget):
         if self.select_visible:
             x,y,width,height = self.translate_distance(self.select_pos[0],self.select_pos[1],50,50)
             target_rect = QRect(x, y, width, height)
-            painter.drawImage(target_rect, QImage('assets/select.png'))
+            pen = QPen(QColor(128, 0, 128), 5, Qt.SolidLine)
+            painter.setPen(pen)
+            painter.setBrush(Qt.NoBrush)
+            painter.drawRect(target_rect)
 
         # x,y,width,height = self.translate_distance(self.rect_x,self.rect_y,self.rect_width,self.rect_height)
 
@@ -201,6 +215,9 @@ class MapDrawingWidget(QWidget):
 
             self.center_x -= dx*(self.zoom_level*1)
             self.center_y -= dy*(self.zoom_level*1)
+
+            print(self.center_x)
+            print(self.center_y)
 
             self.last_mouse_pos = current_pos
         self.update()
