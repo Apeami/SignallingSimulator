@@ -1,4 +1,4 @@
-import pyglet
+
 from tileBase import *
 import queue
 import asyncio
@@ -244,14 +244,12 @@ class Train:
 
     def deleteTrain(self):
         if self.deleted == False:
-            # self.label.delete()
-            # self.rectangle.delete()
             self.map_draw.del_train(self.headcode)
             self.deleted = True
 
     def reDrawTrain(self, worldPos):
-        x = worldPos[0] +20#+ 25 - (self.width / 2)
-        y = worldPos[1] -13#+ 25 - (self.height / 2)
+        x = worldPos[0] + 25 - (self.width / 2)
+        y = worldPos[1] - 25 + (self.height / 2)
 
         self.trainCoord = [x, y]
 
@@ -267,8 +265,8 @@ class Train:
 
     def drawTrain(self,worldPos):
 
-        x = worldPos[0] +20#+(self.width/2)
-        y = worldPos[1] -13 #+(self.height/2)
+        x = worldPos[0]
+        y = worldPos[1]
 
         self.trainCoord = [x,y]
 

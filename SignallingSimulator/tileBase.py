@@ -1,4 +1,4 @@
-import pyglet
+
 import random
 import math
 from extra import ReplacableImage
@@ -147,11 +147,11 @@ class TrackTile(TileBase):
             self.startCoord = (self.location[0]+ self.dimension/2, self.location[1] + self.dimension/2)
             self.endCoord = (self.location[0]- self.dimension/2, self.location[1] - self.dimension/2)
         elif startDir == (-1,1):
-            self.startCoord = (self.location[0]- self.dimension/2, self.location[1] + self.dimension/2)
-            self.endCoord = (self.location[0]+ self.dimension/2, self.location[1] - self.dimension/2)
-        elif startDir == (1,-1):
             self.startCoord = (self.location[0]+ self.dimension/2, self.location[1] - self.dimension/2)
             self.endCoord = (self.location[0]- self.dimension/2, self.location[1] + self.dimension/2)
+        elif startDir == (1,-1):
+            self.startCoord = (self.location[0]- self.dimension/2, self.location[1] + self.dimension/2)
+            self.endCoord = (self.location[0]+ self.dimension/2, self.location[1] - self.dimension/2)
 
 
         current_x = self.startCoord[0] + (self.endCoord[0] - self.startCoord[0]) * progress

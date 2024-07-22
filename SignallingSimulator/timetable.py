@@ -67,6 +67,8 @@ class Timetable:
         self.startTime = self.time_to_seconds(timetableData['StartTime'])
         self.endTime = self.time_to_seconds(timetableData['EndTime'])
 
+        
+
     #This function opens the file.
     def load_json_from_file(self, file_path):
         with open(file_path[0], 'r') as file:

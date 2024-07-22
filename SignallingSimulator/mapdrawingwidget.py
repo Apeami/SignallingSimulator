@@ -50,6 +50,7 @@ class MapDrawingWidget(QWidget):
 
         self.train_list = {}
         self.tile_list = []
+        self.train_to_del = None
 
         self.select_pos = [0,0]
         self.select_visible = False
@@ -111,8 +112,18 @@ class MapDrawingWidget(QWidget):
         self.train_list[text] = pos
         self.update()
 
+    def del_all_train(self):
+        print("Del All train")
+        self.train_list = {}
+        self.update()
+
     def del_train(self,text):
-        self.train_list[text] = None
+        self.train_list = {}
+        self.train_to_del = text
+        self.update()
+
+    def del_all_tile(self):
+        self.tile_list = []
         self.update()
 
     def draw_tile(self, pos,image):
@@ -139,6 +150,10 @@ class MapDrawingWidget(QWidget):
             image = image.render()
             target_rect = QRect(x, y, width, height)
             painter.drawImage(target_rect, image)
+
+        if self.train_to_del != None:
+            self.train_list.pop(self.train_to_del)
+            self.train_to_del = None
 
         for text, pos in self.train_list.items():
             if pos!= None:
@@ -238,22 +253,31 @@ class MapDrawingWidget(QWidget):
 
     def zoomToActualSize(self,tilemap):
         if tilemap!= None:
-            zoomHeightOld = self.zoomed_height
-            prop = self.zoomed_width / self.zoomed_height
+            # zoomHeightOld = self.zoomed_height
+            # prop = self.zoomed_width / self.zoomed_height
 
-            if tilemap.width>tilemap.height:
-                self.zoomed_width = tilemap.width*50
-                self.zoomed_height = self.zoomed_width /prop
-            else:
-                self.zoomed_height = tilemap.height*50
-                self.zoomed_width = self.zoomed_height * prop
+            # if tilemap.width>tilemap.height:
+            #     self.zoomed_width = tilemap.width*50
+            #     self.zoomed_height = self.zoomed_width /prop
+            # else:
+            #     self.zoomed_height = tilemap.height*50
+            #     self.zoomed_width = self.zoomed_height * prop
 
             # self.left = 0
             # self.bottom = 0
             # self.right = self.zoomed_width
             # self.top = self.zoomed_height
 
-            self.center_x = self.width/2
-            self.center_y = self.height/2
+            # x = int((x - self.center_x)/self.zoom_level)
+            # y = -int((y - self.center_y)/self.zoom_level)
 
-            self.zoom_level = self.zoom_level * (self.zoomed_height/zoomHeightOld)
+
+            # width = int(width / self.zoom_level)
+            # height = int(height / self.zoom_level)
+
+            self.center_x = 0
+            self.center_y = 0 + tilemap.height *50
+            self.zoom_level = 1
+            self.repaint()
+
+            # self.zoom_level = self.zoom_level * (self.zoomed_height/zoomHeightOld)

@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QVBoxLayout, QPushButton
-import pyglet
-from pyglet.image import SolidColorImagePattern
+
 
 from PyQt5.QtCore import Qt, QByteArray, QBuffer
 from PyQt5.QtGui import QImage, QPixmap, QTransform

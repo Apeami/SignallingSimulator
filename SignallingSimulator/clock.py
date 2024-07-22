@@ -33,8 +33,11 @@ class Clock:
         self.counter = 0
         self.enabled = True
 
+        self.set_time(startTime)
+
+    def set_time(self,time):
         #Manage initial time
-        second = startTime
+        second = time
         hour = second // 3600
         second %= 3600
         minute = second // 60
@@ -42,6 +45,10 @@ class Clock:
         initial_time = QTime(hour, minute, second)
         self.counter = initial_time.hour() * 3600 + initial_time.minute() * 60 + initial_time.second()
 
+    def reset(self):
+        self.stop_timer()
+        self.set_time(0)
+        self.update_lcd()
 
     def start_timer(self):
         if self.enabled:

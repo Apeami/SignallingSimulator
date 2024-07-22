@@ -1,5 +1,4 @@
 from tileBase import *
-import pyglet
 import json
 from PyQt5.QtCore import Qt
 import math

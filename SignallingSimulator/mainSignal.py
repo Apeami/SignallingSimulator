@@ -24,6 +24,9 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.setWindowTitle("Signalling Simulator")
 
+        #Initialize clock to null
+        self.clock = None
+
         #Get the map widget
         self.map_draw = self.ui.MapWidget
 
@@ -79,8 +82,15 @@ class MainWindow(QMainWindow):
             if button_clicked == QMessageBox.No:
                 return
 
+        self.map_draw.del_all_train()
+        self.map_draw.del_all_tile()
         self.timetable = None
+        del self.tileMap
         self.tileMap = TileMapper(self.map_draw)
+
+        if self.clock!=None:
+            self.clock.reset()
+
 
         fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
 
@@ -90,13 +100,21 @@ class MainWindow(QMainWindow):
             except:
                 print("File Failed to open")
                 popup = WarningBox("File failed to open", "Error").exec_()
+                self.connectMapFunction()
                 self.tileMap=None
                 return
         else:
             print("File Search cancelled")
+            self.connectMapFunction()
             self.tileMap=None
             return
 
+        self.connectMapFunction()
+
+        #Alert the user
+        self.logger.info("Succesfully opened the map")
+
+    def connectMapFunction(self):
         #Connect the actions related routing
         self.ui.actionAuto_Track.triggered.connect(self.tileMap.manageAutoTrack)
         self.ui.actionRoute_Train.triggered.connect(self.tileMap.manageTrainRoute)
@@ -104,10 +122,7 @@ class MainWindow(QMainWindow):
 
         #Connect the mouse and zoom to the map
         self.map_draw.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
-        #self.map_draw.zoomToActualSize(self.tileMap)
-
-        #Alert the user
-        self.logger.info("Succesfully opened the map")
+        self.map_draw.zoomToActualSize(self.tileMap)
 
     def openTimetable(self):
         if self.tileMap!=None:
@@ -137,6 +152,7 @@ class MainWindow(QMainWindow):
             #Here is when the timetable is loaded, the simulation can begin
             #Setup Clock
             self.clock = Clock(self.ui,self.timetable.updateClock,self.timetable.startTime)
+
 
             #Alert user
             self.logger.info("Succesfully opened the timetable")
