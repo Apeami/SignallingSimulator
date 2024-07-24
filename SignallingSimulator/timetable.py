@@ -185,6 +185,11 @@ class Timetable:
         second %= 60
         return f"{hour:02}:{minute:02}:{second:02}"
 
+    def zoomtoselectedtrain(self):
+        if self.selectedTrainIndex!=None:
+            train  = self.trainList[self.selectedTrainIndex]
+            self.zoomtotrain(train.headcode)
+
     def zoomtotrain(self,headcode):
         print("Zooming to ")
         print(headcode)

@@ -157,7 +157,10 @@ class MainWindow(QMainWindow):
                 print("File Search Cancelled")
                 self.timetable=None
                 return
+
+
             self.map_draw.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
+            self.ui.ZoomToTrainButton.clicked.connect(self.timetable.zoomtoselectedtrain)
 
             #Here is when the timetable is loaded, the simulation can begin
             #Setup Clock
