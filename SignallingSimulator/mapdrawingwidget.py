@@ -102,8 +102,8 @@ class MapDrawingWidget(QWidget):
         print(self.height)
         print(point)
         self.zoom_level = 1
-        self.center_x = point[0] - (self.width * self.zoom_level /2 )
-        self.center_y = point[1] - (self.height * self.zoom_level /2 )
+        self.center_x = point[0] - (self.width * self.zoom_level *6 )
+        self.center_y = point[1] + (self.height * self.zoom_level *6 )
         self.update()
 
     def translate_distance(self,x,y, width, height):

@@ -288,3 +288,5 @@ class TileMapper:
     def zoomtopoint(self, loc):
         print("Zooming to")
         print(loc)
+        coord = (self.getCoordFromName(loc)[1]*50, self.getCoordFromName(loc)[0]*50)
+        self.map_draw.zoomToPoint(coord)

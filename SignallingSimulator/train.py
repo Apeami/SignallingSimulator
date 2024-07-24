@@ -69,6 +69,7 @@ class Train:
             if event['Time'] == time and event['Action'] =='Spawn':
                     self.spawnTrain(event['Location'])
                     self.currentEvent = self.currentEvent + 1
+                    self.timetable.updateTrainInformation()
                     self.currentDisplayEvent = self.currentEvent
                     self.timetable.updateTrainList()
 
@@ -160,6 +161,7 @@ class Train:
 
             if self.nextWaypointAction!="Despawn":
                 self.currentEvent = self.currentEvent + 1
+                self.timetable.updateTrainInformation()
 
 
             

@@ -182,9 +182,15 @@ class MainWindow(QMainWindow):
             self.timetable.zoomtotrain(item.text())
 
     def traintimetableclicked(self,row,column):
-        item = self.ui.TrainTimetable.item(row, 2)  # Get the item in the first column of the clicked row
-        if item:
-            self.tileMap.zoomtopoint(item.text())
+        print("Clicked")
+        print(self.timetable.selectedTrainIndex)
+        if self.timetable.selectedTrainIndex!=None:
+            print("HEre")
+            train = self.timetable.trainList[self.timetable.selectedTrainIndex]
+            loc = train.sorted_schedule[row]['Location']
+            print(train)
+            print(loc)
+            self.tileMap.zoomtopoint(loc)
 
     def newMap(self):
         if self.tileMap!=None or self.timetable!=None:

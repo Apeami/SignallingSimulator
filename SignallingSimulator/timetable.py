@@ -106,36 +106,56 @@ class Timetable:
         self.trainListTable.resizeColumnsToContents()
 
     def updateTrainInformation(self):
-        train  = self.trainList[self.selectedTrainIndex]
+        if self.selectedTrainIndex!=None:
+            train  = self.trainList[self.selectedTrainIndex]
 
-        self.headcodeLabel.setText("Headcode: "+ train.headcode)
+            self.headcodeLabel.setText("Headcode: "+ train.headcode)
 
-        self.trainTimetable.setRowCount(len(train.sorted_schedule))  # Number of rows
+            self.trainTimetable.setRowCount(len(train.sorted_schedule))  # Number of rows
 
-        for row, item in enumerate(train.sorted_schedule):
-            # if item['Time']< time:
-            #     for col in range(4):
-            #         highlighted_item = self.trainTimetable.item(row, col)  # Assuming you want to highlight the first cell of the row
-            #         highlighted_item.setBackground(Qt.red)
-            self.trainTimetable.setItem(row, 0, QTableWidgetItem(self.secondsToTime(item['Time']))) #Time
-            self.trainTimetable.setItem(row, 1, QTableWidgetItem(item['Action'])) #Action
+            for row, item in enumerate(train.sorted_schedule):
+                # Determine if this row is before the current event
+                if row < train.currentEvent:
+                    time_text = f"<s>{self.secondsToTime(item['Time'])}</s>"
+                    action_text = f"<s>{item['Action']}</s>"
+                    location_text = f"<s>{item['Location']}</s>"
+                else:
+                    time_text = self.secondsToTime(item['Time'])
+                    action_text = item['Action']
+                    location_text = item['Location']
 
-            self.trainTimetable.setItem(row, 2, QTableWidgetItem(item['Location'])) #Location
-            self.trainTimetable.setItem(row, 3, QTableWidgetItem("")) #Center
+                #Set temp value of location item for enabling teleporting
+                # dataItem = QTableWidgetItem(item['Location'])#.setForeground(QColor(255, 255, 255, 0))
+                # self.trainTimetable.setItem(row, 2, dataItem) #Location
 
 
-            for col in range(self.trainTimetable.columnCount()):
-                cell_item = self.trainTimetable.item(row, col)
-                if cell_item is not None:
-                    cell_item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                # Create QLabel to render HTML content
+                time_label = QLabel(time_text)
+                time_label.setTextFormat(Qt.RichText)
+                time_label.setAlignment(Qt.AlignCenter)
+                self.trainTimetable.setCellWidget(row, 0, time_label)
 
-            # for col, value in enumerate(item.values()):
-            #     cell_item = QTableWidgetItem(str(value))
-            #     cell_item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-            #     self.trainTimetable.setItem(row, col, cell_item)
+                action_label = QLabel(action_text)
+                action_label.setTextFormat(Qt.RichText)
+                action_label.setAlignment(Qt.AlignCenter)
+                self.trainTimetable.setCellWidget(row, 1, action_label)
 
-        self.trainTimetable.resizeColumnsToContents()
-        self.updateTrainList()
+                location_label = QLabel(location_text)
+                location_label.setTextFormat(Qt.RichText)
+                location_label.setAlignment(Qt.AlignCenter)
+                self.trainTimetable.setCellWidget(row, 2, location_label)
+
+                # Empty cell in the 4th column
+                empty_label = QLabel("")
+                self.trainTimetable.setCellWidget(row, 3, empty_label)
+
+                for col in range(self.trainTimetable.columnCount()):
+                    cell_item = self.trainTimetable.item(row, col)
+                    if cell_item is not None:
+                        cell_item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+
+            self.trainTimetable.resizeColumnsToContents()
+            self.updateTrainList()
 
     def canvasMousePressEvent(self, mapX,mapY):
         index = 0
@@ -170,4 +190,11 @@ class Timetable:
         print(headcode)
         for train in self.trainList:
             if train.headcode == headcode:
-                self.map_draw.zoomToPoint(train.trainCoord)
+                self.selectedTrainIndex = self.trainList.index(train)
+                self.updateTrainInformation()
+                if train.exist:
+                    self.map_draw.zoomToPoint(train.trainCoord)
+                else: #Train don't exist
+                    print("NOT exist")
+                    print(train.nextWaypointName)
+                    self.tileMapper.zoomtopoint(train.nextWaypointName)
