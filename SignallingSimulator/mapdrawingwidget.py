@@ -196,26 +196,27 @@ class MapDrawingWidget(QWidget):
 
                     # Draw the blue arrow
                     arrow_size = int(10 //self.zoom_level)  # Size of the arrow
-                    if forwardDir:
-                        # Draw arrow on the left
-                        arrow_x = x - arrow_size
-                        arrow_points = [
-                            QPoint(arrow_x, y + height // 2),
-                            QPoint(arrow_x + arrow_size, y + height // 2 - arrow_size // 2),
-                            QPoint(arrow_x + arrow_size, y + height // 2 + arrow_size // 2)
-                        ]
-                    else:
-                        # Draw arrow on the right
-                        arrow_x = x + width
-                        arrow_points = [
-                            QPoint(arrow_x, y + height // 2),
-                            QPoint(arrow_x - arrow_size, y + height // 2 - arrow_size // 2),
-                            QPoint(arrow_x - arrow_size, y + height // 2 + arrow_size // 2)
-                        ]
-        
-                    painter.setPen(QPen(Qt.blue, 2, Qt.SolidLine))
-                    painter.setBrush(QBrush(Qt.blue, Qt.SolidPattern))
-                    painter.drawPolygon(QPolygon(arrow_points))
+                    if forwardDir is not None:
+                        if forwardDir==True:
+                            # Draw arrow on the left
+                            arrow_x = x - arrow_size
+                            arrow_points = [
+                                QPoint(arrow_x, y + height // 2),
+                                QPoint(arrow_x + arrow_size, y + height // 2 - arrow_size // 2),
+                                QPoint(arrow_x + arrow_size, y + height // 2 + arrow_size // 2)
+                            ]
+                        elif forwardDir==False:
+                            # Draw arrow on the right
+                            arrow_x = x + width
+                            arrow_points = [
+                                QPoint(arrow_x, y + height // 2),
+                                QPoint(arrow_x - arrow_size, y + height // 2 - arrow_size // 2),
+                                QPoint(arrow_x - arrow_size, y + height // 2 + arrow_size // 2)
+                            ]
+
+                        painter.setPen(QPen(Qt.blue, 2, Qt.SolidLine))
+                        painter.setBrush(QBrush(Qt.blue, Qt.SolidPattern))
+                        painter.drawPolygon(QPolygon(arrow_points))
 
                 # Draw the text centered in the shape
                 painter.setPen(QPen(text_color))
@@ -280,9 +281,6 @@ class MapDrawingWidget(QWidget):
 
             self.center_x -= dx*(self.zoom_level*1)
             self.center_y -= dy*(self.zoom_level*1)
-
-            print(self.center_x)
-            print(self.center_y)
 
             self.last_mouse_pos = current_pos
         self.update()

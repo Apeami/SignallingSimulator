@@ -186,6 +186,18 @@ class Train:
         #     print(self.nextWaypointName)
         #     WarningBox(self.headcode + " may have arrived at the wrong waypoint.","Cannot complete").exec_()
             
+    def updateArrow(self):
+        forward = ((0,1),(-1,1),(1,1))
+        backward = ((0,-1),(-1,-1),(0,-1))
+
+        if self.entryToTilePrev in forward:
+            self.forwardDir = True
+        elif self.entryToTilePrev in backward:
+            self.forwardDir = False
+        else:
+            self.forwardDir = None
+
+        self.map_draw.update()
 
     def getNextPosition(self,speed,timeIncrease):
         realDistanceIncrease = speed * timeIncrease
@@ -218,6 +230,8 @@ class Train:
             self.currentTileName = self.tileMapper.getNameFromCoord(self.currentTile)
             self.tileIncreased=False
             self.entryToTilePrev = self.entryToTile
+
+            self.updateArrow()
 
             #Check to see if another train is already in this tile if so delete
             if self.timetable.checkForTrainInTile(self):
@@ -268,6 +282,8 @@ class Train:
 
         self.exist=True
         self.currentSpeed = self.maxSpeed
+
+        self.updateArrow()
 
 
     def deleteTrain(self):
