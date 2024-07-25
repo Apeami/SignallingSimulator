@@ -1,0 +1,129 @@
+{
+    "name" : "West Highland Line",
+    "grid_size" : {
+        "rows" : 20,
+        "columns" : 51
+    },
+
+    "text" : [
+        {"row":2 , "column":-2, "text":"Hellensburgh Upper"},
+        {"row":13 , "column":-2, "text":"Garelochhead"},
+        {"row":23 , "column":-2, "text":"Arrochar and Tarbet"},	
+        {"row":34 , "column":-2, "text":"Ardlui"}, 
+        {"row":3 , "column":3, "text":"Crianlarich"},
+        {"row":12 , "column":7, "text":"To Fort William"},
+        {"row":13 , "column":4, "text":"Tyndrum Lower"},
+        {"row":22 , "column":4, "text":"Dalmally"}
+    ],
+
+
+    "data" : [ 
+        { "row": 0, "column": 0, "type": "contTrack", "point": "west","flip":false,"distance":56 },
+        { "row": 0, "column": 1, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 2, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 4, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 0, "column": 5, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 6, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 7, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 3, "type": "platTrack", "point": "west","flip":false, "distance":56,"waypoint":"Hellensburgh Upper" },
+        { "row": 0, "column": 8, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 9, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 10, "type": "track", "point": "west","flip":false, "distance":56 },
+
+        { "row": 0, "column": 11, "type": "pointTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 1, "column": 12, "type": "curveTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 12, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 13, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 14, "type": "platTrack", "point": "west","flip":false, "distance":56 , "waypoint":"Garelochhead"},
+        { "row": 0, "column": 15, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 1, "column": 13, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 1, "column": 14, "type": "platTrack", "point": "west","flip":true, "distance":56 , "waypoint":"Garelochhead"},
+        { "row": 1, "column": 15, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 1, "column": 16, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 1, "column": 17, "type": "pointTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 16, "type": "curveTrack", "point": "east","flip":false, "distance":56 },
+
+        { "row": 1, "column": 18, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 1, "column": 19, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 1, "column": 20, "type": "track", "point": "west","flip":false, "distance":56 },
+
+        { "row": 1, "column": 21, "type": "pointTrack", "point": "east","flip":true, "distance":56 },
+        { "row": 0, "column": 22, "type": "curveTrack", "point": "west","flip":true, "distance":56 },
+        { "row": 1, "column": 22, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 23, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 24, "type": "platTrack", "point": "west","flip":false, "distance":56 , "waypoint":"Arrochar and Tarbet"},
+        { "row": 0, "column": 25, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 1, "column": 23, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 1, "column": 24, "type": "platTrack", "point": "west","flip":true, "distance":56 , "waypoint":"Arrochar and Tarbet"},
+        { "row": 1, "column": 25, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 0, "column": 26, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 27, "type": "pointTrack", "point": "west","flip":true, "distance":56 },
+        { "row": 1, "column": 26, "type": "curveTrack", "point": "east","flip":true, "distance":56 },
+
+        { "row": 0, "column": 28, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 29, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 30, "type": "track", "point": "west","flip":false, "distance":56 },
+
+        { "row": 0, "column": 31, "type": "pointTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 1, "column": 32, "type": "curveTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 32, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 33, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 34, "type": "platTrack", "point": "west","flip":false, "distance":56 , "waypoint":"Ardlui"},
+        { "row": 0, "column": 35, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 1, "column": 33, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 1, "column": 34, "type": "platTrack", "point": "west","flip":true, "distance":56 , "waypoint":"Ardlui"},
+        { "row": 1, "column": 35, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 1, "column": 36, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 1, "column": 37, "type": "pointTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 0, "column": 36, "type": "curveTrack", "point": "east","flip":false, "distance":56 },
+
+        { "row": 1, "column": 38, "type": "contTrack", "point": "east","flip":false,"distance":56,"connect":"1" },
+
+        { "row": 5, "column": 0, "type": "contTrack", "point": "west","flip":false,"distance":56 },
+
+        { "row": 5, "column": 1, "type": "pointTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 6, "column": 2, "type": "curveTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 5, "column": 2, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 5, "column": 3, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 5, "column": 4, "type": "platTrack", "point": "west","flip":false, "distance":56 , "waypoint":"Crianlarich"},
+        { "row": 5, "column": 5, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 6, "column": 3, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 4, "type": "platTrack", "point": "west","flip":true, "distance":56 , "waypoint":"Crianlarich"},
+        { "row": 6, "column": 5, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 6, "column": 6, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 7, "type": "pointTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 5, "column": 6, "type": "curveTrack", "point": "east","flip":false, "distance":56 },
+
+        { "row": 6, "column": 8, "type": "pointTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 7, "column": 9, "type": "curveTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 9, "type": "track", "point": "west","flip":false, "distance":56 },
+
+        { "row": 7, "column": 10, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 7, "column": 11, "type": "contTrack", "point": "east","flip":false, "distance":56, "waypoint":"ToFortWilliam" },
+
+        { "row": 6, "column": 10, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 11, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 12, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 13, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 14, "type": "platTrack", "point": "west","flip":false, "distance":56 ,"waypoint":"Tyndrum Lower"},
+        { "row": 6, "column": 15, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 16, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 17, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 18, "type": "track", "point": "west","flip":false, "distance":56 },
+
+        { "row": 6, "column": 19, "type": "pointTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 7, "column": 20, "type": "curveTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 20, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 21, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 22, "type": "platTrack", "point": "west","flip":false, "distance":56 , "waypoint":"Dalmally"},
+        { "row": 6, "column": 23, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 7, "column": 21, "type": "signalTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 7, "column": 22, "type": "platTrack", "point": "west","flip":true, "distance":56 , "waypoint":"Dalmally"},
+        { "row": 7, "column": 23, "type": "signalTrack", "point": "east","flip":false, "distance":56 },
+        { "row": 7, "column": 24, "type": "track", "point": "west","flip":false, "distance":56 },
+        { "row": 7, "column": 25, "type": "pointTrack", "point": "west","flip":false, "distance":56 },
+        { "row": 6, "column": 24, "type": "curveTrack", "point": "east","flip":false, "distance":56 }
+
+
+]
+}

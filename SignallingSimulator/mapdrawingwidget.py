@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
-from PyQt5.QtGui import QPainter, QBrush, QPen,QImage ,QColor
-from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QRect
+from PyQt5.QtGui import QPainter, QBrush, QPen,QImage ,QColor, QFont, QPolygon
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QRect, QPoint
 from extra import ReplacableImage
 
 ZOOM_IN_FACTOR = 1.2
@@ -60,6 +60,8 @@ class MapDrawingWidget(QWidget):
 
         # self.del_train("1k45")
 
+        self.textData = None
+
         self.cur_font = self.font()
 
         # trackA = ReplacableImage('assets/trackRedSignal.png')
@@ -118,8 +120,8 @@ class MapDrawingWidget(QWidget):
         return x,y,width, height
 
     
-    def draw_train(self, pos, text):#Text has to be unique
-        self.train_list[text] = pos
+    def draw_train(self, pos, text, entryModel, forwardDir):#Text has to be unique
+        self.train_list[text] = (pos, entryModel, forwardDir)
         self.update()
 
     def del_all_train(self):
@@ -146,7 +148,8 @@ class MapDrawingWidget(QWidget):
         self.update()
     
 
-
+    def setText(self, textData):
+        self.textData = textData
 
     def draw_all(self, painter):
         painter.setRenderHint(QPainter.Antialiasing)
@@ -166,19 +169,81 @@ class MapDrawingWidget(QWidget):
             self.train_list.pop(self.train_to_del)
             self.train_to_del = None
 
-        for text, pos in self.train_list.items():
-            if pos!= None:
-                x,y,width,height = self.translate_distance(pos[0],pos[1],40,20)
-                # Draw the rectangle
-                painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
-                painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))
-                painter.drawRect(x,y,width,height)
+        for text, trainData in self.train_list.items():
+            pos = trainData[0]
+            style = trainData[1]
+            forwardDir = trainData[2]
+            if pos is not None:
+                x, y, width, height = self.translate_distance(pos[0], pos[1], 50, 20)
+                x=int(x)
+                y=int(y)
 
-                # Draw the text centered in the rectangle
-                painter.setPen(QPen(Qt.white))
+                if style:
+                    # Draw the green circle
+                    radius = min(width, height) // 1  # Choose an appropriate radius
+                    center_x = x + width // 2
+                    center_y = y + height // 2
+                    painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+                    painter.setBrush(QBrush(Qt.green, Qt.SolidPattern))
+                    painter.drawEllipse(center_x - radius, center_y - radius, 2 * radius, 2 * radius)
+                    text_color = Qt.black
+                else:
+                    # Draw the rectangle
+                    painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+                    painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))
+                    painter.drawRect(x, y, width, height)
+                    text_color = Qt.white
+
+                    # Draw the blue arrow
+                    arrow_size = int(10 //self.zoom_level)  # Size of the arrow
+                    if forwardDir:
+                        # Draw arrow on the left
+                        arrow_x = x - arrow_size
+                        arrow_points = [
+                            QPoint(arrow_x, y + height // 2),
+                            QPoint(arrow_x + arrow_size, y + height // 2 - arrow_size // 2),
+                            QPoint(arrow_x + arrow_size, y + height // 2 + arrow_size // 2)
+                        ]
+                    else:
+                        # Draw arrow on the right
+                        arrow_x = x + width
+                        arrow_points = [
+                            QPoint(arrow_x, y + height // 2),
+                            QPoint(arrow_x - arrow_size, y + height // 2 - arrow_size // 2),
+                            QPoint(arrow_x - arrow_size, y + height // 2 + arrow_size // 2)
+                        ]
+        
+                    painter.setPen(QPen(Qt.blue, 2, Qt.SolidLine))
+                    painter.setBrush(QBrush(Qt.blue, Qt.SolidPattern))
+                    painter.drawPolygon(QPolygon(arrow_points))
+
+                # Draw the text centered in the shape
+                painter.setPen(QPen(text_color))
                 painter.setFont(self.cur_font)
-                text_rect = painter.boundingRect(x,y,width,height, Qt.AlignCenter, text)
+                text_rect = painter.boundingRect(x, y, width, height, Qt.AlignCenter, text)
                 painter.drawText(text_rect, Qt.AlignCenter, text)
+
+        #Draw text
+        if self.textData!=None:
+            font = QFont('Arial', int(14/ self.zoom_level))
+            painter.setFont(font)
+            pen = QPen(Qt.white)
+            painter.setPen(pen)
+
+            # These values are hardcoded in alot of places **BAD**
+            row_height = 50
+            column_width = 50
+        
+            for item in self.textData:
+                row = item['row']
+                column = item['column']
+                text = item['text']
+ 
+                x = row * column_width
+                y = column * row_height  # Adding 5 to row to handle negative rows
+                x,y,width,height = self.translate_distance(x,y,50,50)
+                painter.drawText(x, y, text)
+
 
         if self.select_visible:
             x,y,width,height = self.translate_distance(self.select_pos[0],self.select_pos[1],50,50)
@@ -293,7 +358,7 @@ class MapDrawingWidget(QWidget):
             # height = int(height / self.zoom_level)
 
             self.center_x = 0
-            self.center_y = 0 + tilemap.height *50
+            self.center_y = 200
             self.zoom_level = 1
             self.repaint()
 

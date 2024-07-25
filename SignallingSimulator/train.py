@@ -2,6 +2,7 @@ from tileBase import *
 import queue
 import asyncio
 from extra import WarningBox
+from PyQt5 import QtWidgets
 
 class Train:
     def __init__(self,trainData,map_draw,tileMapper,timetable):
@@ -28,6 +29,8 @@ class Train:
 
         self.exist = False
         self.currentTile = None
+
+        self.forwardDir = False 
 
         self.prevDistance = None
 
@@ -83,8 +86,10 @@ class Train:
 
         if self.exist:
             self.manageAction()
-            self.reDrawTrain(self.getNextPosition(self.currentSpeed,0.000277))
-
+            self.reDrawTrain(self.getNextPosition(self.currentSpeed,0.000277), False)
+        else:
+            tempCoord = self.tileMapper.getCoordFromName(self.sorted_schedule[0]['Location'])
+            self.reDrawTrain((tempCoord[1]*50, tempCoord[0]*50), True)
 
 
     def manageRestartSignal(self):
@@ -214,6 +219,28 @@ class Train:
             self.tileIncreased=False
             self.entryToTilePrev = self.entryToTile
 
+            #Check to see if another train is already in this tile if so delete
+            if self.timetable.checkForTrainInTile(self):
+                print("Train is already in tile")
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Critical)
+                msg.setText("The train has entered a tile with another train (Crash). The train "+self.headcode+" will be deleted")
+                msg.setWindowTitle("Train Deletion")
+                msg.addButton(QtWidgets.QMessageBox.Ok)
+                msg.exec_()
+                self.deleteTrain()
+
+
+            if isinstance(self.tileObj, PointTile): #Check to see if the point is set correctly
+                if self.entryToTilePrev not in self.tileObj.getEntryAndExitCoord(currentStatus = True):
+                    print("POINT not set correctly")
+                    msg = QtWidgets.QMessageBox()
+                    msg.setIcon(QtWidgets.QMessageBox.Critical)
+                    msg.setText("The point was not set correctly. The train "+self.headcode+" will be deleted")
+                    msg.setWindowTitle("Train Deletion")
+                    msg.addButton(QtWidgets.QMessageBox.Ok)
+                    msg.exec_()
+                    self.deleteTrain()
 
             tileProgressRemainder = self.tileProgress - 1
             #self.tileProgress = tileProgressRemainder
@@ -236,7 +263,7 @@ class Train:
         self.entryToTilePrev = self.entryToTile
         worldCoord = self.tileObj.getWorldCoordFromProgress(self.tileProgress,self.entryToTile)
         self.prevDistance = self.tileObj.distance
-        self.drawTrain(worldCoord)
+        self.drawTrain(worldCoord, False)
         self.currentTileName = self.tileMapper.getNameFromCoord(self.currentTile)
 
         self.exist=True
@@ -248,13 +275,17 @@ class Train:
             self.map_draw.del_train(self.headcode)
             self.deleted = True
 
-    def reDrawTrain(self, worldPos):
+        if self.prevSignalTile!=None:
+            self.prevSignalTile.trainInBlock=False
+            self.tileMapper.updateSignals()
+
+    def reDrawTrain(self, worldPos, entryModel):
         x = worldPos[0] + 25 - (self.width / 2)
         y = worldPos[1] - 25 + (self.height / 2)
 
         self.trainCoord = [x, y]
 
-        self.map_draw.draw_train(self.trainCoord, self.headcode)
+        self.map_draw.draw_train(self.trainCoord, self.headcode, entryModel, self.forwardDir)
 
         # # Update the label's position
         # self.label.x = x + self.width / 2
@@ -264,14 +295,14 @@ class Train:
         # rectangle_vertices = (x, y, x + self.width, y, x + self.width, y + self.height, x, y + self.height)
         # self.rectangle.vertices = rectangle_vertices
 
-    def drawTrain(self,worldPos):
+    def drawTrain(self,worldPos, entryModel):
 
         x = worldPos[0]
         y = worldPos[1]
 
         self.trainCoord = [x,y]
 
-        self.map_draw.draw_train(self.trainCoord, self.headcode)
+        self.map_draw.draw_train(self.trainCoord, self.headcode, entryModel, self.forwardDir)
 
         # rectLayer = pyglet.graphics.OrderedGroup(2)
         # textLayer = pyglet.graphics.OrderedGroup(3)

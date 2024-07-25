@@ -84,7 +84,11 @@ class DrawMapTile:
 
                 self.setBrushSignal(painter) 
                 painter.setPen(Qt.NoPen)
-                painter.drawEllipse(QPoint(x + half//4, y - half*10//16), width//8, width//8)
+                if self.tileType == "DYellowSignal":
+                    painter.drawEllipse(QPoint(x + half//4 + width//16, y - half*10//16), width//16, width//16)
+                    painter.drawEllipse(QPoint(x + half//4 - width//16, y - half*10//16), width//16, width//16)
+                else:
+                    painter.drawEllipse(QPoint(x + half//4, y - half*10//16), width//8, width//8)
 
             if self.point == 'west':
                 painter.setPen(QPen(Qt.white, width/20, Qt.SolidLine))
@@ -97,7 +101,11 @@ class DrawMapTile:
 
                 self.setBrushSignal(painter)  
                 painter.setPen(Qt.NoPen)
-                painter.drawEllipse(QPoint(x - half//4, y + half*10//16), width//8, width//8)
+                if self.tileType == "DYellowSignal":
+                    painter.drawEllipse(QPoint(x - half//4 + width//16, y + half*10//16), width//16, width//16)
+                    painter.drawEllipse(QPoint(x - half//4 - width//16, y + half*10//16), width//16, width//16)
+                else:
+                    painter.drawEllipse(QPoint(x - half//4, y + half*10//16), width//8, width//8)
 
             if self.point == 'north':
                 pass
@@ -205,9 +213,7 @@ class DrawMapTile:
 
         elif self.tileType == "Curve":
             self.draw_curve(x,y,width, painter)
-
-
-
+        
         else:
             print("No definition")
 

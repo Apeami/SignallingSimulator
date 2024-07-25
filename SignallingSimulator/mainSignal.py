@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 import random
 import time
@@ -94,6 +95,10 @@ class MainWindow(QMainWindow):
 
         self.map_draw.del_all_train()
         self.map_draw.del_all_tile()
+        if self.timetable!=None:
+            self.timetable.delete()
+        if self.tileMap!=None:
+            self.tileMap.delete()
         self.timetable = None
         del self.tileMap
         self.tileMap = TileMapper(self.map_draw)

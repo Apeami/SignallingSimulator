@@ -432,8 +432,8 @@ class PointTile(CurveTile):
                     mouth = True
         return mouth
 
-    def getEntryAndExitCoord(self, entryDir=None, currentStatus = False,diverge = None):
-        curveComponent = super().getEntryAndExitCoord()
+    def getEntryAndExitCoord(self, entryDir=None, currentStatus = False,diverge = None): #Entry dir is what is the part of the point to enter
+        curveComponent = super().getEntryAndExitCoord() #current status ==False is all exits of point, current status == true is only exits that correspond to the current diverge state
         straightComponent = super(CurveTile,self).getEntryAndExitCoord()
 
         if diverge==None:

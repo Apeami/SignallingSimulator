@@ -84,6 +84,8 @@ class TileMapper:
         # Extract text data from trackData
         textData = trackData['text']
 
+        self.map_draw.setText(textData)
+
         #Configure the signal tile
         self.signalTileConfigure()
 

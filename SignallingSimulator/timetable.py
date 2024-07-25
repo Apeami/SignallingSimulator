@@ -105,6 +105,12 @@ class Timetable:
 
         self.trainListTable.resizeColumnsToContents()
 
+    def checkForTrainInTile(self, trainCheck):
+        for train in self.trainList:
+            if train.tileObj == trainCheck.tileObj and train!=trainCheck:
+                return True
+        return False
+
     def updateTrainInformation(self):
         if self.selectedTrainIndex!=None:
             train  = self.trainList[self.selectedTrainIndex]
@@ -167,7 +173,12 @@ class Timetable:
             index = index + 1
 
     def delete(self):
+        print("DELTING")
+        # for train in self.trainList:
+        #     train.deleteTrain()
+        self.trainList = []
         self.map_draw.train_list = {}
+        self.map_draw.update()
         #self.openGlInstance.removeBatch("trainList")
 
     def time_to_seconds(self,time_str):
