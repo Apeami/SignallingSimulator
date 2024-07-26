@@ -316,8 +316,11 @@
     <addaction name="actionNew_Simulation"/>
     <addaction name="actionOpen_Scenario"/>
     <addaction name="actionOpen_Timetable_2"/>
+    <addaction name="actionNew_Map"/>
+    <addaction name="actionEdit_Map"/>
     <addaction name="actionExit"/>
     <addaction name="actionHelp"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -498,6 +501,16 @@
   <action name="actionOpen_Timetable_2">
    <property name="text">
     <string>Open Timetable</string>
+   </property>
+  </action>
+  <action name="actionEdit_Map">
+   <property name="text">
+    <string>Edit Map</string>
+   </property>
+  </action>
+  <action name="actionNew_Map">
+   <property name="text">
+    <string>New Map</string>
    </property>
   </action>
  </widget>

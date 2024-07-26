@@ -17,6 +17,7 @@ from train import Train
 from clock import Clock
 from timetable import Timetable
 import helpwindow
+from mapEditor import MapEditor
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -42,11 +43,13 @@ class MainWindow(QMainWindow):
         #These are the maps to be loaded
         self.tileMap = None
         self.timetable = None
+        self.mapEditor = None
 
         #Bind the actions
         self.ui.actionOpen_Scenario.triggered.connect(self.openMap)
         self.ui.actionOpen_Timetable_2.triggered.connect(self.openTimetable)
         self.ui.actionNew_Simulation.triggered.connect(self.newMap)
+        self.ui.actionEdit_Map.triggered.connect(self.editMap)
 
         self.ui.actionRed.triggered.connect(lambda: self.setSignal("Red"))
         self.ui.actionyellow.triggered.connect(lambda: self.setSignal("Yellow"))
@@ -79,6 +82,24 @@ class MainWindow(QMainWindow):
         self.logger.addHandler(handler)
         self.logger.info("Started the simulator")
 
+    def editMap(self):
+        print("Begin Editing map")
+        if self.mapEditor !=None:
+            confirm_box = QMessageBox(self)
+            confirm_box.setIcon(QMessageBox.Question)
+            confirm_box.setWindowTitle('Confirmation')
+            confirm_box.setText('You are already editing a map, are you sure you want to open another one?')
+            confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            confirm_box.setDefaultButton(QMessageBox.No)
+
+            button_clicked = confirm_box.exec_()
+
+            if button_clicked == QMessageBox.No:
+                return
+        
+        fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
+
+        self.mapEditor = MapEditor(fileName)
     
     def openMap(self):
         
