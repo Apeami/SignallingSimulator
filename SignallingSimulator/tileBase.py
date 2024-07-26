@@ -27,7 +27,7 @@ class TileBase:
         self.tileLoc = (math.floor(self.location[0]/50), math.floor(self.location[1]/50))
         self.color = (255,255,255,255)
 
- 
+        self.draw()
 
         #Sprite managment
 
@@ -73,8 +73,10 @@ class TileBase:
         # self.map_draw.shapes.append(self.sprite)
         # self.map_draw.draw_tile(self.locationEdited,image)
 
-        self.tile = DrawMapTile(self.flip, self.point, self.imagetype , QColor(255,255,255))
-        self.map_draw.draw_tile(self.location,self.tile)
+    def draw(self):
+        if self.imagetype!=None:
+            self.tile = DrawMapTile(self.flip, self.point, self.imagetype , QColor(255,255,255))
+            self.map_draw.draw_tile(self.location,self.tile)
 
         
     def changeColor(self, color):

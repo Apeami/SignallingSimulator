@@ -36,14 +36,36 @@ class TileMapper:
         error_dialog.setWindowTitle("Error")
         error_dialog.exec_()
 
-    def openFile(self, fileName):
+    def getTileObj(self, type, point, flip, realCoord, tileCoord, distance, connect):
+        # Determine the tile type and create the appropriate tile object
+        if type == "signalTrack":
+            tileObj = SignalTile(self.map_draw, "RedSignal", point, flip, realCoord,tileCoord)
+        elif type == "contTrack":
+            tileObj = PortalTile(self.map_draw, "Continuation", point, flip, realCoord,tileCoord,distance,self.tileMap,connect)
+        elif type == "platTrack":
+            tileObj = TrackTile(self.map_draw, "Platform", point, flip, realCoord,tileCoord,distance)
+        elif type == "track":
+            tileObj = TrackTile(self.map_draw, "Straight", point, flip, realCoord,tileCoord, distance)
+        elif type == "pointTrack":
+            tileObj = PointTile(self.map_draw, "PointOpen", point, flip, realCoord,tileCoord)
+        elif type == "curveTrack":
+            tileObj = CurveTile(self.map_draw, "Curve", point, flip, realCoord,tileCoord,distance)
+        elif type == "bufferTrack":
+            tileObj = TrackTile(self.map_draw, "Buffer", point, flip, realCoord,tileCoord,distance)
+        elif type == "diagonalTrack":
+            tileObj = DiagonalTile(self.map_draw, "Diagonal", point, flip, realCoord,tileCoord,distance)
+        return tileObj
 
+    def openFile(self, fileName):
         #Read from the json file
         try:
             trackData = self.load_json_from_file(fileName)
         except Exception as e:
             self.show_error_message(str(e))
             return True
+        return self.openMap(trackData)
+
+    def openMap(self, trackData):
 
         if "type" not in trackData or trackData["type"]!= "map":
             self.show_error_message("File is not of type: map")
@@ -84,27 +106,19 @@ class TileMapper:
             point = tile['point']
             flip = tile['flip']
 
-            # Determine the tile type and create the appropriate tile object
-            if type == "signalTrack":
-                tileObj = SignalTile(self.map_draw, "RedSignal", point, flip, realCoord,tileCoord)
-            elif type == "contTrack":
-
-                tileObj = PortalTile(self.map_draw, "Continuation", point, flip, realCoord,tileCoord,tile['distance'],self.tileMap,tile.get('connect', None))
-            elif type == "platTrack":
-                tileObj = TrackTile(self.map_draw, "Platform", point, flip, realCoord,tileCoord,tile['distance'])
-            elif type == "track":
-                tileObj = TrackTile(self.map_draw, "Straight", point, flip, realCoord,tileCoord, tile['distance'])
-            elif type == "pointTrack":
-                tileObj = PointTile(self.map_draw, "PointOpen", point, flip, realCoord,tileCoord)
-            elif type == "curveTrack":
-                tileObj = CurveTile(self.map_draw, "Curve", point, flip, realCoord,tileCoord,tile['distance'])
-            elif type == "bufferTrack":
-                tileObj = TrackTile(self.map_draw, "Buffer", point, flip, realCoord,tileCoord,tile['distance'])
-            elif type == "diagonalTrack":
-                tileObj = DiagonalTile(self.map_draw, "Diagonal", point, flip, realCoord,tileCoord,tile['distance'])
+            tileObj = self.getTileObj(type, point, flip, realCoord, tileCoord, tile['distance'], tile.get('connect', None))
 
             # Assign the created tile object to the appropriate location in the tile map
             self.tileMap[row][column] = tileObj
+
+        # Extract blanks
+        for rowI in range(len(self.tileMap)):
+            row = self.tileMap[rowI]
+            for colI in range(len(row)):
+                realCoord = self.tileToCoord((colI, rowI))
+                tileCoord = (colI,rowI)
+                if self.tileMap[rowI][colI] == None:
+                    self.tileMap[rowI][colI] = TileBase(self.map_draw, None, None, None, realCoord,tileCoord)
 
         # Extract text data from trackData
         textData = trackData['text']
@@ -113,6 +127,8 @@ class TileMapper:
 
         #Configure the signal tile
         self.signalTileConfigure()
+
+        self.trackData = trackData
 
         return False
         

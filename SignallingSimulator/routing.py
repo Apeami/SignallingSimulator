@@ -111,7 +111,7 @@ class BranchSignalTile:
         if visited is None:
             visited = set()
 
-        if tile is None or tile.tileCoord in visited:
+        if isinstance(tile, TileBase) or tile.tileCoord in visited:
             return []
 
 

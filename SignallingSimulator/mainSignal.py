@@ -11,6 +11,7 @@ from PyQt5.QtCore import Qt, QProcess
 
 from ui_mainGUI import Ui_MainWindow
 from tileMapper import TileMapper
+from timetableEditor import TimetableEditor
 
 from extra import *
 from train import Train
@@ -48,8 +49,9 @@ class MainWindow(QMainWindow):
         #Bind the actions
         self.ui.actionOpen_Scenario.triggered.connect(self.openMap)
         self.ui.actionOpen_Timetable_2.triggered.connect(self.openTimetable)
-        self.ui.actionNew_Simulation.triggered.connect(self.newMap)
+        self.ui.actionNew_Simulation.triggered.connect(self.newSim)
         self.ui.actionEdit_Map.triggered.connect(self.editMap)
+        self.ui.actionNew_Map.triggered.connect(self.newMap)
 
         self.ui.actionRed.triggered.connect(lambda: self.setSignal("Red"))
         self.ui.actionyellow.triggered.connect(lambda: self.setSignal("Yellow"))
@@ -82,25 +84,41 @@ class MainWindow(QMainWindow):
         self.logger.addHandler(handler)
         self.logger.info("Started the simulator")
 
+    def openMapConfirmation(self, message):
+        confirm_box = QMessageBox(self)
+        confirm_box.setIcon(QMessageBox.Question)
+        confirm_box.setWindowTitle('Confirmation')
+        confirm_box.setText(message)
+        confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        confirm_box.setDefaultButton(QMessageBox.No)
+
+        button_clicked = confirm_box.exec_()
+
+        if button_clicked == QMessageBox.No:
+            return True
+        return False
+
+    def openTimetableEditor(self, fileNameNew, mapName):
+        return TimetableEditor(fileNameNew, mapName)
+
+    def newMap(self):
+        print("Begin Ner map")
+        if self.mapEditor !=None:
+            if self.openMapConfirmation('You are already editing a map, are you sure you want to open another one?'):
+                return
+            
+        self.mapEditor = MapEditor(None, True, self.openTimetableEditor)
+
     def editMap(self):
         print("Begin Editing map")
         if self.mapEditor !=None:
-            confirm_box = QMessageBox(self)
-            confirm_box.setIcon(QMessageBox.Question)
-            confirm_box.setWindowTitle('Confirmation')
-            confirm_box.setText('You are already editing a map, are you sure you want to open another one?')
-            confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            confirm_box.setDefaultButton(QMessageBox.No)
-
-            button_clicked = confirm_box.exec_()
-
-            if button_clicked == QMessageBox.No:
+            if self.openMapConfirmation('You are already editing a map, are you sure you want to open another one?'):
                 return
         
         fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
+        if fileName!=('', ''):
+            self.mapEditor = MapEditor(fileName, False,self.openTimetableEditor)
 
-        self.mapEditor = MapEditor(fileName)
-    
     def openMap(self):
         
         if self.tileMap!=None:
@@ -249,7 +267,7 @@ class MainWindow(QMainWindow):
             print(loc)
             self.tileMap.zoomtopoint(loc)
 
-    def newMap(self):
+    def newSim(self):
         if self.tileMap!=None or self.timetable!=None:
             confirm_box = QMessageBox(self)
             confirm_box.setIcon(QMessageBox.Question)
