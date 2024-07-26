@@ -1,6 +1,6 @@
 from tileBase import *
 import json
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMessageBox
 import math
 from extra import WarningBox
 from routing import *
@@ -28,20 +28,45 @@ class TileMapper:
 
         #self.tileBatch = self.openGlInstance.createNewBatch("tileMapper")
 
+    def show_error_message(self, message):
+        error_dialog = QMessageBox()
+        error_dialog.setIcon(QMessageBox.Critical)
+        error_dialog.setText("Error")
+        error_dialog.setInformativeText(message)
+        error_dialog.setWindowTitle("Error")
+        error_dialog.exec_()
+
     def openFile(self, fileName):
 
         #Read from the json file
-        trackData = self.load_json_from_file(fileName)
+        try:
+            trackData = self.load_json_from_file(fileName)
+        except Exception as e:
+            self.show_error_message(str(e))
+            return True
+
+        if "type" not in trackData or trackData["type"]!= "map":
+            self.show_error_message("File is not of type: map")
+            return True
 
         #Extract track metadata and dimensions from loaded JSON data.
+        if "name" not in trackData:
+            self.show_error_message("No map name provided")
+            return True
         self.map_name = trackData["name"]
+
+        if "grid_size" not in trackData:
+            self.show_error_message("No map height and width provided")
         self.height = trackData["grid_size"]["rows"]
         self.width = trackData["grid_size"]["columns"]
-
+ 
         #Initialize the tile map
         self.tileMap = [[None for _ in range(self.width)] for _ in range(self.height)]
 
         # Extract the 'data' field from the trackData dictionary
+        if "data" not in trackData:
+            self.show_error_message("No map data provided")
+            return True
         self.map_data = trackData["data"]
 
         # Iterate through each tile in the map data
@@ -89,21 +114,7 @@ class TileMapper:
         #Configure the signal tile
         self.signalTileConfigure()
 
-        # # Iterate through each text object in textData
-        # for textObject in textData:
-        #     # Convert text coordinates to real coordinates on the screen
-        #     realCoord = self.tileToCoord((textObject['row'], textObject['column']))
-
-        #     # Create a pyglet text label with specified properties
-        #     text_label = pyglet.text.Label(
-        #         textObject['text'],
-        #         font_name="Arial",
-        #         font_size=18,
-        #         x=realCoord[0], y=realCoord[1],  # Position of the text label
-        #         anchor_x="center", anchor_y="center",  # Anchoring at the center
-        #         color=(255, 255, 255, 255),  # Text color in RGBA format (white in this case)
-        #         batch=self.tileBatch,
-        #     )
+        return False
         
     #This function opens the file.
     def load_json_from_file(self, file_path):

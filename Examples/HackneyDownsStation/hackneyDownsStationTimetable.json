@@ -1,5 +1,7 @@
 {
-    "MapName":"Hackney downs Station",
+    "name":"Hackney downs station",
+    "type" : "timetable",
+    "info" : "hackneyDownsStationInfo.txt",
     "EndTime":"13:00:00",
     "StartTime": "12:00:00",
     "Trains": [

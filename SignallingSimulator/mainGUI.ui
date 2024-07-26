@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1377</width>
+    <width>1347</width>
     <height>778</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>380</width>
+             <width>450</width>
              <height>0</height>
             </size>
            </property>
@@ -59,17 +59,12 @@
            </column>
            <column>
             <property name="text">
-             <string notr="true">Destination</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
              <string>End Portal</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string>Center</string>
+             <string notr="true">Destination</string>
             </property>
            </column>
            <item row="0" column="2">
@@ -98,7 +93,7 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>400</width>
+             <width>300</width>
              <height>0</height>
             </size>
            </property>
@@ -120,11 +115,6 @@
            <column>
             <property name="text">
              <string>Location</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Center</string>
             </property>
            </column>
           </widget>
@@ -315,7 +305,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1377</width>
+     <width>1347</width>
      <height>22</height>
     </rect>
    </property>
@@ -324,10 +314,8 @@
      <string>File</string>
     </property>
     <addaction name="actionNew_Simulation"/>
-    <addaction name="actionOpen_Map"/>
-    <addaction name="actionOpen_Timetable"/>
-    <addaction name="actionSave_Scenario"/>
     <addaction name="actionOpen_Scenario"/>
+    <addaction name="actionOpen_Timetable_2"/>
     <addaction name="actionExit"/>
     <addaction name="actionHelp"/>
    </widget>
@@ -338,14 +326,14 @@
     <addaction name="actionZoom_In"/>
     <addaction name="actionZoom_Out"/>
     <addaction name="actionActual_Size"/>
-    <addaction name="actionToggle_Grid"/>
    </widget>
    <widget class="QMenu" name="menuSimulation">
     <property name="title">
      <string>Simulation</string>
     </property>
-    <addaction name="actionErrors"/>
     <addaction name="actionWarnings"/>
+    <addaction name="actionEnable_Auto_Track"/>
+    <addaction name="actionEnable_Route_Train"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -431,7 +419,7 @@
   </action>
   <action name="actionOpen_Scenario">
    <property name="text">
-    <string>Open Scenario</string>
+    <string>Open Map</string>
    </property>
   </action>
   <action name="actionExit">
@@ -483,6 +471,33 @@
   <action name="actionHelp">
    <property name="text">
     <string>Help</string>
+   </property>
+  </action>
+  <action name="actionEnable_Auto_Track">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Enable Auto Track</string>
+   </property>
+  </action>
+  <action name="actionEnable_Route_Train">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Enable Route Train</string>
+   </property>
+  </action>
+  <action name="actionOpen_Timetable_2">
+   <property name="text">
+    <string>Open Timetable</string>
    </property>
   </action>
  </widget>

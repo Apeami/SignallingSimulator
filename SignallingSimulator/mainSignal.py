@@ -3,9 +3,10 @@ import sys
 import random
 import time
 import logging
+import os
 
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox,QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox,QWidget, QScrollArea, QVBoxLayout, QTextEdit
 from PyQt5.QtCore import Qt, QProcess
 
 from ui_mainGUI import Ui_MainWindow
@@ -20,6 +21,11 @@ import helpwindow
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.welcome = helpwindow.WelcomeWindow()
+        self.welcome.show()
+        if self.welcome.exec_() == QDialog.Accepted:
+            self.show()
 
         #Setui the ui and window
         self.ui = Ui_MainWindow()
@@ -37,13 +43,9 @@ class MainWindow(QMainWindow):
         self.tileMap = None
         self.timetable = None
 
-        #Initial Window
-        self.welcome = helpwindow.WelcomeWindow()
-        self.welcome.show()
-
         #Bind the actions
-        self.ui.actionOpen_Map.triggered.connect(self.openMap)
-        self.ui.actionOpen_Timetable.triggered.connect(self.openTimetable)
+        self.ui.actionOpen_Scenario.triggered.connect(self.openMap)
+        self.ui.actionOpen_Timetable_2.triggered.connect(self.openTimetable)
         self.ui.actionNew_Simulation.triggered.connect(self.newMap)
 
         self.ui.actionRed.triggered.connect(lambda: self.setSignal("Red"))
@@ -111,13 +113,9 @@ class MainWindow(QMainWindow):
 
         if fileName!=('', ''): #User cancelled the file selection process
             # try:
-            self.tileMap.openFile(fileName)
-            # except:
-                # print("File Failed to open")
-                # popup = WarningBox("File failed to open", "Error").exec_()
-                # self.connectMapFunction()
-                # self.tileMap=None
-                # return
+            if self.tileMap.openFile(fileName):
+                self.tileMap = None
+                return
         else:
             print("File Search cancelled")
             self.connectMapFunction()
@@ -157,12 +155,42 @@ class MainWindow(QMainWindow):
             self.timetable = Timetable(self.map_draw,self.ui, self.tileMap)
             fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
             if fileName!=('',''):
-                self.timetable.openFile(fileName)
+                if self.timetable.openFile(fileName, self.tileMap.map_name):
+                    self.timetable= None
+                    return
             else:
                 print("File Search Cancelled")
                 self.timetable=None
                 return
 
+            if 'info' in self.timetable.timetableData:
+                path = self.timetable.timetableData['info']
+                print(path)
+                print(fileName)
+
+                directory = os.path.dirname(fileName[0])
+                file_to_open = os.path.join(directory, path)
+                file = open(file_to_open)
+
+
+                help_dialog = QDialog(self)
+                help_dialog.setWindowTitle("Help")
+                help_dialog.setGeometry(100, 100, 600, 400)
+                
+                scroll_area = QScrollArea(help_dialog)
+                scroll_area.setWidgetResizable(True)
+                
+                help_content = QTextEdit()
+                help_content.setHtml(file.read())
+                help_content.setReadOnly(True)
+                
+                scroll_area.setWidget(help_content)
+                
+                layout = QVBoxLayout()
+                layout.addWidget(scroll_area)
+                
+                help_dialog.setLayout(layout)
+                help_dialog.exec_()
 
             self.map_draw.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
             self.ui.ZoomToTrainButton.clicked.connect(self.timetable.zoomtoselectedtrain)

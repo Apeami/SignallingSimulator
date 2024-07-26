@@ -1,5 +1,7 @@
 {
     "name" : "Hackney downs station",
+    "type" : "map",
+    
     "grid_size" : {
         "rows" : 6,
         "columns" : 51

@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QDialog, QScrollArea, QVBoxLayout, QTextEdit
 
-class WelcomeWindow(QWidget):
+class WelcomeWindow(QDialog):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -15,40 +15,39 @@ class WelcomeWindow(QWidget):
         layout = QVBoxLayout()
         
         # Welcome label
-        welcome_label = QLabel('Welcome to Signalling Simulator', self)
+        welcome_label = QLabel('Welcome to the Railway Signalling Simulator!', self)
         layout.addWidget(welcome_label)
         
-        # Open Timetable button
-        open_timetable_btn = QPushButton('Open Timetable', self)
-        open_timetable_btn.clicked.connect(self.openTimetable)
-        layout.addWidget(open_timetable_btn)
-        
-        # Open Map button
-        open_map_btn = QPushButton('Open Map', self)
-        open_map_btn.clicked.connect(self.openMap)
-        layout.addWidget(open_map_btn)
+        # Introduction label
+        welcome_label = QLabel('''
+
+To get started, follow these steps:\n
+
+    1) Open a Map: Navigate to File > Open Map to select and load a map. \n
+    2)Open a Timetable: Every map has one or more associated timetables. To open a timetable, go to File > Open Timetable.\n
+    3) Start the Simulation: Once you have opened the timetable, press the start button to begin the simulation.\n
+
+Controls:\n
+
+    1) Signals and Points: Use the toolbar buttons to control the signals and points on the map. \n
+     2)Train Information: Click on the trains to view details about their intended routes. \n
+
+For additional assistance, click the Help button below or access help via File > Help.
+
+Enjoy managing your railway network!''', self)
+        layout.addWidget(welcome_label)
         
         # Help button
         help_btn = QPushButton('Help', self)
         help_btn.clicked.connect(lambda: self.showHelp(self))
         layout.addWidget(help_btn)
+
+        ok_btn = QPushButton('Let\'s Begin', self)
+        ok_btn.clicked.connect(lambda: self.accept())
+        layout.addWidget(ok_btn)
         
         # Set layout
         self.setLayout(layout)
-    
-    def openTimetable(self):
-        # Open file dialog to select a timetable file
-        options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getOpenFileName(self, "Open Timetable", "", "All Files (*);;Text Files (*.txt)", options=options)
-        if file_name:
-            print(f"Selected timetable: {file_name}")
-    
-    def openMap(self):
-        # Open file dialog to select a map file
-        options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getOpenFileName(self, "Open Map", "", "All Files (*);;Text Files (*.txt)", options=options)
-        if file_name:
-            print(f"Selected map: {file_name}")
     
     def showHelp(self, mainwindow):
         # Display help information in a custom scrollable dialog

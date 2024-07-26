@@ -5,6 +5,7 @@ from train import Train
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QMessageBox
 
 from datetime import datetime, timedelta
 from extra import *
@@ -55,18 +56,46 @@ class Timetable:
                 activeTrain.updateEvent(time)
         return True
 
-    def openFile(self,fileName):
+    def show_error_message(self, message):
+        error_dialog = QMessageBox()
+        error_dialog.setIcon(QMessageBox.Critical)
+        error_dialog.setText("Error")
+        error_dialog.setInformativeText(message)
+        error_dialog.setWindowTitle("Error")
+        error_dialog.exec_()
+
+    def openFile(self,fileName, tile_map_name):
         #Read from the json file
         timetableData = self.load_json_from_file(fileName)
 
         #Extract track metadata and dimensions from loaded JSON data.
-        self.map_name = timetableData["MapName"]
+
+        if "type" not in timetableData or timetableData["type"]!= "timetable":
+            self.show_error_message("File is not of type: timetable")
+            return True
+
+        if "name" not in timetableData:
+            self.show_error_message("No map name provided")
+            return True
+        self.map_name = timetableData["name"]
+
+        if self.map_name != tile_map_name:
+            self.show_error_message("Timetable is not from the same map")
+            return True
         
+        if "Trains" not in timetableData:
+            self.show_error_message("No train data provided")
+            return True
         self.trainData = timetableData["Trains"]
 
+        if "StartTime" not in timetableData or "EndTime" not in timetableData:
+            self.show_error_message("No Start of EndTime provided")
+            return True
         self.startTime = self.time_to_seconds(timetableData['StartTime'])
         self.endTime = self.time_to_seconds(timetableData['EndTime'])
 
+        self.timetableData = timetableData
+        return False            
         
 
     #This function opens the file.
@@ -86,9 +115,8 @@ class Timetable:
             self.trainListTable.setItem(rowNum, 1, QTableWidgetItem(self.secondsToTime(train.nextWaypointTime))) #Time of next arrival
             self.trainListTable.setItem(rowNum, 2, QTableWidgetItem(train.nextWaypointName)) #Next Station
 
-            self.trainListTable.setItem(rowNum, 3, QTableWidgetItem(train.destination)) #FinalDestination
-            self.trainListTable.setItem(rowNum, 4, QTableWidgetItem(train.sorted_schedule[-1]['Location'])) #End Section
-            self.trainListTable.setItem(rowNum, 5, QTableWidgetItem(""))
+            self.trainListTable.setItem(rowNum, 4, QTableWidgetItem(train.destination)) #FinalDestination
+            self.trainListTable.setItem(rowNum, 3, QTableWidgetItem(train.sorted_schedule[-1]['Location'])) #End Section
 
             for col in range(self.trainListTable.columnCount()):
                 cell_item = self.trainListTable.item(rowNum, col)
