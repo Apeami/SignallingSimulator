@@ -1,50 +1,92 @@
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5.QtWidgets import QWidget, QFileDialog, QMainWindow, QMessageBox
 
-import ui_mapEditor 
+from ui_MapEditor import Ui_MainWindow 
 from tileMapper import TileMapper
 from timetableEditor import TimetableEditor
 import json
 
-class MapEditor(ui_mapEditor.Ui_Form):
-    def __init__(self, fileName, newFile, openTimetableEditor):
-        self.mainWidget = QWidget()
-        self.setupUi(self.mainWidget)
+class MapEditor(QMainWindow):
+    def __init__(self, appMain):
+        super().__init__()
 
-        self.fileName = fileName
-        self.mainWidget.show()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.setWindowTitle("Signalling Simulator")
+        self.show()
 
-        self.tileMapper = TileMapper(self.MapWidget)
+        self.editing = False
 
-        if newFile:
+        self.ui.actionOpen_Map_Player.triggered.connect(appMain.playButton)
+        self.ui.actionNew_Map.triggered.connect(lambda: self.openMap(True))
+        self.ui.actionEdit_Map.triggered.connect(lambda: self.openMap(False))
+
+        self.timeTableEditor = TimetableEditor(self)
+
+
+
+    def openMapConfirmation(self, message):
+        confirm_box = QMessageBox(self)
+        confirm_box.setIcon(QMessageBox.Question)
+        confirm_box.setWindowTitle('Confirmation')
+        confirm_box.setText(message)
+        confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        confirm_box.setDefaultButton(QMessageBox.No)
+
+        button_clicked = confirm_box.exec_()
+
+        if button_clicked == QMessageBox.No:
+            return True
+        return False
+
+    def openMap(self, isNew):
+        if self.editing:
+            if self.openMapConfirmation('You are already editing a map, are you sure you want to open another one?'):
+                return
+        
+        if not isNew:
+            self.fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
+            if self.fileName==('', ''):
+                return
+        else:
+            self.fileName = None
+
+        self.editing = True
+
+        self.tileMapper = TileMapper(self.ui.MapWidget)
+
+        if isNew:
             self.trackData = self.createSkeletonMap()
             self.tileMapper.openMap(self.trackData)
         else:
             self.tileMapper.openFile(self.fileName)
             self.trackData = self.tileMapper.trackData
 
-        self.MapWidget.mousePressSignal.connect(self.tileMapper.canvasMousePressEvent)
-        self.MapWidget.zoomToActualSize(self.tileMapper)
+        self.ui.MapWidget.mousePressSignal.connect(self.tileMapper.canvasMousePressEvent)
+        self.ui.MapWidget.zoomToActualSize(self.tileMapper)
 
-        self.TrackButton.clicked.connect(lambda: self.changeTileType("track"))
-        self.DiagonalTrackButton.clicked.connect(lambda: self.changeTileType("diagonalTrack"))
-        self.CurveTrackButton.clicked.connect(lambda: self.changeTileType("curveTrack"))
-        self.SignalButton.clicked.connect(lambda: self.changeTileType("signalTrack"))
-        self.PointButon.clicked.connect(lambda: self.changeTileType("pointTrack"))
-        self.PlatformButton.clicked.connect(lambda: self.changeTileType("platTrack"))
-        self.BufferButton.clicked.connect(lambda: self.changeTileType("bufferTrack"))
-        self.EndPortalButton.clicked.connect(lambda: self.changeTileType("contTrack"))
+        self.ui.TrackButton.clicked.connect(lambda: self.changeTileType("track"))
+        self.ui.DiagonalTrackButton.clicked.connect(lambda: self.changeTileType("diagonalTrack"))
+        self.ui.CurveTrackButton.clicked.connect(lambda: self.changeTileType("curveTrack"))
+        self.ui.SignalButton.clicked.connect(lambda: self.changeTileType("signalTrack"))
+        self.ui.PointButon.clicked.connect(lambda: self.changeTileType("pointTrack"))
+        self.ui.PlatformButton.clicked.connect(lambda: self.changeTileType("platTrack"))
+        self.ui.BufferButton.clicked.connect(lambda: self.changeTileType("bufferTrack"))
+        self.ui.EndPortalButton.clicked.connect(lambda: self.changeTileType("contTrack"))
 
-        self.EastButton.clicked.connect(lambda: self.changeTileRotation('east'))
-        self.WestButton.clicked.connect(lambda: self.changeTileRotation('west'))
-        self.NorthButton.clicked.connect(lambda: self.changeTileRotation('north'))
-        self.SouthButton.clicked.connect(lambda: self.changeTileRotation('south'))
+        self.ui.EastButton.clicked.connect(lambda: self.changeTileRotation('east'))
+        self.ui.WestButton.clicked.connect(lambda: self.changeTileRotation('west'))
+        self.ui.NorthButton.clicked.connect(lambda: self.changeTileRotation('north'))
+        self.ui.SouthButton.clicked.connect(lambda: self.changeTileRotation('south'))
 
-        self.ToggleFlipButton.clicked.connect(lambda: self.flipTile())
+        self.ui.ToggleFlipButton.clicked.connect(lambda: self.flipTile())
 
-        self.SaveButton.clicked.connect(lambda: self.saveMap(fileName))
+        self.ui.actionSave.triggered.connect(lambda: self.saveMap(fileName))
 
-        self.NewTimetableButton.clicked.connect(lambda: TimetableEditor().show())
-        self.EditTimetableButton.clicked.connect(lambda: openTimetableEditor(False, self.trackData["name"]))
+        self.ui.actionNew_Timetable.triggered.connect(lambda: self.timeTableEditor.open(True))
+        self.ui.actionEditTimetable.triggered.connect(lambda: self.timeTableEditor.open(False))
+
+    def openAttributesWindow(self):
+        pass
 
     def saveMap(self, filePath):
         
@@ -83,7 +125,7 @@ class MapEditor(ui_mapEditor.Ui_Form):
     def reDrawMap(self):
         prevSelect = self.tileMapper.highLightedTile.tileCoord
         self.tileMapper.openMap(self.trackData)
-        self.MapWidget.mousePressSignal.connect(self.tileMapper.canvasMousePressEvent)
+        self.ui.MapWidget.mousePressSignal.connect(self.tileMapper.canvasMousePressEvent)
         self.tileMapper.handleClickOnTile(self.tileMapper.tileMap[prevSelect[1]][prevSelect[0]])
 
     def changeTileRotation(self, dir):

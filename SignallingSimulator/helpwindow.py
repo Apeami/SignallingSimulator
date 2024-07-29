@@ -1,57 +1,10 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QDialog, QScrollArea, QVBoxLayout, QTextEdit
 
-class WelcomeWindow(QDialog):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
     
-    def initUI(self):
-        # Set up the window
-        self.setWindowTitle('Welcome to Signalling Simulator')
-        self.setGeometry(100, 100, 300, 200)
-        
-        # Create layout
-        layout = QVBoxLayout()
-        
-        # Welcome label
-        welcome_label = QLabel('Welcome to the Railway Signalling Simulator!', self)
-        layout.addWidget(welcome_label)
-        
-        # Introduction label
-        welcome_label = QLabel('''
-
-To get started, follow these steps:\n
-
-    1) Open a Map: Navigate to File > Open Map to select and load a map. \n
-    2)Open a Timetable: Every map has one or more associated timetables. To open a timetable, go to File > Open Timetable.\n
-    3) Start the Simulation: Once you have opened the timetable, press the start button to begin the simulation.\n
-
-Controls:\n
-
-    1) Signals and Points: Use the toolbar buttons to control the signals and points on the map. \n
-     2)Train Information: Click on the trains to view details about their intended routes. \n
-
-For additional assistance, click the Help button below or access help via File > Help.
-
-Enjoy managing your railway network!''', self)
-        layout.addWidget(welcome_label)
-        
-        # Help button
-        help_btn = QPushButton('Help', self)
-        help_btn.clicked.connect(lambda: self.showHelp(self))
-        layout.addWidget(help_btn)
-
-        ok_btn = QPushButton('Let\'s Begin', self)
-        ok_btn.clicked.connect(lambda: self.accept())
-        layout.addWidget(ok_btn)
-        
-        # Set layout
-        self.setLayout(layout)
-    
-    def showHelp(self, mainwindow):
-        # Display help information in a custom scrollable dialog
-        help_text = """
+def showIntroHelp(mainwindow):
+    # Display help information in a custom scrollable dialog
+    help_text = """
         <h1>Railway Signalling Simulator Help Guide</h1>
         <p>Welcome to the Railway Signalling Simulator! This guide will introduce you to the features of the Graphical User Interface (GUI) and help you get started with managing and routing trains effectively.</p>
         
@@ -141,27 +94,22 @@ Enjoy managing your railway network!''', self)
         <p>We hope this guide helps you navigate and utilize the Railway Signalling Simulator effectively. Enjoy managing your railway network!</p>
         """
         
-        help_dialog = QDialog(mainwindow)
-        help_dialog.setWindowTitle("Help")
-        help_dialog.setGeometry(100, 100, 600, 400)
+    help_dialog = QDialog(mainwindow)
+    help_dialog.setWindowTitle("Help")
+    help_dialog.setGeometry(100, 100, 600, 400)
         
-        scroll_area = QScrollArea(help_dialog)
-        scroll_area.setWidgetResizable(True)
+    scroll_area = QScrollArea(help_dialog)
+    scroll_area.setWidgetResizable(True)
         
-        help_content = QTextEdit()
-        help_content.setHtml(help_text)
-        help_content.setReadOnly(True)
+    help_content = QTextEdit()
+    help_content.setHtml(help_text)
+    help_content.setReadOnly(True)
         
-        scroll_area.setWidget(help_content)
+    scroll_area.setWidget(help_content)
         
-        layout = QVBoxLayout()
-        layout.addWidget(scroll_area)
+    layout = QVBoxLayout()
+    layout.addWidget(scroll_area)
         
-        help_dialog.setLayout(layout)
-        help_dialog.exec_()
+    help_dialog.setLayout(layout)
+    help_dialog.exec_()
     
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = WelcomeWindow()
-    window.show()
-    sys.exit(app.exec_())

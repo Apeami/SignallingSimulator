@@ -313,11 +313,9 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionNew_Simulation"/>
     <addaction name="actionOpen_Scenario"/>
     <addaction name="actionOpen_Timetable_2"/>
-    <addaction name="actionNew_Map"/>
-    <addaction name="actionEdit_Map"/>
+    <addaction name="actionOpen_Map_Editor"/>
     <addaction name="actionExit"/>
     <addaction name="actionHelp"/>
     <addaction name="separator"/>
@@ -434,15 +432,24 @@
    <property name="text">
     <string>Zoom In</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+=</string>
+   </property>
   </action>
   <action name="actionZoom_Out">
    <property name="text">
     <string>Zoom Out</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
   </action>
   <action name="actionActual_Size">
    <property name="text">
     <string>Actual Size</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+0</string>
    </property>
   </action>
   <action name="actionToggle_Grid">
@@ -475,6 +482,9 @@
    <property name="text">
     <string>Help</string>
    </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
   </action>
   <action name="actionEnable_Auto_Track">
    <property name="checkable">
@@ -502,10 +512,13 @@
    <property name="text">
     <string>Open Timetable</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
+   </property>
   </action>
-  <action name="actionEdit_Map">
+  <action name="actionOpen_Map_Editor">
    <property name="text">
-    <string>Edit Map</string>
+    <string>Open Map Editor</string>
    </property>
   </action>
   <action name="actionNew_Map">

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>854</width>
-    <height>600</height>
+    <width>869</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -104,10 +104,10 @@
          <string>Tile Rotation</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
-         <item row="0" column="1">
-          <widget class="QPushButton" name="WestButton">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="EastButton">
            <property name="text">
-            <string>West</string>
+            <string>East</string>
            </property>
           </widget>
          </item>
@@ -118,6 +118,13 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="1">
+          <widget class="QPushButton" name="SouthButton">
+           <property name="text">
+            <string>South</string>
+           </property>
+          </widget>
+         </item>
          <item row="2" column="0">
           <widget class="QPushButton" name="NorthButton">
            <property name="text">
@@ -125,17 +132,107 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <widget class="QPushButton" name="EastButton">
+         <item row="0" column="1">
+          <widget class="QPushButton" name="WestButton">
            <property name="text">
-            <string>East</string>
+            <string>West</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QPushButton" name="SouthButton">
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="title">
+         <string>Tile Information</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Waypoint</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>Set</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Distance</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_2"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="text">
+              <string>Set</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_4">
+        <property name="title">
+         <string>Map Attrubutes</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEdit_3"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_5">
            <property name="text">
-            <string>South</string>
+            <string>Height</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Width</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSpinBox" name="spinBox"/>
+         </item>
+         <item row="3" column="1">
+          <widget class="QSpinBox" name="spinBox_2"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="text">
+            <string>Update</string>
            </property>
           </widget>
          </item>
@@ -164,7 +261,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>854</width>
+     <width>869</width>
      <height>22</height>
     </rect>
    </property>
@@ -172,10 +269,13 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew_Map"/>
+    <addaction name="actionEdit_Map"/>
     <addaction name="actionSave"/>
     <addaction name="actionVerify"/>
     <addaction name="actionNew_Timetable"/>
     <addaction name="actionEditTimetable"/>
+    <addaction name="actionOpen_Map_Player"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -184,6 +284,7 @@
     <addaction name="actionCopy"/>
     <addaction name="actionCut"/>
     <addaction name="actionPaste"/>
+    <addaction name="actionMap_Attrubutes"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -192,6 +293,9 @@
   <action name="actionSave">
    <property name="text">
     <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string/>
    </property>
   </action>
   <action name="actionVerify">
@@ -208,10 +312,16 @@
    <property name="text">
     <string>Cut</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
   </action>
   <action name="actionPaste">
    <property name="text">
     <string>Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
    </property>
   </action>
   <action name="actionNew_Timetable">
@@ -221,7 +331,33 @@
   </action>
   <action name="actionEditTimetable">
    <property name="text">
-    <string>EditTimetable</string>
+    <string>Edit Timetable</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
+   </property>
+  </action>
+  <action name="actionOpen_Map_Player">
+   <property name="text">
+    <string>Open Map Player</string>
+   </property>
+  </action>
+  <action name="actionNew_Map">
+   <property name="text">
+    <string>New Map</string>
+   </property>
+  </action>
+  <action name="actionEdit_Map">
+   <property name="text">
+    <string>Edit Map</string>
+   </property>
+   <property name="shortcut">
+    <string/>
+   </property>
+  </action>
+  <action name="actionMap_Attrubutes">
+   <property name="text">
+    <string>Map Attrubutes</string>
    </property>
   </action>
  </widget>
