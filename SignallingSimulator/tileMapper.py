@@ -7,7 +7,7 @@ from routing import *
 
 
 class TileMapper:
-    def __init__(self, map_draw):
+    def __init__(self, map_draw, clicked_callback = None):
 
         #Define Variables
         self.map_draw = map_draw
@@ -15,6 +15,7 @@ class TileMapper:
         self.width = 0
         self.map_name = ""
 
+        self.clicked_callback = clicked_callback
 
         self.tileDimension = 50
 
@@ -59,6 +60,7 @@ class TileMapper:
     def openFile(self, fileName):
         #Read from the json file
         try:
+            print(fileName)
             trackData = self.load_json_from_file(fileName)
         except Exception as e:
             self.show_error_message(str(e))
@@ -134,7 +136,7 @@ class TileMapper:
         
     #This function opens the file.
     def load_json_from_file(self, file_path):
-        with open(file_path[0], 'r') as file:
+        with open(file_path, 'r') as file:
             json_data = json.load(file)
         return json_data
     
@@ -163,6 +165,10 @@ class TileMapper:
         if 0<=pressedCoord[1]<self.height and 0<=pressedCoord[0]<self.width and self.tileMap[pressedCoord[1]][pressedCoord[0]]!=None:
             self.tileMap[pressedCoord[1]][pressedCoord[0]].handleClick()
             self.handleClickOnTile(self.tileMap[pressedCoord[1]][pressedCoord[0]])
+
+            #Callback for clicked
+            if self.clicked_callback!=None:
+                self.clicked_callback()
 
     def checkRoutingCompatibility(self,routing):
         if routing.tileList!=None:

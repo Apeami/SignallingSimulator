@@ -15,6 +15,7 @@ class MapEditor(QMainWindow):
         self.show()
 
         self.editing = False
+        self.tileMapper =None
 
         self.ui.actionOpen_Map_Player.triggered.connect(appMain.playButton)
         self.ui.actionNew_Map.triggered.connect(lambda: self.openMap(True))
@@ -44,15 +45,21 @@ class MapEditor(QMainWindow):
                 return
         
         if not isNew:
-            self.fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
-            if self.fileName==('', ''):
+            self.fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")[0]
+            if self.fileName=='':
                 return
         else:
             self.fileName = None
 
+        print("AFTER OPEN")
+        print(self.fileName)
+
         self.editing = True
 
-        self.tileMapper = TileMapper(self.ui.MapWidget)
+        if self.tileMapper!=None:
+            self.tileMapper.delete()
+
+        self.tileMapper = TileMapper(self.ui.MapWidget, clicked_callback=self.updateTileAttributes)
 
         if isNew:
             self.trackData = self.createSkeletonMap()
@@ -60,6 +67,10 @@ class MapEditor(QMainWindow):
         else:
             self.tileMapper.openFile(self.fileName)
             self.trackData = self.tileMapper.trackData
+
+        self.ui.nameBox.setText(self.trackData['name'])
+        self.ui.widthBox.setValue(self.trackData['grid_size']['rows'])
+        self.ui.hightBox.setValue(self.trackData['grid_size']['columns'])
 
         self.ui.MapWidget.mousePressSignal.connect(self.tileMapper.canvasMousePressEvent)
         self.ui.MapWidget.zoomToActualSize(self.tileMapper)
@@ -80,23 +91,27 @@ class MapEditor(QMainWindow):
 
         self.ui.ToggleFlipButton.clicked.connect(lambda: self.flipTile())
 
-        self.ui.actionSave.triggered.connect(lambda: self.saveMap(fileName))
+        self.ui.waypointButton.clicked.connect(lambda: self.setTileWaypoint())
+        self.ui.distanceButton.clicked.connect(lambda: self.setTileDistance())
+
+        self.ui.updateSizeButton.clicked.connect(self.updateSize)
+
+        self.ui.actionSave.triggered.connect(lambda: self.saveMap())
 
         self.ui.actionNew_Timetable.triggered.connect(lambda: self.timeTableEditor.open(True))
         self.ui.actionEditTimetable.triggered.connect(lambda: self.timeTableEditor.open(False))
 
-    def openAttributesWindow(self):
-        pass
-
-    def saveMap(self, filePath):
+    def saveMap(self):
         
-        if filePath == None:
-            filePath = QFileDialog.getSaveFileName(self.mainWidget, "Create New File", "", "All Files (*);;Text Files (*.txt)")
+        self.trackData["name"] = self.ui.nameBox.text()
 
-        print(self.trackData)
-        print(filePath[0])
+        if self.fileName == None:
+            self.fileName = QFileDialog.getSaveFileName(self, "Create New File", "", "All Files (*);;Text Files (*.txt)")[0]
 
-        with open(filePath[0], 'w') as file:
+        print("Saving map")
+        print(self.fileName)
+
+        with open(self.fileName, 'w') as file:
             json.dump(self.trackData, file, indent=4)
 
 
@@ -142,6 +157,7 @@ class MapEditor(QMainWindow):
         if colI !=None and rowI!=None:
             for data in self.trackData['data']:
                 if data['row'] == rowI and data['column']==colI:
+                    print("Flipping")
                     if data['flip'] == False:
                         data['flip'] = True
                     else:
@@ -163,3 +179,38 @@ class MapEditor(QMainWindow):
                 self.trackData['data'].append(default_data)
 
         self.reDrawMap()
+
+    def setTileDistance(self):
+        distance = self.ui.distanceText.text()
+        colI, rowI= self.getSelectedTile()
+        if colI !=None and rowI!=None:
+            for data in self.trackData['data']:
+                if data['row'] == rowI and data['column']==colI:
+                    data['distance'] = int(distance)
+
+    def setTileWaypoint(self):
+        waypoint = self.ui.waypointText.text()
+        colI, rowI= self.getSelectedTile()
+        if colI !=None and rowI!=None:
+            for data in self.trackData['data']:
+                if data['row'] == rowI and data['column']==colI:
+                    data['waypoint'] = waypoint
+
+    def updateSize(self):
+        width = self.ui.widthBox.value()
+        height = self.ui.hightBox.value()
+        self.trackData["grid_size"] = {
+            "rows": width,
+            "columns": height
+        }
+        self.reDrawMap()
+
+    def updateTileAttributes(self):
+        print("updating tile attributes")
+        colI, rowI= self.getSelectedTile()
+        if colI !=None and rowI!=None:
+            for data in self.trackData['data']:
+                if data['row'] == rowI and data['column']==colI:
+                    self.ui.waypointText.setText(data.get('waypoint', ""))
+                    self.ui.distanceText.setText(str(data.get('distance', "")))
+

@@ -1,7 +1,8 @@
 
 import ui_timetableEditor
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5.QtWidgets import QWidget, QFileDialog, QTimeEdit, QComboBox
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QTableWidgetItem
+from PyQt5.QtCore import QTime
 import sys
 import json
 
@@ -13,7 +14,8 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         self.setupUi(self.mainWidget)
         
         self.selectedHeadcode = None
-        
+        self.selectTrainPrev = None
+
         self.mapEditor = mapEditor
 
     def createSkeletonTimetable(self):
@@ -52,7 +54,7 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         self.ActionTable.setColumnCount(0)
 
         if not isNew:
-            self.fileName = QFileDialog.getOpenFileName(self.mainWidget, "Open File", "", "All Files (*);;Text Files (*.txt)")
+            self.fileName = QFileDialog.getOpenFileName(self.mainWidget, "Open File", "", "All Files (*);;Text Files (*.txt)")[0]
             if self.fileName==('', ''):
                 return
             self.timetableData = self.load_json_from_file(self.fileName)
@@ -69,6 +71,16 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         self.AddTimeButton.clicked.connect(self.addTimetableEntry)
         self.DeleteTimeButton.clicked.connect(self.removeTimetableEntry)
 
+        self.waypoints = []
+        for tile in self.mapEditor.trackData['data']:
+            if 'waypoint' in tile:
+                self.waypoints.append(tile['waypoint'])
+
+        self.mapNameText.setText(self.timetableData['name'])
+        self.infoFileText.setText(self.timetableData['info'])
+        self.startTimeText.setText(self.timetableData['StartTime'])
+        self.endTimeText.setText(self.timetableData['EndTime'])
+
         self.reloadTrainList()
     
     def reloadTrainList(self):
@@ -83,7 +95,10 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
             i+=1
 
     def addTimetableEntry(self):
-        pass
+        current_row_count = self.ActionTable.rowCount()
+        self.ActionTable.setRowCount(current_row_count + 1)
+        task = {'Action': 'None', 'Time': '00:00:00', 'Location': ''}
+        self.putTaskInTable(task,current_row_count)
 
     def removeTimetableEntry(self):
         pass
@@ -92,7 +107,14 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         pass
 
     def newTrain(self):
-        pass
+        def_data ={"Headcode": "XXX" + str(len(self.timetableData["Trains"])),
+            "MaxSpeed": 0,
+            "Destination": "",
+            "LoadTime" : "xx:xx:xx",
+            "Schedule": []
+        }
+        self.timetableData["Trains"].append(def_data)
+        self.reloadTrainList()
 
     def delTrain(self):
         if self.selectedHeadcode !=None:
@@ -109,10 +131,21 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         self.selectedHeadcode = headcode
         print(f"Clicked: {headcode}")
 
+        if self.selectTrainPrev!=None:
+            self.selectTrainPrev["Headcode"] = self.headcodeText.text()
+            self.selectTrainPrev["Destination"] = self.destinationText.text()
+            self.selectTrainPrev["LoadTime"] = self.loatTimeText.text()
+            self.selectTrainPrev["MaxSpeed"] = self.maxSpeedText.text()
+
         for train in self.timetableData["Trains"]:
             headcodeSel = train["Headcode"]
             if headcode == headcodeSel:
                 selectTrain = train
+
+        self.headcodeText.setText(selectTrain["Headcode"])
+        self.destinationText.setText(selectTrain["Destination"])
+        self.loatTimeText.setText(selectTrain["LoadTime"])
+        self.maxSpeedText.setText(str(selectTrain["MaxSpeed"]))
 
         self.ActionTable.setRowCount(len(selectTrain["Schedule"]))  # Set number of rows
         self.ActionTable.setColumnCount(3)  # Set number of columns
@@ -120,15 +153,42 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         print(selectTrain)
         for task in selectTrain["Schedule"]:
             print(task)
-            self.ActionTable.setItem(row, 0, QTableWidgetItem(task["Time"]))
-            self.ActionTable.setItem(row, 1, QTableWidgetItem(task["Action"]))
-            self.ActionTable.setItem(row, 2, QTableWidgetItem(task["Location"]))
-
+            self.putTaskInTable(task, row)
             row+=1
+    
+        self.selectTrainPrev = selectTrain
+
+
+    def putTaskInTable(self,task, row):
+        time = QTime.fromString(task['Time'], "HH:mm:ss")
+        time_edit = QTimeEdit(self.mainWidget)
+        time_edit.setTime(time)
+        time_edit.setDisplayFormat("HH:mm:ss")
+        self.ActionTable.setCellWidget(row, 0, time_edit)
+
+        actions = ["Spawn", "Call", "Despawn", "None"]
+        combo_box = QComboBox(self.mainWidget)
+        combo_box.addItems(actions)
+        index = combo_box.findText(task["Action"])
+        if index != -1:
+            combo_box.setCurrentIndex(index)
+        self.ActionTable.setCellWidget(row, 1, combo_box)
+
+        combo_box = QComboBox(self.mainWidget)
+        combo_box.addItems(self.waypoints)
+        index = combo_box.findText(task["Location"])
+        if index != -1:
+            combo_box.setCurrentIndex(index)
+        self.ActionTable.setCellWidget(row, 2, combo_box)
 
     def save(self):
         if self.fileName == None:
             self.fileName = QFileDialog.getSaveFileName(self.mainWidget, "Create New File", "", "All Files (*);;Text Files (*.txt)")[0]
+
+        self.timetableData['name'] = self.mapNameText.text()
+        self.timetableData['info'] = self.infoFileText.text()
+        self.timetableData['StartTime'] = self.startTimeText.text()
+        self.timetableData['EndTime'] = self.endTimeText.text()
 
         with open(self.fileName, 'w') as file:
             json.dump(self.timetableData, file, indent=4)
@@ -136,6 +196,6 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         self.mainWidget.close()
 
     def load_json_from_file(self, file_path):
-        with open(file_path[0], 'r') as file:
+        with open(file_path, 'r') as file:
             json_data = json.load(file)
         return json_data
