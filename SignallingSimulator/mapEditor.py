@@ -23,6 +23,9 @@ class MapEditor(QMainWindow):
 
         self.timeTableEditor = TimetableEditor(self)
 
+        self.ui.actionNew_Timetable.triggered.connect(lambda: self.timeTableEditor.open(True))
+        self.ui.actionEditTimetable.triggered.connect(lambda: self.timeTableEditor.open(False))
+
 
 
     def openMapConfirmation(self, message):
@@ -98,8 +101,7 @@ class MapEditor(QMainWindow):
 
         self.ui.actionSave.triggered.connect(lambda: self.saveMap())
 
-        self.ui.actionNew_Timetable.triggered.connect(lambda: self.timeTableEditor.open(True))
-        self.ui.actionEditTimetable.triggered.connect(lambda: self.timeTableEditor.open(False))
+
 
     def saveMap(self):
         

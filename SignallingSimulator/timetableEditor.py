@@ -1,11 +1,12 @@
 
 import ui_timetableEditor
-from PyQt5.QtWidgets import QWidget, QFileDialog, QTimeEdit, QComboBox, QTableWidget, QDialog, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QFileDialog, QTimeEdit, QComboBox, QTableWidget, QDialog, QHBoxLayout,QMessageBox
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QTableWidgetItem, QCheckBox
 from PyQt5.QtCore import QTime
 import sys
 import json
 import copy
+import os
 
 
 class TimetableEditor(ui_timetableEditor.Ui_Form):
@@ -16,12 +17,60 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         
         self.selectedHeadcode = None
         self.selectTrainPrev = None
+        self.headcodeEditedDebounce = False
+
+        self.lastTimeEntry = "00:00:00"
 
         self.mapEditor = mapEditor
+
+        self.saved = True
+        self.fileName = None
+        self.resetTitle()
 
         self.trainListButtons = []
 
         self.ActionTable.setSelectionBehavior(QTableWidget.SelectRows)
+
+        self.SaveButton.clicked.connect(self.save)
+        self.closeButton.clicked.connect(self.closePrompt)
+
+        self.NewTrainButton.clicked.connect(self.newTrain)
+        self.DeleteTrainButton.clicked.connect(self.delTrain)
+
+        self.AddTimeButton.clicked.connect(self.addTimetableEntry)
+        self.DeleteTimeButton.clicked.connect(self.removeTimetableEntry)
+
+        self.CopyTrainButton.clicked.connect(self.copyTrain)
+        self.AddOffsetButton.clicked.connect(self.addOffset)
+
+        # self.loadTimeText.editingFinished.connect(lambda: self.reselectTrain(self.selectTrainPrev["Headcode"]))
+
+        self.headcodeText.editingFinished.connect(self.headcodeEdited)
+
+    def closePrompt(self):
+        if self.saved == False:
+            reply = QMessageBox.question(self.mainWidget, 'Message',
+                "There are unsaved changes. Do you want to save them?", 
+                QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel, QMessageBox.Save)
+            if reply == QMessageBox.Save:
+                self.save()
+                self.mainWidget.close()
+            elif reply == QMessageBox.Discard:
+                self.mainWidget.close()
+        else:
+            self.mainWidget.close()
+
+    def resetTitle(self):
+
+        if self.fileName == None:
+            file = "Untitled"
+        else:
+            file = os.path.basename(self.fileName)
+        if self.saved == False:
+            newTitle = file + "* - Timetable Editor" 
+        else:
+            newTitle = file + " - Timetable Editor" 
+        self.mainWidget.setWindowTitle(newTitle)
 
     def createSkeletonTimetable(self):
         timetable = {}
@@ -34,42 +83,57 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         return timetable
 
     def open(self, isNew):
-        self.mainWidget.show()
+        print("Opening File")
+        print(isNew)
+        print(self)
+        self.saved = True
+        self.resetTitle()
+        
 
         self.ActionTable.clearContents()
+        column_names = ["Time", "Action", "Waypoint"]
+        self.ActionTable.setHorizontalHeaderLabels(column_names)
 
         self.ActionTable.setRowCount(0)
         self.ActionTable.setColumnCount(0)
 
         if not isNew:
             self.fileName = QFileDialog.getOpenFileName(self.mainWidget, "Open File", "", "All Files (*);;Text Files (*.txt)")[0]
-            if self.fileName==('', ''):
+            if self.fileName=='':
                 return
             self.timetableData = self.load_json_from_file(self.fileName)
+
+            if self.mapEditor.trackData['name']!= self.timetableData['name']:
+                error_dialog = QMessageBox()
+                error_dialog.setIcon(QMessageBox.Critical)
+                error_dialog.setWindowTitle("Error")
+                error_dialog.setText("The Names of the map and timetable do not match. Do you want to update")
+                error_dialog.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+                result = error_dialog.exec_()
+                if result == QMessageBox.Ok:
+                    self.timetableData['name'] = self.mapEditor.trackData['name']
+                else:
+                    return
+
+
         else:
             self.fileName = None
             self.timetableData = self.createSkeletonTimetable()
 
-        self.SaveCloseButton.clicked.connect(self.save)
-
-        self.NewTrainButton.clicked.connect(self.newTrain)
-        self.DeleteTrainButton.clicked.connect(self.delTrain)
-
-        self.AddTimeButton.clicked.connect(self.addTimetableEntry)
-        self.DeleteTimeButton.clicked.connect(self.removeTimetableEntry)
-
-        self.CopyTrainButton.clicked.connect(self.copyTrain)
-        self.AddOffsetButton.clicked.connect(self.addOffset)
-
-        self.headcodeText.editingFinished.connect(self.headcodeEdited)
 
         self.waypoints = []
         for tile in self.mapEditor.trackData['data']:
             if 'waypoint' in tile:
-                self.waypoints.append(tile['waypoint'])
+                if tile['waypoint'] not in self.waypoints:
+                    self.waypoints.append(tile['waypoint'])
 
-        print(self.timetableData)
+        for train in self.timetableData["Trains"]:
+            for action in train["Schedule"]:
+                if action["Location"] not in self.waypoints:
+                    self.waypoints.append(action["Location"])
+
         self.mapNameText.setText(self.timetableData['name'])
+
         if 'info' in self.timetableData:
             self.infoFileText.setText(self.timetableData['info'])
         time = QTime.fromString(self.timetableData['StartTime'], "HH:mm:ss")
@@ -78,6 +142,7 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         self.endTimeText.setTime(time)
 
         self.reloadTrainList()
+        self.mainWidget.show()
     
     def copyTrain(self):
         for train in self.timetableData["Trains"]:
@@ -89,6 +154,8 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         self.reloadTrainList()
 
     def addOffset(self):
+        self.saved = False
+        self.resetTitle()
         # Create the dialog
         dialog = QDialog()
         dialog.setWindowTitle("Time Offset Selection")
@@ -130,74 +197,124 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
 
         # Execute the dialog and check the result
         if dialog.exec_() == QDialog.Accepted:
-            print("Accepted")
-            for train in self.timetableData["Trains"]:
-                print(train["Headcode"])
-                print(self.selectedHeadcode)
-                if train["Headcode"] == self.selectedHeadcode:
-                    selected_time = timeEdit.time()
-                    print(selected_time.toString('HH:mm:ss'))
-                    is_negative = negativeCheckBox.isChecked()
-                    offset_seconds = (selected_time.hour() * 3600 +
+            selected_time = timeEdit.time()
+            is_negative = negativeCheckBox.isChecked()
+            offset_seconds = (selected_time.hour() * 3600 +
                                     selected_time.minute() * 60 +
                                     selected_time.second())
-                    if is_negative:
-                        offset_seconds = -offset_seconds
-                    print(offset_seconds)
-                    tempCurrentTime = QTime.fromString(train["LoadTime"], "HH:mm:ss")
-                    print(tempCurrentTime.toString('HH:mm:ss'))
-                    tempCurrentTime = tempCurrentTime.addSecs(offset_seconds)
-                    print(tempCurrentTime.toString('HH:mm:ss'))
+            if is_negative:
+                offset_seconds = -offset_seconds
 
-                    train["LoadTime"] = tempCurrentTime.toString('HH:mm:ss')
+            #Offset seconds is applied to all elements
+            tempCurrentTime = QTime.fromString(self.loadTimeText.text(), "HH:mm:ss")
+            tempCurrentTime = tempCurrentTime.addSecs(offset_seconds)
+            self.loadTimeText.setTime(tempCurrentTime)
 
-                    self.reselectTrain(train["Headcode"])
+            for i in range(self.ActionTable.rowCount()):
+                tempCurrentTime = QTime.fromString(self.ActionTable.cellWidget(i, 0).text(), "HH:mm:ss")
+                tempCurrentTime = tempCurrentTime.addSecs(offset_seconds)
+                time_edit = QTimeEdit(self.mainWidget)
+                time_edit.setTime(tempCurrentTime)
+                time_edit.setDisplayFormat("HH:mm:ss")
+                self.ActionTable.setCellWidget(i, 0, time_edit)
 
-                    print(self.timetableData)
+
+                    # self.reselectTrain(train["Headcode"])
+
+
 
     def headcodeEdited(self):
-        for button in self.trainListButtons:
-            print(button.text())
-            print(self.selectTrainPrev["Headcode"])
-            if button.text()==self.selectTrainPrev["Headcode"]:
-                print("Match")
-                self.selectTrainPrev["Headcode"] = self.headcodeText.text()
-                button.setText(self.headcodeText.text())
+        if self.headcodeEditedDebounce == False:
+            print("Headcode Edited")
+            for button in self.trainListButtons: #IF there is a duplicate headcode
+                if button.text() == self.headcodeText.text():
+                    self.headcodeEditedDebounce = True
+                    print("Setting Test")
+                    print(self.selectTrainPrev["Headcode"])
+                    self.headcodeText.setText(self.selectTrainPrev["Headcode"]) 
+                    error_dialog = QMessageBox()
+                    error_dialog.setIcon(QMessageBox.Critical)
+                    error_dialog.setWindowTitle("Error")
+                    error_dialog.setText("You have chosen a duplicate headcode")
+                    error_dialog.setStandardButtons(QMessageBox.Ok)
+                    error_dialog.exec_()
+
+                    return
+            for button in self.trainListButtons:
+                if button.text()==self.selectTrainPrev["Headcode"]:
+                    self.selectTrainPrev["Headcode"] = self.headcodeText.text()
+                    button.setText(self.headcodeText.text())
+        else:
+            self.headcodeEditedDebounce = False
         # self.reselectTrain(self.selectTrainPrev["Headcode"])
         # self.selectTrainPrev["Headcode"] = self.headcodeText.text()
         # self.reloadTrainList()
         
 
     def reloadTrainList(self):
-        print("Reloaded")
+        self.saved = False
+        self.resetTitle()
         self.trainListButtons = []
         for i in reversed(range(self.ScrollAreaLayout.count())): 
             self.ScrollAreaLayout.itemAt(i).widget().setParent(None)
+
         i=0
-        print("Deleted")
-        for train in self.timetableData["Trains"]:
+        sortedTrainList = sorted(self.timetableData["Trains"], key=lambda train: train["LoadTime"])
+        for train in sortedTrainList:
             headcode = train["Headcode"]
             button = QPushButton(headcode)
             button.clicked.connect(lambda: self.trainSelected())
             self.ScrollAreaLayout.addWidget(button)
             self.trainListButtons.append(button)
             i+=1
-        print("Done")
 
     def addTimetableEntry(self):
+        self.saved = False
+        self.resetTitle()
         current_row_count = self.ActionTable.rowCount()
-        self.ActionTable.setRowCount(current_row_count + 1)
-        task = {'Action': 'None', 'Time': '00:00:00', 'Location': ''}
-        self.putTaskInTable(task,current_row_count)
+        self.saveCurrentlyEditedTrainData()
+        # self.ActionTable.setRowCount(current_row_count + 1)
 
+        task = {'Action': 'None', 'Time': '00:00:00', 'Location': ''}
+
+        selected_rows = self.ActionTable.selectionModel().selectedRows()
+        if not selected_rows:
+            indexAfter = -1
+        else:
+            indexAfter = selected_rows[0].row()+1
+
+        try:
+            timeNew = self.selectTrainPrev["Schedule"][indexAfter-1]["Time"]
+        except:
+            timeNew = "00:00:00"
+        task = {'Action': 'None', 'Time': timeNew, 'Location': ''}
+
+        # self.putTaskInTable(task,indexAfter)
+        self.saveCurrentlyEditedTrainData()
         for train in self.timetableData["Trains"]:
             if train["Headcode"] == self.selectedHeadcode:
-                train["Schedule"].append(task)
+
+                print("INDEX AFTER")
+                print(indexAfter)
+                
+                train["Schedule"].insert(indexAfter, task)
+
+                print(train["Schedule"])
+                column_names = ["Time", "Action", "Waypoint"]
+                self.ActionTable.setHorizontalHeaderLabels(column_names)
+                self.ActionTable.setRowCount(len(train["Schedule"]))
+                row=0
+                for task in train["Schedule"]:
+                    self.putTaskInTable(task, row)
+                    row+=1
+
+        
+                    
 
     def removeTimetableEntry(self):
-        print("remove Timetable entry")
+        self.saved = False
+        self.resetTitle()
         selected_rows = self.ActionTable.selectionModel().selectedRows()
-        print(selected_rows)
         if not selected_rows:
             return
 
@@ -206,7 +323,7 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
 
             for train in self.timetableData["Trains"]:
                 if train["Headcode"] == self.selectedHeadcode:
-                    train["Schedule"].pop(selected_row)
+                    train["Schedule"].pop(selected_row.row())
 
 
     def newTrain(self):
@@ -251,19 +368,20 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         headcode = button.text()
         self.reselectTrain(headcode)
 
-    def reselectTrain(self,headcode):
-        self.selectedHeadcode = headcode
-        print(f"Clicked: {headcode}")
-
+    def saveCurrentlyEditedTrainData(self):
         if self.selectTrainPrev!=None:
             self.selectTrainPrev["Headcode"] = self.headcodeText.text()
             self.selectTrainPrev["Destination"] = self.destinationText.text()
             self.selectTrainPrev["LoadTime"] = self.loadTimeText.text()
             self.selectTrainPrev["MaxSpeed"] = self.maxSpeedText.text()
 
-            print(self.extractTableData())
             data = self.extractTableData()
             self.selectTrainPrev["Schedule"] = data
+
+    def reselectTrain(self,headcode):
+        self.selectedHeadcode = headcode
+
+        self.saveCurrentlyEditedTrainData()
 
         self.reloadTrainList()
 
@@ -280,6 +398,8 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
 
         self.ActionTable.setRowCount(len(selectTrain["Schedule"]))  # Set number of rows
         self.ActionTable.setColumnCount(3)  # Set number of columns
+        column_names = ["Time", "Action", "Waypoint"]
+        self.ActionTable.setHorizontalHeaderLabels(column_names)
         row = 0
         for task in selectTrain["Schedule"]:
             self.putTaskInTable(task, row)
@@ -289,7 +409,6 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
 
 
     def putTaskInTable(self,task, row):
-        print(task)
         time = QTime.fromString(task['Time'], "HH:mm:ss")
         time_edit = QTimeEdit(self.mainWidget)
         time_edit.setTime(time)
@@ -312,6 +431,9 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         self.ActionTable.setCellWidget(row, 2, combo_box)
 
     def save(self):
+        self.saveCurrentlyEditedTrainData()
+        self.saved = True
+        self.resetTitle()
         if self.fileName == None:
             self.fileName = QFileDialog.getSaveFileName(self.mainWidget, "Create New File", "", "All Files (*);;Text Files (*.txt)")[0]
 
@@ -323,7 +445,7 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
         with open(self.fileName, 'w') as file:
             json.dump(self.timetableData, file, indent=4)
         
-        self.mainWidget.close()
+        
 
     def load_json_from_file(self, file_path):
         with open(file_path, 'r') as file:
