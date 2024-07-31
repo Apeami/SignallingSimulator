@@ -84,6 +84,8 @@ class TileMapper:
         self.height = trackData["grid_size"]["rows"]
         self.width = trackData["grid_size"]["columns"]
  
+        self.map_draw.setBoundaryPoints(self.width,self.height)
+
         #Initialize the tile map
         self.tileMap = [[None for _ in range(self.width)] for _ in range(self.height)]
 

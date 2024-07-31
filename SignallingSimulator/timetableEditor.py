@@ -226,24 +226,30 @@ class TimetableEditor(ui_timetableEditor.Ui_Form):
     def headcodeEdited(self):
         if self.headcodeEditedDebounce == False:
             print("Headcode Edited")
+            duplicate = False
             for button in self.trainListButtons: #IF there is a duplicate headcode
                 if button.text() == self.headcodeText.text():
                     self.headcodeEditedDebounce = True
                     print("Setting Test")
                     print(self.selectTrainPrev["Headcode"])
-                    self.headcodeText.setText(self.selectTrainPrev["Headcode"]) 
+                    # self.headcodeText.setText(self.selectTrainPrev["Headcode"]) 
                     error_dialog = QMessageBox()
                     error_dialog.setIcon(QMessageBox.Critical)
                     error_dialog.setWindowTitle("Error")
                     error_dialog.setText("You have chosen a duplicate headcode")
                     error_dialog.setStandardButtons(QMessageBox.Ok)
                     error_dialog.exec_()
+                    duplicate = True
 
-                    return
             for button in self.trainListButtons:
                 if button.text()==self.selectTrainPrev["Headcode"]:
-                    self.selectTrainPrev["Headcode"] = self.headcodeText.text()
-                    button.setText(self.headcodeText.text())
+                    if duplicate == False:
+                        newText = self.headcodeText.text()
+                    else:
+                        newText = self.headcodeText.text() + " (Copy)"
+                    self.selectTrainPrev["Headcode"] = newText
+                    self.headcodeText.setText(newText)
+                    button.setText(newText)
         else:
             self.headcodeEditedDebounce = False
         # self.reselectTrain(self.selectTrainPrev["Headcode"])

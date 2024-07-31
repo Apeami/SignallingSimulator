@@ -28,6 +28,9 @@ class MapDrawingWidget(QWidget):
         self.last_mouse_pos = None
         self.dy = 0
         self.dx = 0
+
+        self.boundaryWidth = 10
+        self.boundaryHeight= 10
         # self.camera_x, self.camera_y = 0, 0
 
         # self.camera_x_min = -40  # Set the minimum X coordinate limit
@@ -151,6 +154,10 @@ class MapDrawingWidget(QWidget):
     def setText(self, textData):
         self.textData = textData
 
+    def setBoundaryPoints(self,width, height):
+        self.boundaryWidth = width
+        self.boundaryHeight = height
+
     def draw_all(self, painter):
         painter.setRenderHint(QPainter.Antialiasing)
 
@@ -253,6 +260,14 @@ class MapDrawingWidget(QWidget):
             painter.setPen(pen)
             painter.setBrush(Qt.NoBrush)
             painter.drawRect(target_rect)
+        
+        #Draw overall boundary
+        x,y,width,height = self.translate_distance(0,-50,self.boundaryWidth*50,-self.boundaryHeight*50)
+        target_rect = QRect(x, y, width, height)
+        pen = QPen(QColor(0, 0, 128), 5, Qt.SolidLine)
+        painter.setPen(pen)
+        painter.setBrush(Qt.NoBrush)
+        painter.drawRect(target_rect)
 
         # x,y,width,height = self.translate_distance(self.rect_x,self.rect_y,self.rect_width,self.rect_height)
 
