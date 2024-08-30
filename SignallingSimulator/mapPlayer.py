@@ -46,12 +46,9 @@ class MapPlayer(QMainWindow):
         self.mapEditor = None
 
         #Bind the actions
-        self.ui.actionOpen_Map_Editor.triggered.connect(appMain.editButton)
+        self.ui.actionOpen_Map_Editor.triggered.connect(appMain.editButtonCallback)
         self.ui.actionOpen_Scenario.triggered.connect(self.openMap)
         self.ui.actionOpen_Timetable_2.triggered.connect(self.openTimetable)
-        # self.ui.actionNew_Simulation.triggered.connect(self.newSim)
-        # self.ui.actionEdit_Map.triggered.connect(self.editMap)
-        # self.ui.actionNew_Map.triggered.connect(self.newMap)
 
         self.ui.actionRed.triggered.connect(lambda: self.setSignal("Red"))
         self.ui.actionyellow.triggered.connect(lambda: self.setSignal("Yellow"))
@@ -109,17 +106,7 @@ class MapPlayer(QMainWindow):
             
         self.mapEditor = MapEditor(None, True, self.openTimetableEditor)
 
-    def editMap(self):
-        print("Begin Editing map")
-        if self.mapEditor !=None:
-            if self.openMapConfirmation('You are already editing a map, are you sure you want to open another one?'):
-                return
-        
-        fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
-        if fileName!=('', ''):
-            self.mapEditor = MapEditor(fileName, False,self.openTimetableEditor)
-
-    def openMap(self):
+    def openMap(self, fileName = None):
         
         if self.tileMap!=None:
             confirm_box = QMessageBox(self)
@@ -147,10 +134,10 @@ class MapPlayer(QMainWindow):
         if self.clock!=None:
             self.clock.reset()
 
+        if fileName==None:
+            fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")[0]
 
-        fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
-
-        if fileName!=('', ''): #User cancelled the file selection process
+        if fileName!='': #User cancelled the file selection process
             # try:
             if self.tileMap.openFile(fileName):
                 self.tileMap = None
@@ -176,7 +163,7 @@ class MapPlayer(QMainWindow):
         self.map_draw.mousePressSignal.connect(self.tileMap.canvasMousePressEvent)
         self.map_draw.zoomToActualSize(self.tileMap)
 
-    def openTimetable(self):
+    def openTimetable(self, fileName = None):
         if self.tileMap!=None:
             if self.timetable!=None:
                 confirm_box = QMessageBox(self)
@@ -192,8 +179,9 @@ class MapPlayer(QMainWindow):
                     return
 
             self.timetable = Timetable(self.map_draw,self.ui, self.tileMap)
-            fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
-            if fileName!=('',''):
+            if fileName==None:
+                fileName = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")[0]
+            if fileName!='':
                 if self.timetable.openFile(fileName, self.tileMap.map_name):
                     self.timetable= None
                     return
@@ -207,29 +195,32 @@ class MapPlayer(QMainWindow):
                 print(path)
                 print(fileName)
 
-                directory = os.path.dirname(fileName[0])
+                directory = os.path.dirname(fileName)
                 file_to_open = os.path.join(directory, path)
-                file = open(file_to_open)
 
+                try:
+                    file = open(file_to_open)
 
-                help_dialog = QDialog(self)
-                help_dialog.setWindowTitle("Help")
-                help_dialog.setGeometry(100, 100, 600, 400)
-                
-                scroll_area = QScrollArea(help_dialog)
-                scroll_area.setWidgetResizable(True)
-                
-                help_content = QTextEdit()
-                help_content.setHtml(file.read())
-                help_content.setReadOnly(True)
-                
-                scroll_area.setWidget(help_content)
-                
-                layout = QVBoxLayout()
-                layout.addWidget(scroll_area)
-                
-                help_dialog.setLayout(layout)
-                help_dialog.exec_()
+                    help_dialog = QDialog(self)
+                    help_dialog.setWindowTitle("Help")
+                    help_dialog.setGeometry(100, 100, 600, 400)
+                    
+                    scroll_area = QScrollArea(help_dialog)
+                    scroll_area.setWidgetResizable(True)
+                    
+                    help_content = QTextEdit()
+                    help_content.setHtml(file.read())
+                    help_content.setReadOnly(True)
+                    
+                    scroll_area.setWidget(help_content)
+                    
+                    layout = QVBoxLayout()
+                    layout.addWidget(scroll_area)
+                    
+                    help_dialog.setLayout(layout)
+                    help_dialog.exec_()
+                except:
+                    pass
 
             self.map_draw.mousePressSignal.connect(self.timetable.canvasMousePressEvent)
             self.ui.ZoomToTrainButton.clicked.connect(self.timetable.zoomtoselectedtrain)

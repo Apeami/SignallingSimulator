@@ -1,0 +1,155 @@
+{
+    "type": "map",
+    "name": "TODOTEMPNAME",
+    "grid_size": {
+        "rows": 10,
+        "columns": 10
+    },
+    "data": [
+        {
+            "row": 0,
+            "column": 0,
+            "type": "bufferTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 56
+        },
+        {
+            "row": 0,
+            "column": 1,
+            "type": "bufferTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 0,
+            "column": 2,
+            "type": "curveTrack",
+            "point": "west",
+            "flip": true,
+            "distance": 100
+        },
+        {
+            "row": 0,
+            "column": 7,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 1,
+            "column": 8,
+            "type": "diagonalTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 2,
+            "column": 9,
+            "type": "curveTrack",
+            "point": "south",
+            "flip": true,
+            "distance": 100
+        },
+        {
+            "row": 3,
+            "column": 9,
+            "type": "track",
+            "point": "north",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 4,
+            "column": 9,
+            "type": "track",
+            "point": "north",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 5,
+            "column": 9,
+            "type": "track",
+            "point": "north",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 0,
+            "column": 6,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 0,
+            "column": 5,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 0,
+            "column": 4,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 0,
+            "column": 3,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 1,
+            "column": 1,
+            "type": "diagonalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 2,
+            "column": 0,
+            "type": "curveTrack",
+            "point": "south",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 3,
+            "column": 0,
+            "type": "track",
+            "point": "north",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 4,
+            "column": 0,
+            "type": "track",
+            "point": "north",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 5,
+            "column": 0,
+            "type": "track",
+            "point": "north",
+            "flip": false,
+            "distance": 100
+        }
+    ],
+    "text": []
+}

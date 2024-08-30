@@ -200,7 +200,7 @@ class Train:
         self.map_draw.update()
 
     def getNextPosition(self,speed,timeIncrease):
-        realDistanceIncrease = speed * timeIncrease
+        realDistanceIncrease = int(speed) * timeIncrease
         progressInclease = realDistanceIncrease / (self.tileObj.distance/1000)
         self.tileProgress = self.tileProgress +progressInclease 
 

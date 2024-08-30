@@ -100,7 +100,7 @@ class Timetable:
 
     #This function opens the file.
     def load_json_from_file(self, file_path):
-        with open(file_path[0], 'r') as file:
+        with open(file_path, 'r') as file:
             json_data = json.load(file)
         return json_data
     

@@ -17,7 +17,7 @@ class MapEditor(QMainWindow):
         self.editing = False
         self.tileMapper =None
 
-        self.ui.actionOpen_Map_Player.triggered.connect(appMain.playButton)
+        self.ui.actionOpen_Map_Player.triggered.connect(appMain.playButtonCallback)
         self.ui.actionNew_Map.triggered.connect(lambda: self.openMap(True))
         self.ui.actionEdit_Map.triggered.connect(lambda: self.openMap(False))
 

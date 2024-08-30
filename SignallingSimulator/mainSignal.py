@@ -1,69 +1,101 @@
 #!/usr/bin/python3
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QDialog, QScrollArea, QVBoxLayout, QTextEdit
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 import helpwindow
 from mapPlayer import MapPlayer
 from mapEditor import MapEditor
+import ui_welcomeScreen
+import json
+import os
 
-class MainSignal(QWidget):
+class MainSignal(ui_welcomeScreen.Ui_Form):
     def __init__(self):
-        super().__init__()
-        self.initUI()
-    
-    def initUI(self):
-        # Set up the window
-        self.setWindowTitle('Welcome to Signalling Simulator')
-        self.setGeometry(100, 100, 300, 200)
-        
-        # Create layout
-        layout = QVBoxLayout()
-        
-        # Welcome label
-        welcome_label = QLabel('Welcome to the Railway Signalling Simulator!', self)
-        layout.addWidget(welcome_label)
-        
-        # Introduction label
-        welcome_label = QLabel('''
+        self.mainWidget = QWidget()
+        self.setupUi(self.mainWidget)
 
-To get started, follow these steps:\n
+        self.mainWidget.setWindowTitle('Welcome to Signalling Simulator')
 
-    1) Open a Map: Navigate to File > Open Map to select and load a map. \n
-    2)Open a Timetable: Every map has one or more associated timetables. To open a timetable, go to File > Open Timetable.\n
-    3) Start the Simulation: Once you have opened the timetable, press the start button to begin the simulation.\n
-
-Controls:\n
-
-    1) Signals and Points: Use the toolbar buttons to control the signals and points on the map. \n
-     2)Train Information: Click on the trains to view details about their intended routes. \n
-
-For additional assistance, click the Help button below or access help via File > Help.
-
-Enjoy managing your railway network!''', self)
-        layout.addWidget(welcome_label)
-        
-        play_btn = QPushButton('Simulation Player', self)
-        play_btn.clicked.connect(lambda: self.playButton())
-        layout.addWidget(play_btn)
-
-        edit_btn = QPushButton('Simulation Editor', self)
-        edit_btn.clicked.connect(lambda: self.editButton())
-        layout.addWidget(edit_btn)
-
-        help_btn = QPushButton('Help', self)
-        help_btn.clicked.connect(lambda: helpwindow.showIntroHelp(self))
-        layout.addWidget(help_btn)
-        
-        # Set layout
-        self.setLayout(layout)
+        self.playButton.clicked.connect(lambda: self.playButtonCallback())
+        self.editButton.clicked.connect(lambda: self.editButtonCallback())
+        self.helpButton.clicked.connect(lambda: helpwindow.showIntroHelp(self.mainWidget))
 
         #Set subwindow variable
         self.playWindow = None
         self.editWindow = None
-    
-    def playButton(self):
+
+        #Gather example files
+        for entry in os.listdir(base_dir):
+            entry_path = os.path.join(base_dir, entry)
+            if os.path.isdir(entry_path):
+                json_file_path = os.path.join(entry_path, f"{entry}.json")
+                if os.path.isfile(json_file_path):
+                    try:
+                        with open(json_file_path, 'r') as json_file:
+                            data = json.load(json_file)
+                            print(data)        
+                            self.addExampleField(data["name"], data["description"], data["map"], data["timetable"][0])
+                    except json.JSONDecodeError:
+                        print(f"Error decoding JSON from file: {json_file_path}")
+
+        #Add final spacer item
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.ScrollAreaLayout.addItem(spacerItem)
+
+        #Show final window
+        self.mainWidget.show()
+
+    def addExampleField(self, name, description, mapName, timetableName):
+        playButton = QtWidgets.QPushButton()
+        playButton.setText("Play Map")
+        playButton.setProperty("map", mapName)
+        playButton.setProperty("timetable", timetableName)
+        playButton.clicked.connect(self.openMapButtonClicked)
+        # self.playPushButtons.append(playButton)
+        
+        labelName = QtWidgets.QLabel()
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        labelName.setFont(font)
+        labelName.setText(name)
+
+        verticalLayout = QtWidgets.QVBoxLayout()
+        verticalLayout.addWidget(labelName)
+        verticalLayout.addWidget(playButton)
+
+
+        line = QtWidgets.QFrame(self.scrollAreaWidgetContents)
+        line.setFrameShape(QtWidgets.QFrame.VLine)
+        line.setFrameShadow(QtWidgets.QFrame.Sunken)
+
+        labelDesc = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        labelDesc.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        labelDesc.setWordWrap(True)
+        labelDesc.setText(description)
+
+        templateMapInfo = QtWidgets.QHBoxLayout()
+        templateMapInfo.addLayout(verticalLayout)
+        templateMapInfo.addWidget(line)
+        templateMapInfo.addWidget(labelDesc)
+
+        self.ScrollAreaLayout.addLayout(templateMapInfo)
+
+    def openMapButtonClicked(self):
+        button = self.mainWidget.sender()
+        mapName = button.property("map")
+        timetableName = button.property("timetable")
+
+        print(mapName)
+        print(timetableName)
+
+        self.playButtonCallback()
+        self.playWindow.openMap(fileName=mapName)
+        self.playWindow.openTimetable(fileName=timetableName)
+
+    def playButtonCallback(self):
         print("User chose play")
-        self.close()
+        self.mainWidget.close()
 
         if self.editWindow!=None:
             self.editWindow.close()
@@ -71,11 +103,9 @@ Enjoy managing your railway network!''', self)
         self.playWindow = MapPlayer(self)
         self.playWindow.show()
 
-
-
-    def editButton(self):
+    def editButtonCallback(self):
         print("User chose edit")
-        self.close()
+        self.mainWidget.close()
 
         if self.playWindow!=None:
             self.playWindow.close()
@@ -83,10 +113,15 @@ Enjoy managing your railway network!''', self)
         self.editWindow = MapEditor(self)
         self.editWindow.show()
 
+    def load_json_from_file(self, file_path):
+        with open(file_path, 'r') as file:
+            json_data = json.load(file)
+        return json_data
+
 
 if __name__ == '__main__':    
+    base_dir = "../Examples"
     app = QApplication(sys.argv)
     window = MainSignal()
-    window.show()
     sys.exit(app.exec_())
     

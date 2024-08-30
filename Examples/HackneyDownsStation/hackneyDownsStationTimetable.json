@@ -1,89 +1,193 @@
 {
-    "name":"Hackney downs station",
-    "type" : "timetable",
-    "info" : "hackneyDownsStationInfo.txt",
-    "EndTime":"13:00:00",
+    "name": "Hackney downs station",
+    "type": "timetable",
+    "info": "HackneyDownsStationInfo.txt",
+    "EndTime": "13:00:00",
     "StartTime": "12:00:00",
     "Trains": [
-
         {
             "Headcode": "2H26",
-            "MaxSpeed": 75,
+            "MaxSpeed": "75",
             "Destination": "Cambridge",
-            "LoadTime" : "12:01:00",
+            "LoadTime": "12:01:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": "12:02:00", "Location": "Liverpool Street Portal Fast In" },
-                { "Action": "Despawn", "Time": "12:05:00", "Location": "Clapton Portal Out" }
+                {
+                    "Action": "Spawn",
+                    "Time": "12:02:00",
+                    "Location": "Liverpool Street Portal Fast In"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "12:05:00",
+                    "Location": "Clapton Portal Out"
+                }
             ]
         },
         {
             "Headcode": "2H25",
-            "MaxSpeed": 75,
+            "MaxSpeed": "75",
             "Destination": "London Liverpool Street",
-            "LoadTime" : "12:05:00",
+            "LoadTime": "12:05:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": "12:06:00", "Location": "Clapton Portal In" },
-                { "Action": "Despawn", "Time": "12:09:00", "Location": "Liverpool Street Portal Fast Out" }
+                {
+                    "Action": "Spawn",
+                    "Time": "12:06:00",
+                    "Location": "Clapton Portal In"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "12:09:00",
+                    "Location": "Liverpool Street Portal Fast Out"
+                }
             ]
         },
         {
             "Headcode": "2U36",
             "MaxSpeed": 75,
             "Destination": "Enfield Town",
-            "LoadTime" : "12:03:00",
+            "LoadTime": "12:03:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": "12:04:00", "Location": "Liverpool Street Portal Slow In" },
-                { "Action": "Call", "Time": "12:05:00", "Location": "Cambridge Heath" },
-                { "Action": "Call", "Time": "12:07:00", "Location": "London Fields" },
-                { "Action": "Call", "Time": "12:09:00", "Location": "Hackney Downs" },
-                { "Action": "Despawn", "Time": "12:11:00", "Location": "Rectory Road Portal Out" }
+                {
+                    "Action": "Spawn",
+                    "Time": "12:04:00",
+                    "Location": "Liverpool Street Portal Slow In"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "12:05:00",
+                    "Location": "Cambridge Heath"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "12:07:00",
+                    "Location": "London Fields"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "12:09:00",
+                    "Location": "Hackney Downs"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "12:11:00",
+                    "Location": "Rectory Road Portal Out"
+                }
             ]
         },
         {
             "Headcode": "2T48",
             "MaxSpeed": 75,
             "Destination": "Chingford",
-            "LoadTime" : "12:06:00",
+            "LoadTime": "12:06:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": "12:07:00", "Location": "Liverpool Street Portal Fast In" },
-                { "Action": "Call", "Time": "12:10:00", "Location": "Hackney Downs" },
-                { "Action": "Despawn", "Time": "12:11:00", "Location": "Clapton Portal Out" }
+                {
+                    "Action": "Spawn",
+                    "Time": "12:07:00",
+                    "Location": "Liverpool Street Portal Fast In"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "12:10:00",
+                    "Location": "Hackney Downs"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "12:11:00",
+                    "Location": "Clapton Portal Out"
+                }
             ]
         },
         {
             "Headcode": "5G27",
-            "MaxSpeed": 75,
+            "MaxSpeed": "75",
             "Destination": "Enfield Town",
-            "LoadTime" : "12:09:00",
+            "LoadTime": "12:09:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": "12:10:00", "Location": "Liverpool Street Portal Slow In" },
-                { "Action": "Despawn", "Time": "12:13:00", "Location": "Rectory Road Portal Out" }
+                {
+                    "Action": "Spawn",
+                    "Time": "12:10:00",
+                    "Location": "Liverpool Street Portal Slow In"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "12:13:00",
+                    "Location": "Rectory Road Portal Out"
+                }
             ]
         },
         {
             "Headcode": "2T55",
-            "MaxSpeed": 75,
+            "MaxSpeed": "75",
             "Destination": "London Liverpool Street",
-            "LoadTime" : "12:10:00",
+            "LoadTime": "12:10:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": "12:11:30", "Location": "Clapton Portal In" },
-                { "Action": "Call", "Time": "12:13:00", "Location": "Hackney Downs" },
-                { "Action": "Despawn", "Time": "12:16:00", "Location": "Liverpool Street Portal Fast Out" }
+                {
+                    "Action": "Spawn",
+                    "Time": "12:11:30",
+                    "Location": "Clapton Portal In"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "12:13:00",
+                    "Location": "Hackney Downs"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "12:16:00",
+                    "Location": "Liverpool Street Portal Fast Out"
+                }
             ]
         },
         {
             "Headcode": "2U37",
-            "MaxSpeed": 75,
+            "MaxSpeed": "75",
             "Destination": "Enfield Town",
-            "LoadTime" : "12:12:00",
+            "LoadTime": "12:12:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": "12:13:00", "Location": "Rectory Road Portal In" },
-                { "Action": "Call", "Time": "12:15:00", "Location": "Hackney Downs" },
-                { "Action": "Call", "Time": "12:17:00", "Location": "London Fields" },
-                { "Action": "Call", "Time": "12:19:00", "Location": "Cambridge Heath" },
-                { "Action": "Despawn", "Time": "12:20:00", "Location": "Liverpool Street Portal Slow Out" }
+                {
+                    "Action": "Spawn",
+                    "Time": "12:13:00",
+                    "Location": "Rectory Road Portal In"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "12:15:00",
+                    "Location": "Hackney Downs"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "12:17:00",
+                    "Location": "London Fields"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "12:19:00",
+                    "Location": "Cambridge Heath"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "12:20:00",
+                    "Location": "Liverpool Street Portal Slow Out"
+                }
+            ]
+        },
+        {
+            "Headcode": "2H24",
+            "MaxSpeed": "75",
+            "Destination": "Cambridge",
+            "LoadTime": "12:31:00",
+            "Schedule": [
+                {
+                    "Action": "Spawn",
+                    "Time": "12:32:00",
+                    "Location": "Liverpool Street Portal Fast In"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "12:35:00",
+                    "Location": "Clapton Portal Out"
+                }
             ]
         }
-
     ]
 }

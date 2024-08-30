@@ -1,0 +1,9 @@
+{
+"name": "Hackney downs station",
+"map" : "HackneyDownsStationMap.json",
+"timetable" :[
+    "HackneyDownsStationTimetable.json"
+],
+"description": "This map lets you explore the station"
+
+}
