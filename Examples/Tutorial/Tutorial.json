@@ -1,0 +1,9 @@
+{
+"name": "Tutorial",
+"map" : "TutorialMap.json",
+"timetable" :[
+    "TutorialTimetable.json"
+],
+"description": "Play this map if you have never used Signalling Simulator before."
+
+}

@@ -235,6 +235,10 @@ class SignalTile(TrackTile):
 
         modifiedDesiredSignal = self.desiredSignal
 
+        print("Updating Singal")
+        print(self.trainInBlock)
+        print(self.lastSignal)
+
         if self.trainInBlock ==True:
             modifiedDesiredSignal = "Red"
         elif self.lastSignal ==True:
@@ -281,6 +285,8 @@ class SignalTile(TrackTile):
 
     def setSignal(self,signal,source = "User"):
         if (source =="Router" and self.lock ==True) or self.lock ==False:
+            print("Updating Signal")
+            print(signal)
             self.desiredSignal = signal
             self.updateSignal()
 

@@ -47,8 +47,8 @@ class MapPlayer(QMainWindow):
 
         #Bind the actions
         self.ui.actionOpen_Map_Editor.triggered.connect(appMain.editButtonCallback)
-        self.ui.actionOpen_Scenario.triggered.connect(self.openMap)
-        self.ui.actionOpen_Timetable_2.triggered.connect(self.openTimetable)
+        self.ui.actionOpen_Scenario.triggered.connect(lambda: self.openMap(None))
+        self.ui.actionOpen_Timetable_2.triggered.connect(lambda: self.openTimetable(None))
 
         self.ui.actionRed.triggered.connect(lambda: self.setSignal("Red"))
         self.ui.actionyellow.triggered.connect(lambda: self.setSignal("Yellow"))
@@ -107,7 +107,8 @@ class MapPlayer(QMainWindow):
         self.mapEditor = MapEditor(None, True, self.openTimetableEditor)
 
     def openMap(self, fileName = None):
-        
+        print("Opening map")
+        print(fileName)
         if self.tileMap!=None:
             confirm_box = QMessageBox(self)
             confirm_box.setIcon(QMessageBox.Question)
@@ -287,6 +288,8 @@ class MapPlayer(QMainWindow):
         
 
     def setSignal(self, type):
+        print("Set Signal")
+        print(type)
         if self.tileMap!=None:
             self.tileMap.setSignal(type)
 

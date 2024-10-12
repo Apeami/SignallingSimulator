@@ -108,25 +108,38 @@ class BranchSignalTile:
 
     def findNextSignal(self, tile, tileDirection, visited=None):
 
+        print("Finding Next Signal")
+        print(tile.tileLoc)
+
         if visited is None:
             visited = set()
+        print("1")
 
-        if isinstance(tile, TileBase) or tile.tileCoord in visited:
+        #if isinstance(tile, TileBase) or tile.tileCoord in visited:
+        if type(tile) is TileBase or tile.tileCoord in visited:
+            print(tile.tileCoord)
+            print(visited)
+            print(isinstance(tile, TileBase))
+            print(tile)
+            print("8")
             return []
+            
 
-
+        print("2")
         visited.add(tile.tileCoord)
 
         if isinstance(tile, SignalTile):
             if (tile.getDefaultStartDir() == tileDirection):
+                print("7")
                 return [tile]
         if isinstance(tile,PortalTile):
+            print("3")
             return []
-
+            
         entryDir = (-tileDirection[0], -tileDirection[1])
 
         coords = tile.getEntryAndExitCoord(entryDir=entryDir,currentStatus=False)
-
+        print("4")
 
         tileList = []
         for coord in coords:
@@ -137,12 +150,14 @@ class BranchSignalTile:
                 try:#Catching index out of range
                     newTile = self.tileMapper.tileMap[newTileCoordY][newTileCoordX]
                 except:
+                    print("5")
                     return []
+                    
                 result = self.findNextSignal(newTile, coord, visited=visited)
                 #result = []
                 for i in result:
                     tileList.append(i)
-
+        print("6")
         return tileList
 
 
@@ -150,6 +165,9 @@ class BranchSignalTile:
         startDir = tile.getDefaultStartDir()
         entryLoc = (startDir[0],startDir[1])
         newTile = self.tileMapper.tileMap[tile.tileCoord[1]+startDir[0]][tile.tileCoord[0]+startDir[1]]
+        print("Begin signal neighbour finding")
+        print(tile.tileLoc)
+        print(self.tileMapper.tileMap)
         return self.findNextSignal(newTile,entryLoc)
 
 class RoutingTrack(AbstractTrackSection):

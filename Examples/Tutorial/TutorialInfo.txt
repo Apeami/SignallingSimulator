@@ -1,0 +1,78 @@
+    <h1>Signalling Simulator Tutorial</h1>
+    
+    <p>Welcome to the tutorial for <strong>Signalling Simulator</strong>. Please read this guide carefully so that you understand what to do.</p>
+
+    <h2>1. Starting the Simulation</h2>
+    <p>To <strong>start</strong> the simulation, press the <strong>Play</strong> button.</p>
+    <p>To <strong>pause</strong> the simulation at any time, use the <strong>Pause</strong> button.</p>
+    <p>Use the speed control buttons (<strong>1x, 2x, etc.</strong>) to adjust the simulation speed.</p>
+
+    <h2>2. Train Information</h2>
+    <p>The <strong>Train List</strong> box provides information about all the trains currently in the simulation.</p>
+    <p>To view a specific train's schedule and details, click on the train to open the <strong>Train Information</strong> box.</p>
+
+    <h2>3. Monitoring Train Activity</h2>
+    <p>Once the simulation begins, the trains will appear in the <strong>Train List</strong>, showing when and at what time each train will spawn in the simulation. Wait for the first train to spawn, and you will see it entering the track and moving toward the first signal.</p>
+
+    <h2>4. Setting Signals and Points</h2>
+    <p>To manage train movements effectively:</p>
+    <ul>
+        <li><strong>Signals</strong> control the train's path:
+            <ul>
+                <li><strong>Red Signal</strong>: Stops the train.</li>
+                <li><strong>Green Signal</strong>: Allows the train to proceed.</li>
+                <li><strong>Yellow Signal</strong>: Slows the train down.</li>
+            </ul>
+            To change a signal's state, simply click on it and press the "Toggle Point" button.
+        </li>
+        <li><strong>Points (Switches)</strong> determine the direction trains will take at junctions:
+            <ul>
+                <li>Click on a point to switch its direction.</li>
+                <li>Ensure the correct track is set for the train to avoid collisions or wrong routes.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>5. Managing the Simulation</h2>
+    <p>As trains move through the track, ensure:</p>
+    <ul>
+        <li>Signals are set properly to avoid conflicts at junctions.</li>
+        <li>Points are switched in time for the train to follow its intended route.</li>
+    </ul>
+
+    <h2>6. Safely Setting Signals and Points (for New Players)</h2>
+    <p>As a new player, it’s important to understand how to safely set signals and points to ensure smooth and accident-free train operations. Here are some tips:</p>
+
+    <h3>Understanding Signals</h3>
+    <p><strong>Red Signal</strong>: Always means <strong>Stop</strong>. Use this to prevent trains from entering a section that is occupied by another train or where points are incorrectly set.</p>
+    <p><strong>Green Signal</strong>: Means the track ahead is clear, and the train can proceed safely.</p>
+    <p><strong>Yellow Signal</strong>: Typically used as a warning to slow the train down, often before a red signal or when entering a complex track layout.</p>
+
+    <h3>How to Safely Set Signals</h3>
+    <ul>
+        <li><strong>Before Moving a Train</strong>: Always ensure the next section of the track is clear. If another train is in the section ahead, keep the signal <strong>Red</strong> to prevent collisions.</li>
+        <li><strong>At Junctions</strong>: If there are multiple routes ahead, make sure the correct points are set before changing the signal to green.</li>
+        <li><strong>Slowing Trains</strong>: Use <strong>Yellow</strong> signals in advance of a red signal to gradually slow a train, reducing the risk of abrupt stops.</li>
+    </ul>
+
+    <h3>Understanding Points (Switches)</h3>
+    <p>Points control which direction a train will go at a junction. Incorrectly set points can cause trains to take the wrong path or even derail.</p>
+
+    <h3>How to Safely Set Points</h3>
+    <ul>
+        <li><strong>Before the Train Arrives</strong>: Always check and set points <strong>before</strong> the train reaches the junction. If the points are not set, the train may take an unintended route or stop abruptly.</li>
+        <li><strong>Ensure Clear Paths</strong>: Make sure no other trains are on the path where you are directing a train. Multiple trains converging on the same junction without proper signal control can lead to collisions.</li>
+        <li><strong>Manual Switching</strong>: In some cases, you may need to manually switch points by clicking on them. This gives you full control over directing trains, but be mindful of their current speed and distance.</li>
+    </ul>
+
+    <div class="tip">
+        <strong>General Safety Tips</strong>
+        <ul>
+            <li><strong>Always plan ahead</strong>: Look ahead at where trains are heading. Make sure all signals and points are set well in advance.</li>
+            <li><strong>Use the Pause Button</strong>: If you feel overwhelmed, pause the simulation to carefully adjust the signals and points.</li>
+            <li><strong>Avoid Overlapping Routes</strong>: Keep different trains on separate routes whenever possible to reduce the chance of accidents.</li>
+        </ul>
+    </div>
+
+    <p>By following these steps, you'll be able to manage your railway network safely and efficiently, ensuring smooth operations for all trains.</p>
+

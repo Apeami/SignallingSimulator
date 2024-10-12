@@ -59,6 +59,7 @@ class TileMapper:
 
     def openFile(self, fileName):
         #Read from the json file
+        trackData = self.load_json_from_file(fileName)
         try:
             print(fileName)
             trackData = self.load_json_from_file(fileName)
@@ -138,8 +139,13 @@ class TileMapper:
         
     #This function opens the file.
     def load_json_from_file(self, file_path):
+        print("Load Json")
+        print(file_path)
+        
         with open(file_path, 'r') as file:
+            print("Here")
             json_data = json.load(file)
+            print(json_data)
         return json_data
     
     #These convert the pyglet coordinate to the tile map array index
@@ -158,7 +164,11 @@ class TileMapper:
         # mapX = left + propX * (right-left)
         # mapY = top + propY * (bottom-top)
 
+
         pressedCoord = self.coordToTile((mapX,mapY))
+
+        print("Canvas mouse clicked")
+        print(pressedCoord)
 
         for i in self.tileMap:
             for tile in i:

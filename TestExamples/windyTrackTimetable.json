@@ -2,6 +2,7 @@
     "MapName":"WindyMap",
     "EndTime":"7:30:00",
     "StartTime": "07:00:00",
+    "type": "timetable",
     "Trains": [
         {
             "Headcode": "9k34",

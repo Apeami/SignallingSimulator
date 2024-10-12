@@ -35,7 +35,7 @@ class MainSignal(ui_welcomeScreen.Ui_Form):
                         with open(json_file_path, 'r') as json_file:
                             data = json.load(json_file)
                             print(data)        
-                            self.addExampleField(data["name"], data["description"], data["map"], data["timetable"][0])
+                            self.addExampleField(data["name"], data["description"], entry_path+'/'+data["map"], entry_path+'/'+data["timetable"][0])
                     except json.JSONDecodeError:
                         print(f"Error decoding JSON from file: {json_file_path}")
 
@@ -120,7 +120,20 @@ class MainSignal(ui_welcomeScreen.Ui_Form):
 
 
 if __name__ == '__main__':    
-    base_dir = "../Examples"
+    base_dir = "../Examples/"
+    directory_path = "../Examples"
+
+    # List all files and directories in the specified path
+    try:
+        contents = os.listdir(directory_path)
+        print(f"Contents of {directory_path}:")
+        for item in contents:
+            print(item)
+    except FileNotFoundError:
+        print(f"The directory {directory_path} does not exist.")
+    except PermissionError:
+        print(f"Permission denied to access {directory_path}.")
+    print(os.getcwd())
     app = QApplication(sys.argv)
     window = MainSignal()
     sys.exit(app.exec_())

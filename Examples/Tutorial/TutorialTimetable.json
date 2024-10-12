@@ -1,0 +1,78 @@
+{
+    "type": "timetable",
+    "name": "Tutorial",
+    "info": "TutorialInfo.txt",
+    "EndTime": "00:03:30",
+    "StartTime": "00:00:00",
+    "Trains": [
+        {
+            "Headcode": "1G00",
+            "MaxSpeed": "50",
+            "Destination": "",
+            "LoadTime": "00:00:10",
+            "Schedule": [
+                {
+                    "Action": "Spawn",
+                    "Time": "00:00:20",
+                    "Location": "Entry1"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "00:00:50",
+                    "Location": "Station1"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "00:01:20",
+                    "Location": "Exit1"
+                }
+            ]
+        },
+        {
+            "Headcode": "3F46",
+            "MaxSpeed": "50",
+            "Destination": "",
+            "LoadTime": "00:01:00",
+            "Schedule": [
+                {
+                    "Action": "Spawn",
+                    "Time": "00:01:30",
+                    "Location": "Entry3"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "00:01:50",
+                    "Location": "Station3"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "00:02:20",
+                    "Location": "Exit2"
+                }
+            ]
+        },
+        {
+            "Headcode": "3F56",
+            "MaxSpeed": "50",
+            "Destination": "",
+            "LoadTime": "00:01:01",
+            "Schedule": [
+                {
+                    "Action": "Spawn",
+                    "Time": "00:01:40",
+                    "Location": "Entry2"
+                },
+                {
+                    "Action": "Call",
+                    "Time": "00:02:00",
+                    "Location": "Station2"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "00:02:20",
+                    "Location": "Exit2"
+                }
+            ]
+        }
+    ]
+}

@@ -1,5 +1,6 @@
 {
     "name" : "Windy Map",
+    "type": "map",
     "grid_size" : {
         "rows" : 15,
         "columns" : 25

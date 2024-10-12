@@ -1,0 +1,283 @@
+{
+    "type": "map",
+    "name": "Tutorial",
+    "grid_size": {
+        "rows": 10,
+        "columns": 11
+    },
+    "text": [
+        {
+            "row": 0,
+            "column": -0.5,
+            "text": "Entry1"
+        },
+        {
+            "row": 3,
+            "column": -0.5,
+            "text": "Station1"
+        },
+        {
+            "row": 6,
+            "column": -0.5,
+            "text": "Exit1"
+        },
+        {
+            "row": 2.5,
+            "column": 1.3,
+            "text": "V                   V"
+        },
+        {
+            "row": 0.5,
+            "column": 2.0,
+            "text": "Set these signals to green to allow the train to pass!"
+        },
+        {
+            "row": 3.5,
+            "column": 5.5,
+            "text": "Remember to set these points correctly for all trains! :)"
+        },
+        {
+            "row": 3.3,
+            "column": 6.0,
+            "text": "^            ^                                       ^"
+        },
+        {
+            "row": 7.2,
+            "column": 6,
+            "text": "Station 2"
+        },
+        {
+            "row": 5.7,
+            "column": 8.3,
+            "text": "Station 3"
+        },
+        {
+            "row": -1.5,
+            "column": 6.5,
+            "text": "Entry 2"
+        },
+        {
+            "row": -1.5,
+            "column": 7.5,
+            "text": "Entry 3"
+        },
+        {
+            "row": 11,
+            "column": 6.5,
+            "text": "Exit 2"
+        }
+    ],
+    "data": [
+        {
+            "row": 1,
+            "column": 0,
+            "type": "contTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 100,
+            "waypoint": "Entry1"
+        },
+        {
+            "row": 1,
+            "column": 1,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 1,
+            "column": 2,
+            "type": "signalTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 1,
+            "column": 3,
+            "type": "platTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100,
+            "waypoint": "Station1"
+        },
+        {
+            "row": 1,
+            "column": 4,
+            "type": "signalTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 1,
+            "column": 5,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 1,
+            "column": 6,
+            "type": "contTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100,
+            "waypoint": "Exit1"
+        },
+        {
+            "row": 7,
+            "column": 0,
+            "type": "contTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 100,
+            "waypoint": "Entry2"
+        },
+        {
+            "row": 7,
+            "column": 1,
+            "type": "signalTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 7,
+            "column": 2,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 7,
+            "column": 3,
+            "type": "pointTrack",
+            "point": "west",
+            "flip": true,
+            "distance": 100
+        },
+        {
+            "row": 8,
+            "column": 5,
+            "type": "curveTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 100,
+            "waypoint": ""
+        },
+        {
+            "row": 7,
+            "column": 4,
+            "type": "pointTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 7,
+            "column": 5,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 100,
+            "waypoint": ""
+        },
+        {
+            "row": 8,
+            "column": 6,
+            "type": "platTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 100,
+            "waypoint": "Station3"
+        },
+        {
+            "row": 7,
+            "column": 7,
+            "type": "signalTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 8,
+            "column": 7,
+            "type": "signalTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 100
+        },
+        {
+            "row": 7,
+            "column": 6,
+            "type": "platTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100,
+            "waypoint": "Station2"
+        },
+        {
+            "row": 7,
+            "column": 8,
+            "type": "track",
+            "point": "west",
+            "flip": true,
+            "distance": 100
+        },
+        {
+            "row": 7,
+            "column": 9,
+            "type": "pointTrack",
+            "point": "west",
+            "flip": true,
+            "distance": 100,
+            "waypoint": ""
+        },
+        {
+            "row": 8,
+            "column": 0,
+            "type": "contTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 100,
+            "waypoint": "Entry3"
+        },
+        {
+            "row": 8,
+            "column": 1,
+            "type": "signalTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100
+        },
+        {
+            "row": 8,
+            "column": 2,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 100
+        },
+        {
+            "row": 8,
+            "column": 8,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 100
+        },
+        {
+            "row": 7,
+            "column": 10,
+            "type": "contTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 100,
+            "waypoint": "Exit2"
+        }
+    ]
+}
