@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>869</width>
-    <height>650</height>
+    <height>684</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,24 +39,10 @@
          <string>Feature Selection</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="1" column="1">
-          <widget class="QPushButton" name="SignalButton">
+         <item row="3" column="1">
+          <widget class="QPushButton" name="EndPortalButton">
            <property name="text">
-            <string>Signal</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QPushButton" name="PointButon">
-           <property name="text">
-            <string>Point</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QPushButton" name="CurveTrackButton">
-           <property name="text">
-            <string>Curve Track</string>
+            <string>End Portal</string>
            </property>
           </widget>
          </item>
@@ -67,10 +53,10 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
-          <widget class="QPushButton" name="EndPortalButton">
+         <item row="0" column="1">
+          <widget class="QPushButton" name="DiagonalTrackButton">
            <property name="text">
-            <string>End Portal</string>
+            <string>Diagonal Track</string>
            </property>
           </widget>
          </item>
@@ -81,17 +67,51 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QPushButton" name="DiagonalTrackButton">
-           <property name="text">
-            <string>Diagonal Track</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="1">
           <widget class="QPushButton" name="PlatformButton">
            <property name="text">
             <string>Platform </string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="SignalButton">
+           <property name="text">
+            <string>Signal</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="CurveTrackButton">
+           <property name="text">
+            <string>Curve Track</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QPushButton" name="PointButon">
+           <property name="text">
+            <string>Point</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QPushButton" name="BridgeButton">
+           <property name="text">
+            <string>Bridge</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QPushButton" name="DeleteButton">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Delete</string>
            </property>
           </widget>
          </item>

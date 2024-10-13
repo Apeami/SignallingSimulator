@@ -86,6 +86,8 @@ class MapEditor(QMainWindow):
         self.ui.PlatformButton.clicked.connect(lambda: self.changeTileType("platTrack"))
         self.ui.BufferButton.clicked.connect(lambda: self.changeTileType("bufferTrack"))
         self.ui.EndPortalButton.clicked.connect(lambda: self.changeTileType("contTrack"))
+        self.ui.BridgeButton.clicked.connect(lambda: self.changeTileType("bridgeTrack"))
+        self.ui.DeleteButton.clicked.connect(lambda: self.delTile())
 
         self.ui.EastButton.clicked.connect(lambda: self.changeTileRotation('east'))
         self.ui.WestButton.clicked.connect(lambda: self.changeTileRotation('west'))
@@ -165,6 +167,15 @@ class MapEditor(QMainWindow):
                     else:
                         data['flip'] = False
 
+        self.reDrawMap()
+
+    def delTile(self):
+        colI, rowI= self.getSelectedTile()
+        if colI is not None and rowI is not None:
+            print("Deleting")
+            print(self.trackData['data'])
+            self.trackData['data'] = [data for data in self.trackData['data'] if not (data['row'] == rowI and data['column'] == colI)]
+            print(self.trackData['data'])
         self.reDrawMap()
 
     def changeTileType(self,tileType):
