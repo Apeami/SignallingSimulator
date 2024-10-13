@@ -1,105 +1,689 @@
 {
-    "name" : "Windy Map",
+    "name": "Windy Map",
     "type": "map",
-    "grid_size" : {
-        "rows" : 15,
-        "columns" : 25
+    "grid_size": {
+        "rows": 15,
+        "columns": 25
     },
-
-    "text" : [
-    ],
-
-    "data" : [ 
-        { "row": 1, "column": 0, "type": "contTrack", "point": "west","flip":false,"waypoint":"In","connect":"None","distance":500 },
-        { "row": 1, "column": 1, "type": "curveTrack", "point": "east","flip":false,"distance":500 },
-        { "row": 2, "column": 2, "type": "diagonalTrack", "point": "east","flip":true,"distance":500 },
-        { "row": 3, "column": 3, "type": "curveTrack", "point": "south","flip":true,"distance":500 },
-        { "row": 4, "column": 3, "type": "track", "point": "north","flip":true,"distance":500 },
-        { "row": 5, "column": 3, "type": "curveTrack", "point": "north","flip":true,"distance":500 },
-        { "row": 6, "column": 4, "type": "diagonalTrack", "point": "east","flip":true,"distance":500 },
-        { "row": 7, "column": 5, "type": "curveTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 7, "column": 6, "type": "track", "point": "east","flip":true,"distance":500 },
-        { "row": 7, "column": 7, "type": "curveTrack", "point": "east","flip":true,"distance":500 },
-
-        { "row": 6, "column": 8, "type": "diagonalTrack", "point": "west","flip":true,"distance":500 },
-        { "row": 5, "column": 9, "type": "curveTrack", "point": "north","flip":false,"distance":500 },
-        { "row": 4, "column": 9, "type": "track", "point": "south","flip":true,"distance":500 },
-        { "row": 3, "column": 9, "type": "curveTrack", "point": "south","flip":false,"distance":500 },
-        { "row": 2, "column": 10, "type": "diagonalTrack", "point": "west","flip":true,"distance":500 },
-
-        { "row": 1, "column": 11, "type": "curveTrack", "point": "west","flip":true,"distance":500 },
-        { "row": 1, "column": 12, "type": "pointTrack", "point": "east","flip":true,"distance":500 },
-        { "row": 1, "column": 13, "type": "track", "point": "east","flip":true,"distance":500 },
-        { "row": 1, "column": 14, "type": "pointTrack", "point": "east","flip":false,"distance":500 },
-        { "row": 1, "column": 15, "type": "track", "point": "east","flip":true,"distance":500 },
-        { "row": 1, "column": 16, "type": "pointTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 1, "column": 17, "type": "track", "point": "east","flip":true,"distance":500 },
-        { "row": 1, "column": 18, "type": "pointTrack", "point": "west","flip":true,"distance":500 },
-
-        { "row": 0, "column": 13, "type": "curveTrack", "point": "west","flip":true,"distance":500 },
-        { "row": 0, "column": 14, "type": "track", "point": "east","flip":true,"distance":500 },
-        { "row": 0, "column": 15, "type": "curveTrack", "point": "east","flip":false,"distance":500 },
-        { "row": 2, "column": 15, "type": "curveTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 2, "column": 16, "type": "track", "point": "east","flip":true,"distance":500 },
-        { "row": 2, "column": 17, "type": "curveTrack", "point": "east","flip":true,"distance":500 },
-
-        { "row": 1, "column": 19, "type": "curveTrack", "point": "east","flip":false,"distance":500 },
-        { "row": 2, "column": 20, "type": "curveTrack", "point": "south","flip":true,"distance":500 },
-
-        { "row": 3, "column": 20, "type": "pointTrack", "point": "north","flip":true,"distance":500 },
-        { "row": 4, "column": 20, "type": "track", "point": "north","flip":true,"distance":500 },
-        { "row": 5, "column": 20, "type": "pointTrack", "point": "north","flip":false,"distance":500 },
-        { "row": 6, "column": 20, "type": "track", "point": "north","flip":true,"distance":500 },
-        { "row": 7, "column": 20, "type": "pointTrack", "point": "south","flip":false,"distance":500 },
-        { "row": 8, "column": 20, "type": "track", "point": "north","flip":true,"distance":500 },
-        { "row": 9, "column": 20, "type": "pointTrack", "point": "south","flip":true,"distance":500 },
-
-        { "row": 6, "column": 19, "type": "curveTrack", "point": "south","flip":false,"distance":500 },
-        { "row": 7, "column": 19, "type": "track", "point": "north","flip":true,"distance":500 },
-        { "row": 8, "column": 19, "type": "curveTrack", "point": "north","flip":true,"distance":500 },
-        { "row": 4, "column": 21, "type": "curveTrack", "point": "south","flip":true,"distance":500 },
-        { "row": 5, "column": 21, "type": "track", "point": "north","flip":true,"distance":500 },
-        { "row": 6, "column": 21, "type": "curveTrack", "point": "north","flip":false,"distance":500 },
-
-        { "row": 10, "column": 20, "type": "curveTrack", "point": "north","flip":false,"distance":500 },
-        { "row": 11, "column": 19, "type": "curveTrack", "point": "east","flip":true,"distance":500 },
-
-        { "row": 11, "column": 18, "type": "pointTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 10, "column": 17, "type": "curveTrack", "point": "east","flip":false,"distance":500 },
-        { "row": 11, "column": 17, "type": "track", "point": "east","flip":false,"distance":500 },
-
-        { "row": 11, "column": 16, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 11, "column": 15, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 11, "column": 14, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 11, "column": 13, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 11, "column": 12, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 11, "column": 11, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 11, "column": 10, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 11, "column": 9, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 11, "column": 8, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 11, "column": 7, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 11, "column": 6, "type": "contTrack", "point": "west","flip":false,"distance":500,"connect":"Top" },
-
-        { "row": 10, "column": 16, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 10, "column": 15, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 10, "column": 14, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 10, "column": 13, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 10, "column": 12, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 10, "column": 11, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 10, "column": 10, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 10, "column": 9, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 10, "column": 8, "type": "signalTrack", "point": "west","flip":false,"distance":500 },
-        { "row": 10, "column": 7, "type": "track", "point": "east","flip":false,"distance":500 },
-        { "row": 10, "column": 6, "type": "contTrack", "point": "west","flip":false,"distance":500,"connect":"Bottom" },
-
-        { "row": 13, "column": 18, "type": "contTrack", "point": "east","flip":false,"distance":500,"connect":"Top" },
-        { "row": 13, "column": 17, "type": "track", "point": "west","flip":false,"distance":500 },
-        { "row": 13, "column": 16, "type": "bufferTrack", "point": "west","flip":false,"distance":500}
-
-
-
-
-
-
+    "text": [],
+    "data": [
+        {
+            "row": 1,
+            "column": 0,
+            "type": "contTrack",
+            "point": "west",
+            "flip": false,
+            "waypoint": "In",
+            "connect": "None",
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 1,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 2,
+            "column": 2,
+            "type": "diagonalTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 3,
+            "column": 3,
+            "type": "curveTrack",
+            "point": "south",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 3,
+            "type": "track",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 5,
+            "column": 3,
+            "type": "curveTrack",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 6,
+            "column": 4,
+            "type": "diagonalTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 7,
+            "column": 5,
+            "type": "curveTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 7,
+            "column": 6,
+            "type": "bridgeTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 7,
+            "column": 7,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 6,
+            "column": 8,
+            "type": "diagonalTrack",
+            "point": "west",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 5,
+            "column": 9,
+            "type": "curveTrack",
+            "point": "north",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 9,
+            "type": "bridgeTrack",
+            "point": "south",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 3,
+            "column": 9,
+            "type": "curveTrack",
+            "point": "south",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 2,
+            "column": 10,
+            "type": "diagonalTrack",
+            "point": "west",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 11,
+            "type": "curveTrack",
+            "point": "west",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 12,
+            "type": "pointTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 13,
+            "type": "track",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 14,
+            "type": "pointTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 15,
+            "type": "track",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 16,
+            "type": "pointTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 17,
+            "type": "track",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 18,
+            "type": "pointTrack",
+            "point": "west",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 0,
+            "column": 13,
+            "type": "curveTrack",
+            "point": "west",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 0,
+            "column": 14,
+            "type": "track",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 0,
+            "column": 15,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 2,
+            "column": 15,
+            "type": "curveTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 2,
+            "column": 16,
+            "type": "track",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 2,
+            "column": 17,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 1,
+            "column": 19,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 2,
+            "column": 20,
+            "type": "curveTrack",
+            "point": "south",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 3,
+            "column": 20,
+            "type": "pointTrack",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 20,
+            "type": "track",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 5,
+            "column": 20,
+            "type": "pointTrack",
+            "point": "north",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 6,
+            "column": 20,
+            "type": "track",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 7,
+            "column": 20,
+            "type": "pointTrack",
+            "point": "south",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 8,
+            "column": 20,
+            "type": "track",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 9,
+            "column": 20,
+            "type": "pointTrack",
+            "point": "south",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 6,
+            "column": 19,
+            "type": "curveTrack",
+            "point": "south",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 7,
+            "column": 19,
+            "type": "track",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 8,
+            "column": 19,
+            "type": "curveTrack",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 21,
+            "type": "curveTrack",
+            "point": "south",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 5,
+            "column": 21,
+            "type": "track",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 6,
+            "column": 21,
+            "type": "curveTrack",
+            "point": "north",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 20,
+            "type": "curveTrack",
+            "point": "north",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 19,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 18,
+            "type": "pointTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 17,
+            "type": "curveTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 17,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 16,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 15,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 14,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 13,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 12,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 11,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 10,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 9,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 8,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 7,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 11,
+            "column": 6,
+            "type": "contTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500,
+            "connect": "Top"
+        },
+        {
+            "row": 10,
+            "column": 16,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 15,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 14,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 13,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 12,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 11,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 10,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 9,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 8,
+            "type": "signalTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 7,
+            "type": "pointTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 10,
+            "column": 6,
+            "type": "contTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500,
+            "connect": "Bottom"
+        },
+        {
+            "row": 13,
+            "column": 18,
+            "type": "contTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500,
+            "connect": "Top"
+        },
+        {
+            "row": 13,
+            "column": 17,
+            "type": "track",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 13,
+            "column": 16,
+            "type": "bufferTrack",
+            "point": "west",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 9,
+            "column": 6,
+            "type": "curveTrack",
+            "point": "north",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 8,
+            "column": 6,
+            "type": "track",
+            "point": "north",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 6,
+            "column": 6,
+            "type": "track",
+            "point": "north",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 8,
+            "type": "signalTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 7,
+            "type": "curveTrack",
+            "point": "west",
+            "flip": true,
+            "distance": 500
+        },
+        {
+            "row": 5,
+            "column": 6,
+            "type": "curveTrack",
+            "point": "south",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 10,
+            "type": "track",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 11,
+            "type": "signalTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 12,
+            "type": "signalTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500
+        },
+        {
+            "row": 4,
+            "column": 13,
+            "type": "contTrack",
+            "point": "east",
+            "flip": false,
+            "distance": 500,
+            "waypoint": "End"
+        }
     ]
 }

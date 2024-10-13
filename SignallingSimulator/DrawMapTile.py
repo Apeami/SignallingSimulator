@@ -116,6 +116,68 @@ class DrawMapTile:
         elif self.tileType == "Straight":
             self.draw_straight(x,y,width, painter)
 
+        elif self.tileType == "Bridge":
+            self.draw_straight(x,y,width, painter)
+            halfMid = width//3
+            half = width//2
+            bridgeStart= width//6
+            pen = QPen(self.color, width/10, Qt.SolidLine)
+            painter.setPen(pen)
+            if self.point =='north' or self.point =='south':
+                start_point = QPoint(x + halfMid, y)
+                end_point = QPoint(x + half, y)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x - halfMid, y)
+                end_point = QPoint(x - half, y)
+                painter.drawLine(start_point, end_point)
+                pen = QPen(self.color, width/20, Qt.SolidLine)
+                painter.setPen(pen)
+                start_point = QPoint(x + bridgeStart , y + halfMid)#
+                end_point = QPoint(x + bridgeStart , y - halfMid)#
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x + bridgeStart , y + halfMid)
+                end_point = QPoint(x + half , y + half)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x - bridgeStart , y + halfMid)
+                end_point = QPoint(x - half , y + half)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x - bridgeStart , y - halfMid)#
+                end_point = QPoint(x - bridgeStart , y + halfMid)#
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x + bridgeStart , y - halfMid)
+                end_point = QPoint(x + half , y - half)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x - bridgeStart , y - halfMid)
+                end_point = QPoint(x - half , y - half)
+                painter.drawLine(start_point, end_point)
+            if self.point =='east' or self.point == 'west':
+                start_point = QPoint(x , y + halfMid)
+                end_point = QPoint(x , y + half)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x , y - halfMid)
+                end_point = QPoint(x , y - half)
+                painter.drawLine(start_point, end_point)
+                pen = QPen(self.color, width/20, Qt.SolidLine)
+                painter.setPen(pen)
+                start_point = QPoint(x + halfMid , y + bridgeStart)
+                end_point = QPoint(x - halfMid , y + bridgeStart)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x + halfMid , y + bridgeStart)
+                end_point = QPoint(x + half , y + half)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x - halfMid , y + bridgeStart)
+                end_point = QPoint(x - half , y + half)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x + halfMid , y - bridgeStart)
+                end_point = QPoint(x - halfMid , y - bridgeStart)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x + halfMid , y - bridgeStart)
+                end_point = QPoint(x + half , y - half)
+                painter.drawLine(start_point, end_point)
+                start_point = QPoint(x - halfMid , y - bridgeStart)
+                end_point = QPoint(x - half , y - half)
+                painter.drawLine(start_point, end_point)
+
         elif self.tileType == "Diagonal":
             pen = QPen(self.color, width/10, Qt.SolidLine)
             painter.setPen(pen)
@@ -192,7 +254,37 @@ class DrawMapTile:
                 painter.drawLine(start_point, end_point)
 
         elif self.tileType == "Buffer":
-            pass #TODO
+            half = width//2
+            bridgeStart= width//6
+            pen = QPen(self.color, width/10, Qt.SolidLine)
+            painter.setPen(pen)
+            if self.point =='west':
+                start_point = QPoint(x, y)
+                end_point = QPoint(x + half, y)
+                painter.drawLine(start_point, end_point)
+            elif self.point =='east':
+                start_point = QPoint(x, y)
+                end_point = QPoint(x - half, y)
+                painter.drawLine(start_point, end_point)
+            elif self.point =='north':
+                start_point = QPoint(x , y)
+                end_point = QPoint(x , y + half)
+                painter.drawLine(start_point, end_point)
+            elif self.point == 'south':
+                start_point = QPoint(x , y)
+                end_point = QPoint(x , y - half)
+                painter.drawLine(start_point, end_point)
+            pen = QPen(self.color, width/20, Qt.SolidLine)
+            painter.setPen(pen)
+            if self.point=='east' or self.point=='west':
+                start_point = QPoint(x, y+half)
+                end_point = QPoint(x, y-half)
+                painter.drawLine(start_point, end_point)
+            if self.point=='north' or self.point=='south':
+                start_point = QPoint(x+half, y)
+                end_point = QPoint(x-half, y)
+                painter.drawLine(start_point, end_point)
+                
 
         elif self.tileType == "Continuation":
             self.draw_straight(x,y,width, painter)

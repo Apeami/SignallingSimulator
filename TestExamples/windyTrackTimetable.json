@@ -1,18 +1,27 @@
 {
-    "MapName":"WindyMap",
-    "EndTime":"7:30:00",
+    "name": "Windy Map",
+    "EndTime": "00:00:00",
     "StartTime": "07:00:00",
     "type": "timetable",
     "Trains": [
         {
             "Headcode": "9k34",
-            "MaxSpeed": 100,
+            "MaxSpeed": "200",
             "Destination": "Faraway Station 1",
-            "LoadTime" : "7:00:00",
+            "LoadTime": "07:00:00",
             "Schedule": [
-                { "Action": "Spawn", "Time": "7:00:10", "Location": "In" },
-                { "Action": "Despawn", "Time": "7:10:00", "Location": "Out" }
+                {
+                    "Action": "Spawn",
+                    "Time": "07:00:10",
+                    "Location": "In"
+                },
+                {
+                    "Action": "Despawn",
+                    "Time": "07:10:00",
+                    "Location": "End"
+                }
             ]
         }
-    ]
+    ],
+    "info": ""
 }

@@ -55,6 +55,8 @@ class TileMapper:
             tileObj = TrackTile(self.map_draw, "Buffer", point, flip, realCoord,tileCoord,distance)
         elif type == "diagonalTrack":
             tileObj = DiagonalTile(self.map_draw, "Diagonal", point, flip, realCoord,tileCoord,distance)
+        elif type == "bridgeTrack":
+            tileObj = BridgeTile(self.map_draw, "Bridge", point, flip, realCoord,tileCoord,distance)
         return tileObj
 
     def openFile(self, fileName):

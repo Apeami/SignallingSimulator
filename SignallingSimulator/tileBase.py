@@ -196,6 +196,23 @@ class TrackTile(TileBase):
         #     return (0,0)
         
 
+class BridgeTile(TrackTile):
+    def __init__(self, map_draw, imagePath, point, flip,location,tileCoord,distance, clickable=False,dimension = 50):
+        super().__init__(map_draw,imagePath,point,flip,location,tileCoord,distance)
+
+    def getEntryAndExitCoord(self,entryDir = None, currentStatus = False):
+        print("Bridge tile ACCESSED")
+        print(entryDir)
+        if entryDir in ((0,1),(0,-1)):
+            return ((0,1),(0,-1))
+        if entryDir in ((1,0),(-1,0)):
+            return ((1,0),(-1,0))
+
+        # if self.point=="east" or self.point=="west":
+        #     return((0,1),(0,-1))
+        # elif self.point=="north" or self.point=="south":
+        #     return((1,0),(-1,0))
+
 class DiagonalTile(TrackTile):
     def __init__(self, map_draw, imagePath, point, flip,location,tileCoord,distance, clickable=False,dimension = 50):
         super().__init__(map_draw,imagePath,point,flip,location,tileCoord,distance)
