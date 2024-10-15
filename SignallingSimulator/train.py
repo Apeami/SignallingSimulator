@@ -58,7 +58,7 @@ class Train:
 
         self.deleted = False
 
-    def updateEvent(self,time):
+    def updateEvent(self,time, updatesPerSecond):
         self.time = time
 
 
@@ -86,7 +86,7 @@ class Train:
 
         if self.exist:
             self.manageAction()
-            self.reDrawTrain(self.getNextPosition(self.currentSpeed,0.000277), False)
+            self.reDrawTrain(self.getNextPosition(self.currentSpeed,0.000277/updatesPerSecond), False)
         else:
             tempCoord = self.tileMapper.getCoordFromName(self.sorted_schedule[0]['Location'])
             self.reDrawTrain((tempCoord[1]*50, tempCoord[0]*50), True)

@@ -26,7 +26,7 @@ class Timetable:
         self.end = False
 
 
-    def updateClock(self, time):
+    def updateClock(self, time, updatesPerSecond):
 
         # if self.selectedTrainIndex!=None:
         #     self.updateTrainInformation(time)
@@ -53,7 +53,7 @@ class Timetable:
                     self.updateTrainList()
 
             for activeTrain in self.trainList:
-                activeTrain.updateEvent(time)
+                activeTrain.updateEvent(time, updatesPerSecond)
         return True
 
     def show_error_message(self, message):

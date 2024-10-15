@@ -3,9 +3,10 @@ from PyQt5.QtCore import QTimer, QTime
 
 
 class Clock:
-    def __init__(self, ui, function,startTime):
+    def __init__(self, ui, function,startTime, updatesPerSecond):
         self.ui = ui
         self.function = function
+        self.updatesPerSecond = updatesPerSecond
 
         #initialize buttons
         self.lcd = ui.lcdNumber
@@ -52,7 +53,7 @@ class Clock:
 
     def start_timer(self):
         if self.enabled:
-            self.timer.start(1000 // self.speed)  # Adjust the interval based on speed
+            self.timer.start((1000//self.updatesPerSecond) // self.speed)  # Adjust the interval based on speed
         else:
             self.counter = 0
             self.update_lcd()
@@ -64,13 +65,13 @@ class Clock:
         print(speed)
         self.speed = speed
         if self.timer.isActive():
-            self.timer.start(1000 // self.speed)
+            self.timer.start((1000//self.updatesPerSecond) // self.speed)
 
     def update_lcd(self):
-        time = QTime(0, 0).addSecs(self.counter)
+        time = QTime(0, 0).addSecs(self.counter//self.updatesPerSecond)
         time_str = time.toString("hh:mm:ss")
         self.lcd.display(time_str)
-        self.enabled = self.function(self.counter)
+        self.enabled = self.function(self.counter, self.updatesPerSecond)
         if not self.enabled:
             self.stop_timer()
         self.counter += 1

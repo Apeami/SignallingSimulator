@@ -228,7 +228,7 @@ class MapPlayer(QMainWindow):
 
             #Here is when the timetable is loaded, the simulation can begin
             #Setup Clock
-            self.clock = Clock(self.ui,self.timetable.updateClock,self.timetable.startTime)
+            self.clock = Clock(self.ui,self.timetable.updateClock,self.timetable.startTime, 3)
 
             print("create handleer")
             #Create A handler for the clicks of Train List and Train Information
