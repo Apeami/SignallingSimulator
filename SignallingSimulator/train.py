@@ -63,13 +63,13 @@ class Train:
 
 
         self.manageRestartSignal()
-        self.manageRestartStop()
+        self.manageRestartStop(time, updatesPerSecond)
         
 
 
         if self.currentEvent == 0:
             event = self.sorted_schedule[self.currentEvent]
-            if event['Time'] == time and event['Action'] =='Spawn':
+            if event['Time'] * updatesPerSecond == time  and event['Action'] =='Spawn':
                     self.spawnTrain(event['Location'])
                     self.currentEvent = self.currentEvent + 1
                     self.timetable.updateTrainInformation()
@@ -80,12 +80,12 @@ class Train:
                         self.prevWaypointName = self.nextWaypointName
                         self.nextWaypointName = self.sorted_schedule[self.currentEvent]['Location']
                         self.nextWaypointAction =self.sorted_schedule[self.currentEvent]['Action']
-                        self.nextWaypointTime = self.sorted_schedule[self.currentEvent]['Time']
+                        self.nextWaypointTime = self.sorted_schedule[self.currentEvent]['Time'] * updatesPerSecond
 
 
 
         if self.exist:
-            self.manageAction()
+            self.manageAction(time, updatesPerSecond)
             self.reDrawTrain(self.getNextPosition(self.currentSpeed,0.000277/updatesPerSecond), False)
         else:
             tempCoord = self.tileMapper.getCoordFromName(self.sorted_schedule[0]['Location'])
@@ -103,8 +103,8 @@ class Train:
             self.prevSignalTile = self.tileObjNext
 
 
-    def manageRestartStop(self):
-        if self.trainStopped and self.trainReadyTime<=self.time:
+    def manageRestartStop(self, time, updatesPerSecond):
+        if self.trainStopped and self.trainReadyTime<=time//updatesPerSecond:
             self.currentSpeed = self.maxSpeed
             self.trainStopped = False
             self.currentDisplayEvent = self.currentEvent
@@ -126,7 +126,7 @@ class Train:
                     self.prevSignalTile = self.tileObjNext
                 
 
-    def manageAction(self):
+    def manageAction(self, time, updatesPerSecond):
         if self.currentTileName == self.nextWaypointName:#The train has arrived at the certain waypoint
             if self.nextWaypointAction =="Call":
                 self.currentSpeed = 0
@@ -136,7 +136,7 @@ class Train:
                 if self.time<self.nextWaypointTime- waitTime:
                     self.trainReadyTime = self.nextWaypointTime
                 else: 
-                    self.trainReadyTime = self.time + waitTime
+                    self.trainReadyTime = (time//updatesPerSecond) + waitTime
 
                 self.trainStopped = True
             
@@ -176,7 +176,7 @@ class Train:
                 self.prevWaypointName = self.nextWaypointName
                 self.nextWaypointName = self.sorted_schedule[self.currentEvent]['Location']
                 self.nextWaypointAction =self.sorted_schedule[self.currentEvent]['Action']
-                self.nextWaypointTime = self.sorted_schedule[self.currentEvent]['Time']
+                self.nextWaypointTime = self.sorted_schedule[self.currentEvent]['Time'] * updatesPerSecond
 
         #New feature
         # elif self.currentTileName != self.nextWaypointName and self.currentTileName!=None and self.currentTileName!=self.prevWaypointName:

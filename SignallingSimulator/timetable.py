@@ -10,6 +10,8 @@ from PyQt5.QtWidgets import QMessageBox
 from datetime import datetime, timedelta
 from extra import *
 
+import copy
+
 class Timetable:
     def __init__(self,map_draw,ui,tileMapper):
         self.map_draw=map_draw
@@ -45,9 +47,17 @@ class Timetable:
             return False
         if self.end==False:
             for train in self.trainData:
-                if self.time_to_seconds(train['LoadTime']) == time:
+                print("Train Data")
+                print(self.trainData)
+                print("Train")
+                print(train)
+                print("LOAd time")
+                print(train["LoadTime"])
+                if self.time_to_seconds(train['LoadTime']) * updatesPerSecond == time:
                     #load the train in
+                    print("Events")
                     for event in train['Schedule']:
+                        print(event)
                         event['Time'] = self.time_to_seconds(event['Time'])
                     self.trainList.append(Train(train,self.map_draw,self.tileMapper,self))
                     self.updateTrainList()
@@ -94,9 +104,37 @@ class Timetable:
         self.startTime = self.time_to_seconds(timetableData['StartTime'])
         self.endTime = self.time_to_seconds(timetableData['EndTime'])
 
+        #Duplicate timetable data
+        tempArray = []
+        for train in timetableData["Trains"]:
+            if "RepeatNum" in train and "RepeatInterval" in train:
+                #This means we need to execute the duplication
+                for i in range(train["RepeatNum"]):
+                    newTrain = copy.deepcopy(train)
+                    newTrain["LoadTime"] = self.secondsToTime(self.time_to_seconds(newTrain["LoadTime"])+((i+1)*self.time_to_seconds(train["RepeatInterval"])))
+
+                    newTrain["Headcode"] = self.increment_with_mask(newTrain["Headcode"], newTrain["IncreaseHeadcode"], i+1 )
+
+                    for item in newTrain["Schedule"]:
+                        item["Time"] = self.secondsToTime(self.time_to_seconds(item["Time"])+((i+1)*self.time_to_seconds(train["RepeatInterval"])))
+
+                    tempArray.append(newTrain)
+        timetableData["Trains"] +=(tempArray)
+
+        print(timetableData)
+
         self.timetableData = timetableData
         return False            
         
+    def increment_with_mask(self, s, mask, increment_amount):
+        result = []
+        for char, m in zip(s, mask):
+            if char.isdigit() and m == '+':  # If it's a digit and the mask says increment
+                result.append(str(int(char) + increment_amount))
+            else:
+                result.append(char)  # Keep the character unchanged (either non-digit or '-')
+
+        return ''.join(result)
 
     #This function opens the file.
     def load_json_from_file(self, file_path):
@@ -141,7 +179,11 @@ class Timetable:
 
     def updateTrainInformation(self):
         if self.selectedTrainIndex!=None:
-            train  = self.trainList[self.selectedTrainIndex]
+            if 0 <= self.selectedTrainIndex < len(self.trainList):
+                train = self.trainList[self.selectedTrainIndex]
+            else:
+                self.selectedTrainIndex = None
+                return
 
             self.headcodeLabel.setText("Headcode: "+ train.headcode)
 
